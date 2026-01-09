@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { OfflineIndicator, OfflineBanner, InstallPWAPrompt } from "@/components/OfflineIndicator";
 import { 
   Brain, 
   ChevronDown, 
@@ -95,6 +96,13 @@ export default function DashboardLayoutNeuroPlan({ children }: DashboardLayoutPr
               })}
             </nav>
           </ScrollArea>
+
+          <Separator />
+
+          {/* Offline Indicator */}
+          <div className="px-4 py-2">
+            <OfflineIndicator className="w-full justify-center" />
+          </div>
 
           <Separator />
 
@@ -236,6 +244,12 @@ export default function DashboardLayoutNeuroPlan({ children }: DashboardLayoutPr
           {children}
         </div>
       </main>
+
+      {/* Offline Banner */}
+      <OfflineBanner />
+
+      {/* Install PWA Prompt */}
+      <InstallPWAPrompt />
     </div>
   );
 }

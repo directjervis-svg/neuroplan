@@ -122,3 +122,14 @@
 - [x] Separar hero com apenas imagem Voyager (sem texto)
 - [x] Mover textos para seção abaixo da imagem
 - [x] Ajustar transições entre seções
+
+
+## Fase 20: Modo Offline (PWA)
+- [x] Criar manifest.json para PWA
+- [x] Implementar Service Worker para cache de assets
+- [x] Configurar IndexedDB para armazenamento local
+- [x] Criar hooks de sincronização offline/online
+- [x] Implementar fila de operações pendentes
+- [x] Adicionar indicador de status de conexão na UI
+- [x] Implementar sincronização automática ao reconectar
+- [x] Permitir instalação do app no dispositivo
