@@ -26,6 +26,11 @@ import CalendarSettings from "./pages/CalendarSettings";
 import Rewards from "./pages/Rewards";
 import DashboardUnified from "./pages/DashboardUnified";
 
+// Admin Pages
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminProducts from "./pages/admin/AdminProducts";
+import AdminOrders from "./pages/admin/AdminOrders";
+
 // Protected Route Component
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   const { isAuthenticated, loading } = useAuth();
@@ -97,6 +102,17 @@ function Router() {
       </Route>
       <Route path="/dashboard/rewards">
         <ProtectedRoute component={Rewards} />
+      </Route>
+      
+      {/* Admin Routes */}
+      <Route path="/admin">
+        <ProtectedRoute component={AdminDashboard} />
+      </Route>
+      <Route path="/admin/products">
+        <ProtectedRoute component={AdminProducts} />
+      </Route>
+      <Route path="/admin/orders">
+        <ProtectedRoute component={AdminOrders} />
       </Route>
       <Route path="/dashboard/unified">
         <ProtectedRoute component={DashboardUnified} />

@@ -33,6 +33,7 @@ import { weeklyReportsRouter } from "./weeklyReports";
 import { googleCalendarRouter } from "./googleCalendar";
 import { rewardsRouter } from "./rewards";
 import { calendarExportRouter } from "./exportCalendar";
+import { adminStoreRouter } from "./adminStore";
 import { createCheckoutSession, createPortalSession, getOrCreateCustomer } from "./stripe/stripe";
 import { NEUROPLAN_PRODUCTS } from "./stripe/products";
 
@@ -335,6 +336,9 @@ export const appRouter = router({
 
   // Rewards and TDAH Store Router
   rewards: rewardsRouter,
+  
+  // Admin Store Router (produtos e pedidos)
+  adminStore: adminStoreRouter,
   
   // Calendar Export Router
   calendarExport: calendarExportRouter,

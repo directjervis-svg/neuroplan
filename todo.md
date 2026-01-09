@@ -204,3 +204,12 @@
 - [x] Criar visão consolidada de projetos, tarefas e métricas
 - [x] Implementar widgets configuráveis
 - [x] Adicionar atalhos rápidos para ações frequentes
+
+
+## Fase 31: Painel Admin TDAH Store
+- [x] Criar procedures admin para produtos (CRUD)
+- [x] Criar procedures admin para pedidos (listar, atualizar status)
+- [x] Implementar página de gerenciamento de produtos
+- [x] Implementar página de processamento de pedidos
+- [x] Adicionar dashboard de métricas da loja
+- [x] Implementar filtros e busca de pedidos
