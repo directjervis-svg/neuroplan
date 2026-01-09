@@ -1,4 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -19,7 +20,11 @@ import {
   CreditCard,
   BarChart3,
   Award,
-  Bell
+  Bell,
+  Sun,
+  Moon,
+  Gift,
+  Calendar
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import {
@@ -41,12 +46,15 @@ const navItems = [
   { href: "/dashboard/focus", label: "Timer de Foco", icon: Timer },
   { href: "/dashboard/ideas", label: "Quick Ideas", icon: Lightbulb },
   { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/dashboard/calendar", label: "Calendário", icon: Calendar },
   { href: "/dashboard/profile", label: "Perfil", icon: Award },
+  { href: "/dashboard/rewards", label: "Recompensas", icon: Gift },
   { href: "/dashboard/notifications", label: "Notificações", icon: Bell },
 ];
 
 export default function DashboardLayoutNeuroPlan({ children }: DashboardLayoutProps) {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme, switchable } = useTheme();
   const [location] = useLocation();
 
   const handleLogout = async () => {
@@ -100,6 +108,30 @@ export default function DashboardLayoutNeuroPlan({ children }: DashboardLayoutPr
           </ScrollArea>
 
           <Separator />
+
+          {/* Theme Toggle */}
+          {switchable && (
+            <div className="px-4 py-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleTheme}
+                className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground"
+              >
+                {theme === 'dark' ? (
+                  <>
+                    <Sun className="h-4 w-4" />
+                    <span>Modo Claro</span>
+                  </>
+                ) : (
+                  <>
+                    <Moon className="h-4 w-4" />
+                    <span>Modo Escuro</span>
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
 
           {/* Offline Indicator */}
           <div className="px-4 py-2">

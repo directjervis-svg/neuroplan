@@ -22,6 +22,8 @@ import ExportProject from "./pages/ExportProject";
 import Analytics from "./pages/Analytics";
 import EffortMatrix from "./pages/EffortMatrix";
 import NotificationSettings from "./pages/NotificationSettings";
+import CalendarSettings from "./pages/CalendarSettings";
+import Rewards from "./pages/Rewards";
 
 // Protected Route Component
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -89,6 +91,12 @@ function Router() {
       <Route path="/dashboard/notifications">
         <ProtectedRoute component={NotificationSettings} />
       </Route>
+      <Route path="/dashboard/calendar">
+        <ProtectedRoute component={CalendarSettings} />
+      </Route>
+      <Route path="/dashboard/rewards">
+        <ProtectedRoute component={Rewards} />
+      </Route>
       
       {/* 404 */}
       <Route path="/404" component={NotFound} />
@@ -100,7 +108,7 @@ function Router() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="light">
+      <ThemeProvider defaultTheme="light" switchable>
         <TooltipProvider>
           <Toaster />
           <Router />

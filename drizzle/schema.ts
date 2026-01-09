@@ -452,3 +452,235 @@ export const weeklyReports = mysqlTable("weeklyReports", {
 
 export type WeeklyReport = typeof weeklyReports.$inferSelect;
 export type InsertWeeklyReport = typeof weeklyReports.$inferInsert;
+
+
+/**
+ * Rewards - available rewards for point redemption
+ */
+export const rewards = mysqlTable("rewards", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  code: varchar("code", { length: 50 }).notNull().unique(),
+  name: varchar("name", { length: 200 }).notNull(),
+  description: text("description"),
+  
+  type: mysqlEnum("type", ["DISCOUNT", "PRODUCT", "FEATURE", "BADGE"]).notNull(),
+  
+  // Cost in points
+  pointsCost: int("pointsCost").notNull(),
+  
+  // For discounts
+  discountType: mysqlEnum("discountType", ["PERCENTAGE", "FIXED"]),
+  discountValue: int("discountValue"), // Percentage or fixed amount in cents
+  discountAppliesTo: mysqlEnum("discountAppliesTo", ["PRO", "TEAM", "ANY"]),
+  
+  // For products (TDAH Store)
+  productSku: varchar("productSku", { length: 50 }),
+  productImageUrl: varchar("productImageUrl", { length: 500 }),
+  productPrice: int("productPrice"), // Original price in cents
+  shippingIncluded: boolean("shippingIncluded").default(false),
+  
+  // Availability
+  stock: int("stock"), // null = unlimited
+  maxPerUser: int("maxPerUser").default(1),
+  isActive: boolean("isActive").default(true),
+  isPremiumOnly: boolean("isPremiumOnly").default(false),
+  
+  // Validity
+  validFrom: timestamp("validFrom"),
+  validUntil: timestamp("validUntil"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Reward = typeof rewards.$inferSelect;
+export type InsertReward = typeof rewards.$inferInsert;
+
+/**
+ * Reward Redemptions - user reward claims
+ */
+export const rewardRedemptions = mysqlTable("rewardRedemptions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  rewardId: int("rewardId").notNull(),
+  
+  pointsSpent: int("pointsSpent").notNull(),
+  
+  status: mysqlEnum("status", ["PENDING", "PROCESSING", "COMPLETED", "SHIPPED", "DELIVERED", "CANCELED", "REFUNDED"]).default("PENDING"),
+  
+  // For discounts - generated coupon code
+  couponCode: varchar("couponCode", { length: 50 }),
+  couponUsed: boolean("couponUsed").default(false),
+  couponUsedAt: timestamp("couponUsedAt"),
+  
+  // For products - shipping info
+  shippingName: varchar("shippingName", { length: 200 }),
+  shippingAddress: text("shippingAddress"),
+  shippingCity: varchar("shippingCity", { length: 100 }),
+  shippingState: varchar("shippingState", { length: 50 }),
+  shippingZip: varchar("shippingZip", { length: 20 }),
+  shippingCountry: varchar("shippingCountry", { length: 50 }).default("BR"),
+  trackingCode: varchar("trackingCode", { length: 100 }),
+  
+  // Notes
+  notes: text("notes"),
+  
+  redeemedAt: timestamp("redeemedAt").defaultNow().notNull(),
+  processedAt: timestamp("processedAt"),
+  completedAt: timestamp("completedAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RewardRedemption = typeof rewardRedemptions.$inferSelect;
+export type InsertRewardRedemption = typeof rewardRedemptions.$inferInsert;
+
+/**
+ * Point Transactions - history of point gains and spending
+ */
+export const pointTransactions = mysqlTable("pointTransactions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  
+  amount: int("amount").notNull(), // Positive = earned, Negative = spent
+  balanceAfter: int("balanceAfter").notNull(),
+  
+  type: mysqlEnum("type", ["EARNED", "SPENT", "BONUS", "REFUND", "EXPIRED", "ADJUSTMENT"]).notNull(),
+  
+  // Source of points
+  sourceType: mysqlEnum("sourceType", ["PROJECT_COMPLETE", "TASK_COMPLETE", "STREAK_BONUS", "LEVEL_UP", "ACHIEVEMENT", "REDEMPTION", "ADMIN", "REFERRAL"]),
+  sourceId: int("sourceId"),
+  
+  // For redemptions
+  redemptionId: int("redemptionId"),
+  
+  description: varchar("description", { length: 200 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type PointTransaction = typeof pointTransactions.$inferSelect;
+export type InsertPointTransaction = typeof pointTransactions.$inferInsert;
+
+/**
+ * TDAH Store Products - physical products catalog
+ */
+export const storeProducts = mysqlTable("storeProducts", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  sku: varchar("sku", { length: 50 }).notNull().unique(),
+  name: varchar("name", { length: 200 }).notNull(),
+  description: text("description"),
+  longDescription: text("longDescription"),
+  
+  category: mysqlEnum("category", ["PLANNER", "TIMER", "FIDGET", "ORGANIZER", "BOOK", "ACCESSORY", "KIT"]).default("ACCESSORY"),
+  
+  // Pricing
+  priceInCents: int("priceInCents").notNull(),
+  compareAtPriceInCents: int("compareAtPriceInCents"), // Original price for showing discount
+  
+  // Points option
+  pointsPrice: int("pointsPrice"), // Can be purchased with points
+  pointsOnly: boolean("pointsOnly").default(false), // Only available with points
+  
+  // Images
+  imageUrl: varchar("imageUrl", { length: 500 }),
+  images: json("images"), // Array of additional image URLs
+  
+  // Inventory
+  stock: int("stock").default(0),
+  lowStockThreshold: int("lowStockThreshold").default(5),
+  trackInventory: boolean("trackInventory").default(true),
+  
+  // Shipping
+  weight: int("weight"), // grams
+  dimensions: json("dimensions"), // { length, width, height } in cm
+  freeShipping: boolean("freeShipping").default(false),
+  
+  // Status
+  isActive: boolean("isActive").default(true),
+  isFeatured: boolean("isFeatured").default(false),
+  
+  // SEO
+  slug: varchar("slug", { length: 200 }),
+  metaTitle: varchar("metaTitle", { length: 200 }),
+  metaDescription: text("metaDescription"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type StoreProduct = typeof storeProducts.$inferSelect;
+export type InsertStoreProduct = typeof storeProducts.$inferInsert;
+
+/**
+ * Store Orders - product purchases
+ */
+export const storeOrders = mysqlTable("storeOrders", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  
+  orderNumber: varchar("orderNumber", { length: 50 }).notNull().unique(),
+  
+  status: mysqlEnum("status", ["PENDING", "PAID", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELED", "REFUNDED"]).default("PENDING"),
+  
+  // Payment
+  paymentMethod: mysqlEnum("paymentMethod", ["STRIPE", "POINTS", "MIXED"]).default("STRIPE"),
+  subtotalInCents: int("subtotalInCents").notNull(),
+  shippingInCents: int("shippingInCents").default(0),
+  discountInCents: int("discountInCents").default(0),
+  totalInCents: int("totalInCents").notNull(),
+  pointsUsed: int("pointsUsed").default(0),
+  
+  // Stripe
+  stripePaymentIntentId: varchar("stripePaymentIntentId", { length: 255 }),
+  
+  // Coupon
+  couponCode: varchar("couponCode", { length: 50 }),
+  
+  // Shipping
+  shippingName: varchar("shippingName", { length: 200 }),
+  shippingEmail: varchar("shippingEmail", { length: 320 }),
+  shippingPhone: varchar("shippingPhone", { length: 50 }),
+  shippingAddress: text("shippingAddress"),
+  shippingCity: varchar("shippingCity", { length: 100 }),
+  shippingState: varchar("shippingState", { length: 50 }),
+  shippingZip: varchar("shippingZip", { length: 20 }),
+  shippingCountry: varchar("shippingCountry", { length: 50 }).default("BR"),
+  trackingCode: varchar("trackingCode", { length: 100 }),
+  shippedAt: timestamp("shippedAt"),
+  deliveredAt: timestamp("deliveredAt"),
+  
+  // Notes
+  customerNotes: text("customerNotes"),
+  internalNotes: text("internalNotes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type StoreOrder = typeof storeOrders.$inferSelect;
+export type InsertStoreOrder = typeof storeOrders.$inferInsert;
+
+/**
+ * Store Order Items - products in an order
+ */
+export const storeOrderItems = mysqlTable("storeOrderItems", {
+  id: int("id").autoincrement().primaryKey(),
+  orderId: int("orderId").notNull(),
+  productId: int("productId").notNull(),
+  
+  productName: varchar("productName", { length: 200 }).notNull(),
+  productSku: varchar("productSku", { length: 50 }).notNull(),
+  
+  quantity: int("quantity").notNull(),
+  priceInCents: int("priceInCents").notNull(),
+  totalInCents: int("totalInCents").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type StoreOrderItem = typeof storeOrderItems.$inferSelect;
+export type InsertStoreOrderItem = typeof storeOrderItems.$inferInsert;

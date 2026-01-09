@@ -30,6 +30,8 @@ import { exportRouter } from "./export";
 import { notificationsRouter } from "./notifications";
 import { pushRouter } from "./pushNotifications";
 import { weeklyReportsRouter } from "./weeklyReports";
+import { googleCalendarRouter } from "./googleCalendar";
+import { rewardsRouter } from "./rewards";
 import { createCheckoutSession, createPortalSession, getOrCreateCustomer } from "./stripe/stripe";
 import { NEUROPLAN_PRODUCTS } from "./stripe/products";
 
@@ -326,6 +328,12 @@ export const appRouter = router({
 
   // Weekly Reports Router
   weeklyReports: weeklyReportsRouter,
+
+  // Google Calendar Router
+  calendar: googleCalendarRouter,
+
+  // Rewards and TDAH Store Router
+  rewards: rewardsRouter,
 
   // AI Router
   ai: router({

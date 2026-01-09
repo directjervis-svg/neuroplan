@@ -154,3 +154,25 @@
 - [x] Gerar insights baseados em coeficientes de tarefas
 - [x] Configurar agendamento de envio semanal
 - [x] Adicionar opção de opt-in/opt-out nas configurações
+
+
+## Fase 24: Modo Escuro Neuroadaptado
+- [x] Criar variáveis CSS para tema escuro
+- [x] Manter cores verde/vermelho/laranja em ambos os modos
+- [x] Implementar toggle de tema no header/sidebar
+- [x] Persistir preferência do usuário
+- [x] Garantir contraste adequado para acessibilidade
+
+## Fase 25: Integração Google Calendar
+- [x] Configurar OAuth2 para Google Calendar API
+- [x] Implementar sincronização de tarefas → eventos
+- [x] Implementar sincronização de eventos → tarefas
+- [x] Criar página de configuração de calendário
+- [x] Adicionar toggle de sincronização automática
+## Fase 26: Sistema de Recompensas e TDAH Store
+- [x] Criar schema para recompensas e produtos
+- [x] Implementar sistema de troca de pontos
+- [x] Criar loja TDAH Store com produtos físicos
+- [x] Implementar descontos nos planos via pontos
+- [x] Criar página de recompensas e históricord
+- [ ] Implementar histórico de resgates
