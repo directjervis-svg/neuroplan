@@ -25,6 +25,8 @@ import {
   updateUserPreferences
 } from "./db";
 import { processBriefing, decomposeTasks, getSocraticResponse } from "./ai";
+import { gamificationRouter } from "./gamification";
+import { exportRouter } from "./export";
 import { createCheckoutSession, createPortalSession, getOrCreateCustomer } from "./stripe/stripe";
 import { NEUROPLAN_PRODUCTS } from "./stripe/products";
 
@@ -306,6 +308,12 @@ export const appRouter = router({
       };
     }),
   }),
+
+  // Gamification Router
+  gamification: gamificationRouter,
+
+  // Export Router
+  export: exportRouter,
 
   // AI Router
   ai: router({

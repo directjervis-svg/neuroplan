@@ -15,6 +15,10 @@ import ProjectDetail from "./pages/ProjectDetail";
 import FocusTimer from "./pages/FocusTimer";
 import QuickIdeas from "./pages/QuickIdeas";
 import Pricing from "./pages/Pricing";
+import Profile from "./pages/Profile";
+import Templates from "./pages/Templates";
+import Onboarding from "./pages/Onboarding";
+import ExportProject from "./pages/ExportProject";
 
 // Protected Route Component
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -60,6 +64,18 @@ function Router() {
       </Route>
       <Route path="/dashboard/ideas">
         <ProtectedRoute component={QuickIdeas} />
+      </Route>
+      <Route path="/dashboard/profile">
+        <ProtectedRoute component={Profile} />
+      </Route>
+      <Route path="/dashboard/templates">
+        <ProtectedRoute component={Templates} />
+      </Route>
+      <Route path="/dashboard/projects/:id/export">
+        <ProtectedRoute component={ExportProject} />
+      </Route>
+      <Route path="/onboarding">
+        <ProtectedRoute component={Onboarding} />
       </Route>
       
       {/* 404 */}

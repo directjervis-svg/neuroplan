@@ -18,7 +18,8 @@ import {
   Target,
   FileText,
   Lightbulb,
-  Brain
+  Brain,
+  Download
 } from "lucide-react";
 import { Link, useParams } from "wouter";
 import { useState } from "react";
@@ -173,6 +174,12 @@ export default function ProjectDetail() {
                   <Edit className="mr-2 h-4 w-4" />
                   Editar Projeto
                 </DropdownMenuItem>
+                <Link href={`/dashboard/projects/${projectId}/export`}>
+                  <DropdownMenuItem>
+                    <Download className="mr-2 h-4 w-4" />
+                    Exportar Projeto
+                  </DropdownMenuItem>
+                </Link>
                 {status === "ACTIVE" && (
                   <DropdownMenuItem onClick={() => updateProject.mutate({ id: projectId, status: "PAUSED" })}>
                     <Clock className="mr-2 h-4 w-4" />

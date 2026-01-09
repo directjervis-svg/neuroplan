@@ -206,3 +206,162 @@ export const aiUsage = mysqlTable("aiUsage", {
 
 export type AiUsage = typeof aiUsage.$inferSelect;
 export type InsertAiUsage = typeof aiUsage.$inferInsert;
+
+
+/**
+ * User Gamification Stats - tracks XP, level, streaks
+ * Compensates dopamine deficit through micro-rewards
+ */
+export const userGamification = mysqlTable("userGamification", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  
+  // XP and Level System
+  totalXp: int("totalXp").default(0),
+  currentLevel: int("currentLevel").default(1),
+  xpToNextLevel: int("xpToNextLevel").default(100),
+  
+  // Streak System
+  currentStreak: int("currentStreak").default(0),
+  longestStreak: int("longestStreak").default(0),
+  lastActiveDate: timestamp("lastActiveDate"),
+  
+  // Statistics
+  totalTasksCompleted: int("totalTasksCompleted").default(0),
+  totalProjectsCompleted: int("totalProjectsCompleted").default(0),
+  totalFocusMinutes: int("totalFocusMinutes").default(0),
+  totalIdeasCaptured: int("totalIdeasCaptured").default(0),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserGamification = typeof userGamification.$inferSelect;
+export type InsertUserGamification = typeof userGamification.$inferInsert;
+
+/**
+ * Badge Definitions - available achievements
+ */
+export const badgeDefinitions = mysqlTable("badgeDefinitions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  code: varchar("code", { length: 50 }).notNull().unique(),
+  name: varchar("name", { length: 100 }).notNull(),
+  description: text("description"),
+  icon: varchar("icon", { length: 50 }).notNull(), // Lucide icon name
+  color: varchar("color", { length: 20 }).default("#22C55E"),
+  
+  // Unlock criteria
+  category: mysqlEnum("category", ["STREAK", "TASKS", "PROJECTS", "FOCUS", "IDEAS", "SPECIAL"]).default("TASKS"),
+  threshold: int("threshold").default(1), // Number required to unlock
+  xpReward: int("xpReward").default(50),
+  
+  // Rarity
+  rarity: mysqlEnum("rarity", ["COMMON", "UNCOMMON", "RARE", "EPIC", "LEGENDARY"]).default("COMMON"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type BadgeDefinition = typeof badgeDefinitions.$inferSelect;
+export type InsertBadgeDefinition = typeof badgeDefinitions.$inferInsert;
+
+/**
+ * User Badges - earned achievements
+ */
+export const userBadges = mysqlTable("userBadges", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  badgeId: int("badgeId").notNull(),
+  
+  earnedAt: timestamp("earnedAt").defaultNow().notNull(),
+  notified: boolean("notified").default(false),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type UserBadge = typeof userBadges.$inferSelect;
+export type InsertUserBadge = typeof userBadges.$inferInsert;
+
+/**
+ * XP Transactions - history of XP gains
+ */
+export const xpTransactions = mysqlTable("xpTransactions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  
+  amount: int("amount").notNull(),
+  reason: varchar("reason", { length: 100 }).notNull(),
+  sourceType: mysqlEnum("sourceType", ["TASK", "PROJECT", "FOCUS", "IDEA", "BADGE", "STREAK", "BONUS"]).default("TASK"),
+  sourceId: int("sourceId"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type XpTransaction = typeof xpTransactions.$inferSelect;
+export type InsertXpTransaction = typeof xpTransactions.$inferInsert;
+
+/**
+ * Onboarding Progress - tracks user journey steps
+ */
+export const onboardingProgress = mysqlTable("onboardingProgress", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  
+  // Onboarding steps completed
+  welcomeViewed: boolean("welcomeViewed").default(false),
+  profileSetup: boolean("profileSetup").default(false),
+  firstProjectCreated: boolean("firstProjectCreated").default(false),
+  firstTaskCompleted: boolean("firstTaskCompleted").default(false),
+  firstFocusSession: boolean("firstFocusSession").default(false),
+  firstIdeaCaptured: boolean("firstIdeaCaptured").default(false),
+  tourCompleted: boolean("tourCompleted").default(false),
+  
+  // Current step
+  currentStep: int("currentStep").default(0),
+  totalSteps: int("totalSteps").default(7),
+  
+  completedAt: timestamp("completedAt"),
+  skippedAt: timestamp("skippedAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type OnboardingProgress = typeof onboardingProgress.$inferSelect;
+export type InsertOnboardingProgress = typeof onboardingProgress.$inferInsert;
+
+/**
+ * Project Templates - pre-built project structures
+ */
+export const projectTemplates = mysqlTable("projectTemplates", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  name: varchar("name", { length: 100 }).notNull(),
+  description: text("description"),
+  icon: varchar("icon", { length: 50 }).default("FileText"),
+  color: varchar("color", { length: 20 }).default("#22C55E"),
+  
+  category: mysqlEnum("category", ["PERSONAL", "PROFESSIONAL", "ACADEMIC", "CONTENT", "SOFTWARE", "HEALTH"]).default("PERSONAL"),
+  
+  // Template structure
+  defaultBriefing: text("defaultBriefing"),
+  defaultDeliverableA: text("defaultDeliverableA"),
+  defaultDeliverableB: text("defaultDeliverableB"),
+  defaultDeliverableC: text("defaultDeliverableC"),
+  defaultCycleDuration: mysqlEnum("defaultCycleDuration", ["DAYS_3", "DAYS_7", "DAYS_14"]).default("DAYS_3"),
+  
+  // Pre-defined tasks (JSON array)
+  defaultTasks: json("defaultTasks"),
+  
+  // Usage tracking
+  usageCount: int("usageCount").default(0),
+  
+  isActive: boolean("isActive").default(true),
+  isPremium: boolean("isPremium").default(false),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectTemplate = typeof projectTemplates.$inferSelect;
+export type InsertProjectTemplate = typeof projectTemplates.$inferInsert;
