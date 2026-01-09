@@ -133,3 +133,24 @@
 - [x] Adicionar indicador de status de conexão na UI
 - [x] Implementar sincronização automática ao reconectar
 - [x] Permitir instalação do app no dispositivo
+
+
+## Fase 21: Notificações Push
+- [x] Configurar Web Push API no servidor
+- [x] Criar endpoint para registro de subscription
+- [x] Implementar envio de notificações para tarefas pendentes
+- [x] Criar alertas de streak em risco
+- [x] Adicionar UI para gerenciar preferências de notificação
+
+## Fase 22: Sincronização em Segundo Plano
+- [x] Implementar Background Sync API no Service Worker
+- [x] Criar fila de operações pendentes persistente
+- [x] Garantir sincronização mesmo com app fechado
+- [x] Adicionar retry automático para falhas
+
+## Fase 23: Relatórios Semanais por Email
+- [x] Criar template de email com resumo semanal
+- [x] Implementar cálculo de métricas de produtividade
+- [x] Gerar insights baseados em coeficientes de tarefas
+- [x] Configurar agendamento de envio semanal
+- [x] Adicionar opção de opt-in/opt-out nas configurações

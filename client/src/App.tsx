@@ -21,6 +21,7 @@ import Onboarding from "./pages/Onboarding";
 import ExportProject from "./pages/ExportProject";
 import Analytics from "./pages/Analytics";
 import EffortMatrix from "./pages/EffortMatrix";
+import NotificationSettings from "./pages/NotificationSettings";
 
 // Protected Route Component
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -84,6 +85,9 @@ function Router() {
       </Route>
       <Route path="/dashboard/projects/:id/matrix">
         <ProtectedRoute component={EffortMatrix} />
+      </Route>
+      <Route path="/dashboard/notifications">
+        <ProtectedRoute component={NotificationSettings} />
       </Route>
       
       {/* 404 */}

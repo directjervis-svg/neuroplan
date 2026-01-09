@@ -28,6 +28,8 @@ import { processBriefing, decomposeTasks, getSocraticResponse } from "./ai";
 import { gamificationRouter } from "./gamification";
 import { exportRouter } from "./export";
 import { notificationsRouter } from "./notifications";
+import { pushRouter } from "./pushNotifications";
+import { weeklyReportsRouter } from "./weeklyReports";
 import { createCheckoutSession, createPortalSession, getOrCreateCustomer } from "./stripe/stripe";
 import { NEUROPLAN_PRODUCTS } from "./stripe/products";
 
@@ -318,6 +320,12 @@ export const appRouter = router({
 
   // Notifications Router
   notifications: notificationsRouter,
+
+  // Push Notifications Router
+  push: pushRouter,
+
+  // Weekly Reports Router
+  weeklyReports: weeklyReportsRouter,
 
   // AI Router
   ai: router({

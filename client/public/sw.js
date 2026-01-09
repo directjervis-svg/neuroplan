@@ -184,8 +184,14 @@ async function staleWhileRevalidate(request) {
 }
 
 // Background sync for offline operations
+const SYNC_STORE_NAME = 'neuroplan-sync-queue';
+
 self.addEventListener('sync', (event) => {
   console.log('[SW] Background sync:', event.tag);
+  
+  if (event.tag === 'sync-pending-operations') {
+    event.waitUntil(syncPendingOperations());
+  }
   
   if (event.tag === 'sync-tasks') {
     event.waitUntil(syncTasks());
@@ -196,10 +202,157 @@ self.addEventListener('sync', (event) => {
   }
 });
 
+// Sync all pending operations from IndexedDB
+async function syncPendingOperations() {
+  console.log('[SW] Syncing pending operations...');
+  
+  try {
+    // Open IndexedDB
+    const db = await openSyncDB();
+    const operations = await getAllPendingOperations(db);
+    
+    console.log(`[SW] Found ${operations.length} pending operations`);
+    
+    for (const op of operations) {
+      try {
+        const response = await executeSyncOperation(op);
+        if (response.ok) {
+          await removePendingOperation(db, op.id);
+          console.log(`[SW] Synced operation ${op.id}`);
+        } else {
+          // Increment retry count
+          await updateOperationRetry(db, op.id);
+          console.log(`[SW] Failed to sync operation ${op.id}, will retry`);
+        }
+      } catch (error) {
+        console.error(`[SW] Error syncing operation ${op.id}:`, error);
+        await updateOperationRetry(db, op.id);
+      }
+    }
+    
+    // Notify clients that sync is complete
+    const clients = await self.clients.matchAll();
+    clients.forEach(client => {
+      client.postMessage({ type: 'SYNC_COMPLETE', count: operations.length });
+    });
+    
+  } catch (error) {
+    console.error('[SW] Error in syncPendingOperations:', error);
+    throw error;
+  }
+}
+
+// Open the sync IndexedDB
+function openSyncDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('neuroplan-offline', 1);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains('syncQueue')) {
+        db.createObjectStore('syncQueue', { keyPath: 'id' });
+      }
+    };
+  });
+}
+
+// Get all pending operations
+function getAllPendingOperations(db) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['syncQueue'], 'readonly');
+    const store = transaction.objectStore('syncQueue');
+    const request = store.getAll();
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      // Sort by timestamp and filter out operations with too many retries
+      const operations = request.result
+        .filter(op => (op.retries || 0) < 5)
+        .sort((a, b) => a.timestamp - b.timestamp);
+      resolve(operations);
+    };
+  });
+}
+
+// Remove a synced operation
+function removePendingOperation(db, id) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['syncQueue'], 'readwrite');
+    const store = transaction.objectStore('syncQueue');
+    const request = store.delete(id);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve();
+  });
+}
+
+// Update retry count for failed operation
+function updateOperationRetry(db, id) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['syncQueue'], 'readwrite');
+    const store = transaction.objectStore('syncQueue');
+    const getRequest = store.get(id);
+    getRequest.onerror = () => reject(getRequest.error);
+    getRequest.onsuccess = () => {
+      const op = getRequest.result;
+      if (op) {
+        op.retries = (op.retries || 0) + 1;
+        op.lastRetry = Date.now();
+        const putRequest = store.put(op);
+        putRequest.onerror = () => reject(putRequest.error);
+        putRequest.onsuccess = () => resolve();
+      } else {
+        resolve();
+      }
+    };
+  });
+}
+
+// Execute a sync operation
+async function executeSyncOperation(op) {
+  const { store, operation, data } = op;
+  
+  // Map store and operation to API endpoint
+  const endpoints = {
+    tasks: {
+      create: '/api/trpc/tasks.create',
+      update: '/api/trpc/tasks.update',
+      complete: '/api/trpc/tasks.complete',
+    },
+    ideas: {
+      create: '/api/trpc/ideas.create',
+    },
+    projects: {
+      create: '/api/trpc/projects.create',
+      update: '/api/trpc/projects.update',
+    },
+    focus: {
+      start: '/api/trpc/focus.start',
+      end: '/api/trpc/focus.end',
+    },
+  };
+  
+  const endpoint = endpoints[store]?.[operation];
+  if (!endpoint) {
+    console.error(`[SW] Unknown operation: ${store}.${operation}`);
+    return { ok: false };
+  }
+  
+  // Make the API call
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+    credentials: 'include',
+  });
+  
+  return response;
+}
+
 // Sync pending tasks
 async function syncTasks() {
   console.log('[SW] Syncing tasks...');
-  // This will be handled by the IndexedDB sync logic in the app
   const clients = await self.clients.matchAll();
   clients.forEach(client => {
     client.postMessage({ type: 'SYNC_TASKS' });
@@ -214,6 +367,15 @@ async function syncIdeas() {
     client.postMessage({ type: 'SYNC_IDEAS' });
   });
 }
+
+// Periodic background sync (if supported)
+self.addEventListener('periodicsync', (event) => {
+  console.log('[SW] Periodic sync:', event.tag);
+  
+  if (event.tag === 'sync-check') {
+    event.waitUntil(syncPendingOperations());
+  }
+})
 
 // Push notifications
 self.addEventListener('push', (event) => {

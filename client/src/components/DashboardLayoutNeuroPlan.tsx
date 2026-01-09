@@ -18,7 +18,8 @@ import {
   User,
   CreditCard,
   BarChart3,
-  Award
+  Award,
+  Bell
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import {
@@ -41,6 +42,7 @@ const navItems = [
   { href: "/dashboard/ideas", label: "Quick Ideas", icon: Lightbulb },
   { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/dashboard/profile", label: "Perfil", icon: Award },
+  { href: "/dashboard/notifications", label: "Notificações", icon: Bell },
 ];
 
 export default function DashboardLayoutNeuroPlan({ children }: DashboardLayoutProps) {

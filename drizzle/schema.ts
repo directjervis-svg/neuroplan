@@ -365,3 +365,90 @@ export const projectTemplates = mysqlTable("projectTemplates", {
 
 export type ProjectTemplate = typeof projectTemplates.$inferSelect;
 export type InsertProjectTemplate = typeof projectTemplates.$inferInsert;
+
+
+/**
+ * Push Subscriptions - Web Push notification subscriptions
+ */
+export const pushSubscriptions = mysqlTable("pushSubscriptions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  
+  endpoint: varchar("endpoint", { length: 500 }).notNull(),
+  p256dh: varchar("p256dh", { length: 255 }).notNull(),
+  auth: varchar("auth", { length: 255 }).notNull(),
+  
+  active: boolean("active").default(true),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PushSubscription = typeof pushSubscriptions.$inferSelect;
+export type InsertPushSubscription = typeof pushSubscriptions.$inferInsert;
+
+/**
+ * Notification Preferences - user notification settings
+ */
+export const notificationPreferences = mysqlTable("notificationPreferences", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  
+  // Push notification preferences
+  pushEnabled: boolean("pushEnabled").default(true),
+  taskReminders: boolean("taskReminders").default(true),
+  streakWarnings: boolean("streakWarnings").default(true),
+  achievementAlerts: boolean("achievementAlerts").default(true),
+  dailySummary: boolean("dailySummary").default(false),
+  
+  // Email preferences
+  emailEnabled: boolean("emailEnabled").default(true),
+  weeklyReport: boolean("weeklyReport").default(true),
+  weeklyReportDay: int("weeklyReportDay").default(1), // 0=Sunday, 1=Monday, etc.
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type NotificationPreference = typeof notificationPreferences.$inferSelect;
+export type InsertNotificationPreference = typeof notificationPreferences.$inferInsert;
+
+/**
+ * Weekly Reports - generated productivity reports
+ */
+export const weeklyReports = mysqlTable("weeklyReports", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  
+  weekStart: timestamp("weekStart").notNull(),
+  weekEnd: timestamp("weekEnd").notNull(),
+  
+  // Metrics
+  tasksCompleted: int("tasksCompleted").default(0),
+  projectsWorkedOn: int("projectsWorkedOn").default(0),
+  totalFocusMinutes: int("totalFocusMinutes").default(0),
+  ideasCaptured: int("ideasCaptured").default(0),
+  xpEarned: int("xpEarned").default(0),
+  
+  // Coefficients breakdown
+  actionTasksCompleted: int("actionTasksCompleted").default(0),
+  retentionTasksCompleted: int("retentionTasksCompleted").default(0),
+  maintenanceTasksCompleted: int("maintenanceTasksCompleted").default(0),
+  productivityScore: int("productivityScore").default(0), // Weighted score
+  
+  // Streak info
+  streakDays: int("streakDays").default(0),
+  streakMaintained: boolean("streakMaintained").default(true),
+  
+  // AI-generated insights (JSON)
+  insights: json("insights"),
+  
+  // Email tracking
+  emailSent: boolean("emailSent").default(false),
+  emailSentAt: timestamp("emailSentAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type WeeklyReport = typeof weeklyReports.$inferSelect;
+export type InsertWeeklyReport = typeof weeklyReports.$inferInsert;
