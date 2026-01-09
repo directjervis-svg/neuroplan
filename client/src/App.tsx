@@ -24,6 +24,7 @@ import EffortMatrix from "./pages/EffortMatrix";
 import NotificationSettings from "./pages/NotificationSettings";
 import CalendarSettings from "./pages/CalendarSettings";
 import Rewards from "./pages/Rewards";
+import DashboardUnified from "./pages/DashboardUnified";
 
 // Protected Route Component
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -96,6 +97,9 @@ function Router() {
       </Route>
       <Route path="/dashboard/rewards">
         <ProtectedRoute component={Rewards} />
+      </Route>
+      <Route path="/dashboard/unified">
+        <ProtectedRoute component={DashboardUnified} />
       </Route>
       
       {/* 404 */}
