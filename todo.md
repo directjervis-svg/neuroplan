@@ -92,3 +92,33 @@
 - [x] Integrar imagem Voyager como hero background
 - [x] Criar design imersivo estilo Starlink
 - [x] Adicionar animações sutis de entrada
+
+
+## Fase 15: Sistema de Notificações
+- [x] Implementar notificações para tarefas do dia
+- [x] Criar alertas de quebra de streak
+- [x] Adicionar incentivos para manutenção de streaks
+- [x] Integrar com API de notificações do template
+
+## Fase 16: Dashboard de Analytics
+- [x] Criar página de analytics com gráficos
+- [x] Implementar visualização de produtividade semanal/mensal
+- [x] Adicionar métricas de horas de foco
+- [x] Criar gráfico de evolução de XP e tarefas
+
+## Fase 17: Coeficientes de Tarefas
+- [x] Implementar coeficientes para ACTION (peso 1.0)
+- [x] Implementar coeficientes para RETENTION (peso 0.7)
+- [x] Implementar coeficientes para MAINTENANCE (peso 0.5)
+- [x] Calcular score de produtividade baseado em coeficientes
+
+## Fase 18: Matriz Esforço/Resultado
+- [x] Criar visualização da matriz 2x2
+- [x] Implementar classificação de tarefas por esforço/impacto
+- [x] Adicionar drag-and-drop para reposicionar tarefas
+- [x] Gerar recomendações baseadas na matriz
+
+## Fase 19: Redesign Welcome Page
+- [x] Separar hero com apenas imagem Voyager (sem texto)
+- [x] Mover textos para seção abaixo da imagem
+- [x] Ajustar transições entre seções

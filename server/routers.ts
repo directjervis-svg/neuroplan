@@ -27,6 +27,7 @@ import {
 import { processBriefing, decomposeTasks, getSocraticResponse } from "./ai";
 import { gamificationRouter } from "./gamification";
 import { exportRouter } from "./export";
+import { notificationsRouter } from "./notifications";
 import { createCheckoutSession, createPortalSession, getOrCreateCustomer } from "./stripe/stripe";
 import { NEUROPLAN_PRODUCTS } from "./stripe/products";
 
@@ -314,6 +315,9 @@ export const appRouter = router({
 
   // Export Router
   export: exportRouter,
+
+  // Notifications Router
+  notifications: notificationsRouter,
 
   // AI Router
   ai: router({

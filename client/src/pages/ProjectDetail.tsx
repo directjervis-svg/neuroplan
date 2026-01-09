@@ -19,7 +19,8 @@ import {
   FileText,
   Lightbulb,
   Brain,
-  Download
+  Download,
+  Grid3X3
 } from "lucide-react";
 import { Link, useParams } from "wouter";
 import { useState } from "react";
@@ -178,6 +179,12 @@ export default function ProjectDetail() {
                   <DropdownMenuItem>
                     <Download className="mr-2 h-4 w-4" />
                     Exportar Projeto
+                  </DropdownMenuItem>
+                </Link>
+                <Link href={`/dashboard/projects/${projectId}/matrix`}>
+                  <DropdownMenuItem>
+                    <Grid3X3 className="mr-2 h-4 w-4" />
+                    Matriz Esforço/Resultado
                   </DropdownMenuItem>
                 </Link>
                 {status === "ACTIVE" && (

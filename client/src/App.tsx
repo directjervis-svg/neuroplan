@@ -19,6 +19,8 @@ import Profile from "./pages/Profile";
 import Templates from "./pages/Templates";
 import Onboarding from "./pages/Onboarding";
 import ExportProject from "./pages/ExportProject";
+import Analytics from "./pages/Analytics";
+import EffortMatrix from "./pages/EffortMatrix";
 
 // Protected Route Component
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -76,6 +78,12 @@ function Router() {
       </Route>
       <Route path="/onboarding">
         <ProtectedRoute component={Onboarding} />
+      </Route>
+      <Route path="/dashboard/analytics">
+        <ProtectedRoute component={Analytics} />
+      </Route>
+      <Route path="/dashboard/projects/:id/matrix">
+        <ProtectedRoute component={EffortMatrix} />
       </Route>
       
       {/* 404 */}
