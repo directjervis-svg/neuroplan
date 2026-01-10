@@ -264,11 +264,12 @@ export const cyclesRouter = router({
       return { cycleId, cycleNumber };
     }),
   
-  // Generate cycle with AI (Planner Barkley)
+  // Generate cycle with AI (Planner Barkley) - Full cycle generation
   generateWithAI: protectedProcedure
     .input(z.object({
       projectId: z.number(),
       briefing: z.string(),
+      createCycle: z.boolean().optional().default(false),
     }))
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
@@ -276,29 +277,58 @@ export const cyclesRouter = router({
       
       const startTime = Date.now();
       
-      const prompt = `Você é o Planner Barkley, um assistente especializado em ajudar pessoas com TDAH a executar projetos.
+      const prompt = `Você é o **Planner Barkley**, um assistente de execução neuroadaptado especializado em ajudar pessoas com TDAH a transformar ideias em ações concretas.
 
-Baseado no briefing abaixo, crie um ciclo de 3 dias com tarefas A-B-C para cada dia.
+Sua missão é criar um ciclo de 3 dias com tarefas organizadas pelo sistema A-B-C de prioridades.
 
-REGRAS:
-- Cada dia deve ter EXATAMENTE 3 tarefas: A (mínimo aceitável), B (ideal), C (excepcional)
-- Tarefa A é obrigatória e deve ser completável em ~30 minutos
-- Tarefa B expande A e leva ~45 minutos
-- Tarefa C é bônus para dias produtivos, ~30 minutos
-- Use verbos de ação no início de cada tarefa
-- Seja específico e concreto, evite tarefas vagas
+## REGRAS DO SISTEMA A-B-C:
 
-BRIEFING DO PROJETO:
+**Tarefa A (Mínimo Aceitável):**
+- É a tarefa OBRIGATÓRIA do dia
+- Deve ser completável em ~30 minutos
+- Representa o mínimo para considerar o dia produtivo
+- Foco em ação imediata, sem dependências complexas
+
+**Tarefa B (Ideal):**
+- Expande ou complementa a Tarefa A
+- Leva ~45 minutos
+- Representa um dia de boa produtividade
+- Pode ter alguma complexidade adicional
+
+**Tarefa C (Excepcional):**
+- Bônus para dias muito produtivos
+- ~30 minutos
+- Opcional, mas recompensadora
+- Pode ser criativa ou de refinamento
+
+## PRINCÍPIOS BARKLEY:
+1. **Externalização**: Cada tarefa deve ser auto-explicativa
+2. **Fragmentação**: Dividir em passos pequenos e concretos
+3. **Proximidade temporal**: Tarefas devem ter resultado visível no mesmo dia
+4. **Redução de atrito**: Verbos de ação no início (Criar, Escrever, Revisar, Enviar)
+
+## BRIEFING DO PROJETO:
 ${input.briefing}
 
-Responda APENAS com JSON válido no formato:
+## INSTRUÇÕES:
+- Crie EXATAMENTE 9 tarefas (3 por dia, A-B-C cada)
+- Seja ESPECÍFICO e CONCRETO
+- Evite tarefas vagas como "Pesquisar sobre X"
+- Prefira "Listar 5 fontes sobre X" ou "Escrever 200 palavras sobre Y"
+
+Responda APENAS com JSON válido:
 {
+  "projectSummary": "Resumo do projeto em 1-2 frases",
   "tasks": [
-    {"dayNumber": 1, "priority": "A", "title": "...", "description": "...", "estimatedMinutes": 30},
-    {"dayNumber": 1, "priority": "B", "title": "...", "description": "...", "estimatedMinutes": 45},
-    {"dayNumber": 1, "priority": "C", "title": "...", "description": "...", "estimatedMinutes": 30},
-    {"dayNumber": 2, "priority": "A", "title": "...", "description": "...", "estimatedMinutes": 30},
-    ...
+    {"dayNumber": 1, "priority": "A", "title": "...", "description": "...", "estimatedMinutes": 30, "checklist": ["Passo 1", "Passo 2"]},
+    {"dayNumber": 1, "priority": "B", "title": "...", "description": "...", "estimatedMinutes": 45, "checklist": ["Passo 1", "Passo 2", "Passo 3"]},
+    {"dayNumber": 1, "priority": "C", "title": "...", "description": "...", "estimatedMinutes": 30, "checklist": ["Passo 1", "Passo 2"]},
+    {"dayNumber": 2, "priority": "A", "title": "...", "description": "...", "estimatedMinutes": 30, "checklist": []},
+    {"dayNumber": 2, "priority": "B", "title": "...", "description": "...", "estimatedMinutes": 45, "checklist": []},
+    {"dayNumber": 2, "priority": "C", "title": "...", "description": "...", "estimatedMinutes": 30, "checklist": []},
+    {"dayNumber": 3, "priority": "A", "title": "...", "description": "...", "estimatedMinutes": 30, "checklist": []},
+    {"dayNumber": 3, "priority": "B", "title": "...", "description": "...", "estimatedMinutes": 45, "checklist": []},
+    {"dayNumber": 3, "priority": "C", "title": "...", "description": "...", "estimatedMinutes": 30, "checklist": []}
   ]
 }`;
 
@@ -327,7 +357,87 @@ Responda APENAS com JSON válido no formato:
           success: true,
         });
         
-        return { tasks: parsed.tasks || [] };
+        // If createCycle is true, create the cycle with the generated tasks
+        if (input.createCycle && parsed.tasks && parsed.tasks.length > 0) {
+          // Get cycle number
+          const existingCycles = await db
+            .select()
+            .from(projectCycles)
+            .where(eq(projectCycles.projectId, input.projectId));
+          
+          const cycleNumber = existingCycles.length + 1;
+          
+          // Create cycle
+          const now = new Date();
+          const day2 = new Date(now);
+          day2.setDate(day2.getDate() + 1);
+          const day3 = new Date(now);
+          day3.setDate(day3.getDate() + 2);
+          
+          const result = await db.insert(projectCycles).values({
+            projectId: input.projectId,
+            userId: ctx.user.id,
+            cycleNumber,
+            day1Date: now,
+            day2Date: day2,
+            day3Date: day3,
+            status: "DAY_1",
+            currentDay: 1,
+          });
+          
+          const cycleId = Number(result[0].insertId);
+          
+          // Create tasks with checklist
+          for (const task of parsed.tasks) {
+            await db.insert(cycleTasks).values({
+              cycleId,
+              projectId: input.projectId,
+              dayNumber: task.dayNumber,
+              priority: task.priority,
+              title: task.title,
+              description: task.description || null,
+              estimatedMinutes: task.estimatedMinutes || 30,
+              checklist: task.checklist ? JSON.stringify(task.checklist.map((text: string, idx: number) => ({
+                id: `item-${idx}`,
+                text,
+                completed: false
+              }))) : null,
+              status: "PENDING",
+            });
+          }
+          
+          // Update project context with summary
+          if (parsed.projectSummary) {
+            const existingContext = await db
+              .select()
+              .from(projectContext)
+              .where(eq(projectContext.projectId, input.projectId))
+              .limit(1);
+            
+            const summaryBullets = [{ text: parsed.projectSummary }];
+            
+            if (existingContext.length > 0) {
+              await db
+                .update(projectContext)
+                .set({ summaryBullets })
+                .where(eq(projectContext.projectId, input.projectId));
+            } else {
+              await db.insert(projectContext).values({
+                projectId: input.projectId,
+                summaryBullets,
+              });
+            }
+          }
+          
+          return { 
+            tasks: parsed.tasks, 
+            cycleId, 
+            cycleNumber,
+            projectSummary: parsed.projectSummary 
+          };
+        }
+        
+        return { tasks: parsed.tasks || [], projectSummary: parsed.projectSummary };
       } catch (error) {
         // Log error
         await db.insert(aiInteractionLog).values({

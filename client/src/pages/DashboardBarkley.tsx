@@ -13,6 +13,8 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
+import { NeuroTooltip, NeuroInfoBadge } from "@/components/NeuroTooltip";
+import { QuickFeedback, XPGain, ButtonWithFeedback } from "@/components/QuickFeedback";
 import { 
   Play, 
   Pause, 
@@ -215,7 +217,7 @@ export default function DashboardBarkley() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-muted-foreground text-center">
-              O NeuroPlan usa ciclos de 3 dias para ajudar você a executar projetos 
+              O NeuroExecução usa ciclos de 3 dias para ajudar você a executar projetos 
               sem sobrecarga. Vamos criar seu primeiro ciclo?
             </p>
             <Button className="w-full" size="lg" asChild>
@@ -240,7 +242,7 @@ export default function DashboardBarkley() {
           <div className="flex items-center gap-4">
             <Link href="/" className="font-bold text-xl flex items-center gap-2">
               <Brain className="w-6 h-6 text-primary" />
-              <span>NeuroPlan</span>
+              <span>NeuroExecução</span>
             </Link>
             <Badge variant="outline" className="hidden sm:flex">
               Dia {activeCycle.currentDay} de 3

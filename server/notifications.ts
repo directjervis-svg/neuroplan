@@ -6,7 +6,7 @@ import { users, tasks, projects, userGamification } from "../drizzle/schema";
 import { eq, and, gte, lte, isNull, sql } from "drizzle-orm";
 
 /**
- * Notification Types for NeuroPlan
+ * Notification Types for NeuroExecução
  * - TASK_REMINDER: Lembrete de tarefas do dia
  * - STREAK_WARNING: Alerta de quebra de streak iminente
  * - STREAK_BROKEN: Notificação de streak quebrado

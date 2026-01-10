@@ -3,7 +3,7 @@
  * Configure push notifications and weekly reports
  */
 
-import DashboardLayoutNeuroPlan from "@/components/DashboardLayoutNeuroPlan";
+import DashboardLayoutNeuroExecucao from "@/components/DashboardLayoutNeuroExecucao";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -146,16 +146,16 @@ export default function NotificationSettings() {
 
   if (loadingReportPrefs) {
     return (
-      <DashboardLayoutNeuroPlan>
+      <DashboardLayoutNeuroExecucao>
         <div className="flex items-center justify-center h-64">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
-      </DashboardLayoutNeuroPlan>
+      </DashboardLayoutNeuroExecucao>
     );
   }
 
   return (
-    <DashboardLayoutNeuroPlan>
+    <DashboardLayoutNeuroExecucao>
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Configurações de Notificações</h1>
@@ -338,6 +338,6 @@ export default function NotificationSettings() {
           </CardContent>
         </Card>
       </div>
-    </DashboardLayoutNeuroPlan>
+    </DashboardLayoutNeuroExecucao>
   );
 }

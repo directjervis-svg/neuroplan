@@ -1,4 +1,4 @@
-import DashboardLayoutNeuroPlan from "@/components/DashboardLayoutNeuroPlan";
+import DashboardLayoutNeuroExecucao from "@/components/DashboardLayoutNeuroExecucao";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
@@ -137,7 +137,7 @@ export default function FocusTimer() {
   const currentTask = todayTasks?.find((t) => t.id === taskId);
 
   return (
-    <DashboardLayoutNeuroPlan>
+    <DashboardLayoutNeuroExecucao>
       <div className="p-6 lg:p-8 max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4">
@@ -348,6 +348,6 @@ export default function FocusTimer() {
           </Card>
         )}
       </div>
-    </DashboardLayoutNeuroPlan>
+    </DashboardLayoutNeuroExecucao>
   );
 }

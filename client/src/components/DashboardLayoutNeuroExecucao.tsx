@@ -52,7 +52,7 @@ const navItems = [
   { href: "/dashboard/notifications", label: "Notificações", icon: Bell },
 ];
 
-export default function DashboardLayoutNeuroPlan({ children }: DashboardLayoutProps) {
+export default function DashboardLayoutNeuroExecucao({ children }: DashboardLayoutProps) {
   const { user, logout } = useAuth();
   const { theme, toggleTheme, switchable } = useTheme();
   const [location] = useLocation();
@@ -70,7 +70,7 @@ export default function DashboardLayoutNeuroPlan({ children }: DashboardLayoutPr
           {/* Logo */}
           <div className="flex h-16 items-center gap-2 border-b border-border px-6">
             <Brain className="h-7 w-7 text-[#22C55E]" />
-            <span className="text-xl font-bold text-foreground">NeuroPlan</span>
+            <span className="text-xl font-bold text-foreground">NeuroExecução</span>
           </div>
 
           {/* New Project Button */}
@@ -196,7 +196,7 @@ export default function DashboardLayoutNeuroPlan({ children }: DashboardLayoutPr
       <header className="fixed top-0 z-40 flex h-16 w-full items-center justify-between border-b border-border bg-card px-4 lg:hidden">
         <div className="flex items-center gap-2">
           <Brain className="h-6 w-6 text-[#22C55E]" />
-          <span className="text-lg font-bold text-foreground">NeuroPlan</span>
+          <span className="text-lg font-bold text-foreground">NeuroExecução</span>
         </div>
 
         <Sheet>
@@ -209,7 +209,7 @@ export default function DashboardLayoutNeuroPlan({ children }: DashboardLayoutPr
             <div className="flex h-full flex-col">
               <div className="flex h-16 items-center gap-2 border-b border-border px-6">
                 <Brain className="h-7 w-7 text-[#22C55E]" />
-                <span className="text-xl font-bold text-foreground">NeuroPlan</span>
+                <span className="text-xl font-bold text-foreground">NeuroExecução</span>
               </div>
 
               <div className="p-4">

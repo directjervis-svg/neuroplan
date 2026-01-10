@@ -61,7 +61,7 @@ export default function Pricing() {
           <Link href="/">
             <div className="flex items-center gap-2">
               <Brain className="h-7 w-7 text-[#22C55E]" />
-              <span className="text-xl font-bold text-foreground">NeuroPlan</span>
+              <span className="text-xl font-bold text-foreground">NeuroExecução</span>
             </div>
           </Link>
           <Link href="/">
@@ -167,11 +167,11 @@ export default function Pricing() {
             />
             <FAQItem
               question="Funciona para qualquer tipo de TDAH?"
-              answer="O NeuroPlan foi projetado com base nos princípios de Russell Barkley, que se aplicam a todos os subtipos de TDAH. As funcionalidades são adaptáveis às suas necessidades."
+              answer="O NeuroExecução foi projetado com base nos princípios de Russell Barkley, que se aplicam a todos os subtipos de TDAH. As funcionalidades são adaptáveis às suas necessidades."
             />
             <FAQItem
               question="Preciso de diagnóstico para usar?"
-              answer="Não! O NeuroPlan é uma ferramenta de produtividade que beneficia qualquer pessoa que queira executar projetos com mais clareza, com ou sem diagnóstico."
+              answer="Não! O NeuroExecução é uma ferramenta de produtividade que beneficia qualquer pessoa que queira executar projetos com mais clareza, com ou sem diagnóstico."
             />
           </div>
         </div>
@@ -190,7 +190,7 @@ export default function Pricing() {
       {/* Footer */}
       <footer className="border-t border-border py-8">
         <div className="container text-center text-sm text-muted-foreground">
-          <p>© 2026 NeuroPlan. Todos os direitos reservados.</p>
+          <p>© 2026 NeuroExecução. Todos os direitos reservados.</p>
         </div>
       </footer>
     </div>

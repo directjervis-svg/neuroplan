@@ -1,6 +1,6 @@
 /**
  * Google Calendar Integration Service
- * Bidirectional sync between NeuroPlan tasks and Google Calendar events
+ * Bidirectional sync between NeuroExecução tasks and Google Calendar events
  */
 
 import { router, protectedProcedure } from "./_core/trpc";
@@ -41,7 +41,7 @@ const TASK_TYPE_COLORS = {
   default: '8', // Gray
 };
 
-// Convert NeuroPlan task to Google Calendar event format
+// Convert NeuroExecução task to Google Calendar event format
 function taskToCalendarEvent(task: {
   id: number;
   title: string;
@@ -57,14 +57,14 @@ function taskToCalendarEvent(task: {
   const endTime = new Date(startTime.getTime() + duration * 60 * 1000);
 
   return {
-    summary: `[NeuroPlan] ${task.title}`,
+    summary: `[NeuroExecução] ${task.title}`,
     description: [
       task.description || '',
       '',
       '---',
       `Projeto: ${task.projectName || 'Sem projeto'}`,
       `Tipo: ${task.type || 'Não definido'}`,
-      `ID NeuroPlan: ${task.id}`,
+      `ID NeuroExecução: ${task.id}`,
     ].join('\n'),
     start: {
       dateTime: startTime.toISOString(),
@@ -87,7 +87,7 @@ function taskToCalendarEvent(task: {
   };
 }
 
-// Convert Google Calendar event to NeuroPlan task format
+// Convert Google Calendar event to NeuroExecução task format
 function calendarEventToTask(event: {
   id: string;
   summary: string;
@@ -110,7 +110,7 @@ function calendarEventToTask(event: {
   const durationMinutes = Math.round((endTime.getTime() - startTime.getTime()) / (60 * 1000));
 
   return {
-    title: event.summary?.replace('[NeuroPlan] ', '') || 'Evento do Calendário',
+    title: event.summary?.replace('[NeuroExecução] ', '') || 'Evento do Calendário',
     description: event.description || '',
     dueDate: startTime,
     estimatedMinutes: durationMinutes,
@@ -137,7 +137,7 @@ function generateICalEvent(task: {
   return [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//NeuroPlan//Task Export//PT',
+    'PRODID:-//NeuroExecução//Task Export//PT',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     'BEGIN:VEVENT',
@@ -324,7 +324,7 @@ export const googleCalendarRouter = router({
       const icalContent = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
-        'PRODID:-//NeuroPlan//Project Export//PT',
+        'PRODID:-//NeuroExecução//Project Export//PT',
         'CALSCALE:GREGORIAN',
         'METHOD:PUBLISH',
         `X-WR-CALNAME:${project[0].title}`,

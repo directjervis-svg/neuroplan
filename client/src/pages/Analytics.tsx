@@ -1,5 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
-import DashboardLayoutNeuroPlan from "@/components/DashboardLayoutNeuroPlan";
+import DashboardLayoutNeuroExecucao from "@/components/DashboardLayoutNeuroExecucao";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { trpc } from "@/lib/trpc";
@@ -82,16 +82,16 @@ export default function Analytics() {
 
   if (statsLoading) {
     return (
-      <DashboardLayoutNeuroPlan>
+      <DashboardLayoutNeuroExecucao>
         <div className="p-6 lg:p-8 flex items-center justify-center min-h-[50vh]">
           <Loader2 className="h-8 w-8 animate-spin text-[#22C55E]" />
         </div>
-      </DashboardLayoutNeuroPlan>
+      </DashboardLayoutNeuroExecucao>
     );
   }
 
   return (
-    <DashboardLayoutNeuroPlan>
+    <DashboardLayoutNeuroExecucao>
       <div className="p-6 lg:p-8 space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -357,7 +357,7 @@ export default function Analytics() {
           </CardContent>
         </Card>
       </div>
-    </DashboardLayoutNeuroPlan>
+    </DashboardLayoutNeuroExecucao>
   );
 }
 

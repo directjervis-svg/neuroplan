@@ -63,7 +63,7 @@ DTSTART:${dtstart}
 DTEND:${dtend}
 SUMMARY:${task.title}
 DESCRIPTION:${task.description || "Tarefa do projeto " + project.title}\\nTipo: ${task.type}\\nDia ${task.dayNumber} - Posição ${task.position}
-CATEGORIES:NeuroPlan,${project.title}
+CATEGORIES:NeuroExecução,${project.title}
 STATUS:${task.completedAt ? "COMPLETED" : "NEEDS-ACTION"}
 END:VEVENT`;
 }
@@ -76,10 +76,10 @@ function generateICalFile(projectData: any, tasksData: any[]): string {
   
   return `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//NeuroPlan//Projeto ${projectData.title}//PT-BR
+PRODID:-//NeuroExecução//Projeto ${projectData.title}//PT-BR
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-X-WR-CALNAME:NeuroPlan - ${projectData.title}
+X-WR-CALNAME:NeuroExecução - ${projectData.title}
 X-WR-TIMEZONE:America/Sao_Paulo
 ${events}
 END:VCALENDAR`;
@@ -429,7 +429,7 @@ function generateMentalPlanHTML(project: any, tasksList: any[], userName: string
     </div>
     
     <div class="footer">
-      Gerado por <span class="logo">NeuroPlan</span> • Seu parceiro de execução neuroadaptado
+      Gerado por <span class="logo">NeuroExecução</span> • Seu parceiro de execução neuroadaptado
     </div>
   </div>
 </body>
@@ -967,7 +967,7 @@ function generateProjectOnePage(project: any, tasksList: any[], userName: string
   
   <div class="footer">
     <div>
-      Documento gerado automaticamente por <span class="footer-logo">NeuroPlan</span>
+      Documento gerado automaticamente por <span class="footer-logo">NeuroExecução</span>
     </div>
     <div>
       Metodologia baseada em Russell Barkley • Ciclos de ${cycleDays} dias

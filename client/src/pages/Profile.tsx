@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import DashboardLayoutNeuroPlan from "@/components/DashboardLayoutNeuroPlan";
+import DashboardLayoutNeuroExecucao from "@/components/DashboardLayoutNeuroExecucao";
 
 // Icon mapping for badges
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -92,11 +92,11 @@ export default function Profile() {
 
   if (statsLoading || badgesLoading) {
     return (
-      <DashboardLayoutNeuroPlan>
+      <DashboardLayoutNeuroExecucao>
         <div className="flex items-center justify-center h-64">
           <Loader2 className="h-8 w-8 animate-spin text-[#22C55E]" />
         </div>
-      </DashboardLayoutNeuroPlan>
+      </DashboardLayoutNeuroExecucao>
     );
   }
 
@@ -104,7 +104,7 @@ export default function Profile() {
   const lockedBadges = allBadges?.filter(b => !b.earned) || [];
 
   return (
-    <DashboardLayoutNeuroPlan>
+    <DashboardLayoutNeuroExecucao>
       <div className="space-y-8">
         {/* Header with User Info */}
         <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
@@ -214,7 +214,7 @@ export default function Profile() {
                     Nenhum emblema conquistado ainda
                   </h3>
                   <p className="text-muted-foreground">
-                    Complete tarefas, mantenha seu streak e explore o NeuroPlan para desbloquear emblemas!
+                    Complete tarefas, mantenha seu streak e explore o NeuroExecução para desbloquear emblemas!
                   </p>
                 </CardContent>
               </Card>
@@ -269,7 +269,7 @@ export default function Profile() {
           </Card>
         )}
       </div>
-    </DashboardLayoutNeuroPlan>
+    </DashboardLayoutNeuroExecucao>
   );
 }
 

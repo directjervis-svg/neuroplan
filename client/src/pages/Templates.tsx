@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
-import DashboardLayoutNeuroPlan from "@/components/DashboardLayoutNeuroPlan";
+import DashboardLayoutNeuroExecucao from "@/components/DashboardLayoutNeuroExecucao";
 import { toast } from "sonner";
 
 // Icon mapping for templates
@@ -81,16 +81,16 @@ export default function Templates() {
 
   if (isLoading) {
     return (
-      <DashboardLayoutNeuroPlan>
+      <DashboardLayoutNeuroExecucao>
         <div className="flex items-center justify-center h-64">
           <Loader2 className="h-8 w-8 animate-spin text-[#22C55E]" />
         </div>
-      </DashboardLayoutNeuroPlan>
+      </DashboardLayoutNeuroExecucao>
     );
   }
 
   return (
-    <DashboardLayoutNeuroPlan>
+    <DashboardLayoutNeuroExecucao>
       <div className="space-y-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
@@ -242,6 +242,6 @@ export default function Templates() {
           </CardContent>
         </Card>
       </div>
-    </DashboardLayoutNeuroPlan>
+    </DashboardLayoutNeuroExecucao>
   );
 }

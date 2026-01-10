@@ -4,7 +4,7 @@
  */
 
 import { useState } from "react";
-import DashboardLayoutNeuroPlan from "@/components/DashboardLayoutNeuroPlan";
+import DashboardLayoutNeuroExecucao from "@/components/DashboardLayoutNeuroExecucao";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -83,16 +83,16 @@ export default function CalendarSettings() {
 
   if (loadingConnection || loadingSettings) {
     return (
-      <DashboardLayoutNeuroPlan>
+      <DashboardLayoutNeuroExecucao>
         <div className="flex items-center justify-center min-h-[60vh]">
           <Loader2 className="h-8 w-8 animate-spin text-[#22C55E]" />
         </div>
-      </DashboardLayoutNeuroPlan>
+      </DashboardLayoutNeuroExecucao>
     );
   }
 
   return (
-    <DashboardLayoutNeuroPlan>
+    <DashboardLayoutNeuroExecucao>
       <div className="p-6 max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div>
@@ -212,10 +212,10 @@ export default function CalendarSettings() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="to_calendar">
-                    NeuroPlan → Calendário
+                    NeuroExecução → Calendário
                   </SelectItem>
                   <SelectItem value="from_calendar">
-                    Calendário → NeuroPlan
+                    Calendário → NeuroExecução
                   </SelectItem>
                   <SelectItem value="bidirectional">
                     Bidirecional
@@ -398,6 +398,6 @@ export default function CalendarSettings() {
           </CardContent>
         </Card>
       </div>
-    </DashboardLayoutNeuroPlan>
+    </DashboardLayoutNeuroExecucao>
   );
 }

@@ -1,4 +1,4 @@
-import DashboardLayoutNeuroPlan from "@/components/DashboardLayoutNeuroPlan";
+import DashboardLayoutNeuroExecucao from "@/components/DashboardLayoutNeuroExecucao";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -18,7 +18,7 @@ import { Link } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 /**
- * Dashboard Page - Main hub for NeuroPlan
+ * Dashboard Page - Main hub for NeuroExecução
  * Shows overview of projects, today's tasks, and quick actions
  * Follows Barkley principles: max 3 interactive elements per viewport
  */
@@ -29,7 +29,7 @@ export default function Dashboard() {
   const { data: stats } = trpc.stats.overview.useQuery();
 
   return (
-    <DashboardLayoutNeuroPlan>
+    <DashboardLayoutNeuroExecucao>
       <div className="p-6 lg:p-8 space-y-8">
         {/* Welcome Section */}
         <div className="space-y-2">
@@ -198,7 +198,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
-    </DashboardLayoutNeuroPlan>
+    </DashboardLayoutNeuroExecucao>
   );
 }
 

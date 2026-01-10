@@ -393,7 +393,7 @@ export async function sendWeeklyReportEmail(userId: number, reportId: number): P
 
     // Format email content
     const emailContent = `
-📊 Relatório Semanal NeuroPlan
+📊 Relatório Semanal NeuroExecução
 
 Olá ${user.name || 'Usuário'}!
 
@@ -424,7 +424,7 @@ ${insights.map((i: WeeklyInsight) => `• ${i.title}: ${i.description}`).join('\
 Continue assim! Cada pequeno passo conta.
 
 --
-NeuroPlan - Seu Parceiro de Execução
+NeuroExecução - Seu Parceiro de Execução
     `.trim();
 
     // Use the notification system to send

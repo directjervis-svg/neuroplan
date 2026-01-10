@@ -1,4 +1,4 @@
-import DashboardLayoutNeuroPlan from "@/components/DashboardLayoutNeuroPlan";
+import DashboardLayoutNeuroExecucao from "@/components/DashboardLayoutNeuroExecucao";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -72,17 +72,17 @@ export default function ProjectDetail() {
 
   if (projectLoading) {
     return (
-      <DashboardLayoutNeuroPlan>
+      <DashboardLayoutNeuroExecucao>
         <div className="p-6 lg:p-8 flex items-center justify-center min-h-[50vh]">
           <Loader2 className="h-8 w-8 animate-spin text-[#22C55E]" />
         </div>
-      </DashboardLayoutNeuroPlan>
+      </DashboardLayoutNeuroExecucao>
     );
   }
 
   if (!project) {
     return (
-      <DashboardLayoutNeuroPlan>
+      <DashboardLayoutNeuroExecucao>
         <div className="p-6 lg:p-8">
           <div className="text-center py-16">
             <h2 className="text-xl font-semibold text-foreground">Projeto não encontrado</h2>
@@ -91,7 +91,7 @@ export default function ProjectDetail() {
             </Link>
           </div>
         </div>
-      </DashboardLayoutNeuroPlan>
+      </DashboardLayoutNeuroExecucao>
     );
   }
 
@@ -125,7 +125,7 @@ export default function ProjectDetail() {
   const status = project.status || "PLANNING";
 
   return (
-    <DashboardLayoutNeuroPlan>
+    <DashboardLayoutNeuroExecucao>
       <div className="p-6 lg:p-8 space-y-6">
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
@@ -358,7 +358,7 @@ export default function ProjectDetail() {
           </TabsContent>
         </Tabs>
       </div>
-    </DashboardLayoutNeuroPlan>
+    </DashboardLayoutNeuroExecucao>
   );
 }
 

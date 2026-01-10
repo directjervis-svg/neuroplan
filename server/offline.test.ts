@@ -220,8 +220,8 @@ describe("PWA Manifest Validation", () => {
 
     // Mock manifest object (would be loaded from manifest.json in real scenario)
     const manifest = {
-      name: "NeuroPlan - Seu Parceiro de Execução",
-      short_name: "NeuroPlan",
+      name: "NeuroExecução - Seu Parceiro de Execução",
+      short_name: "NeuroExecução",
       start_url: "/",
       display: "standalone",
       background_color: "#0F172A",

@@ -27,9 +27,9 @@ const ONBOARDING_STEPS = [
   {
     id: "welcome",
     field: "welcomeViewed",
-    title: "Bem-vindo ao NeuroPlan! 🧠",
+    title: "Bem-vindo ao NeuroExecução! 🧠",
     subtitle: "Seu parceiro de execução neuroadaptado",
-    description: "O NeuroPlan foi desenvolvido com base em ciência cognitiva para ajudar pessoas com TDAH (e qualquer pessoa que luta com procrastinação) a transformar ideias em ações concretas.",
+    description: "O NeuroExecução foi desenvolvido com base em ciência cognitiva para ajudar pessoas com TDAH (e qualquer pessoa que luta com procrastinação) a transformar ideias em ações concretas.",
     icon: Brain,
     color: "#22C55E",
     tips: [
@@ -43,7 +43,7 @@ const ONBOARDING_STEPS = [
     field: "firstProjectCreated",
     title: "Crie seu Primeiro Projeto",
     subtitle: "Transforme ideias em planos executáveis",
-    description: "No NeuroPlan, você começa com um briefing simples. Nossa IA transforma seu texto em tarefas acionáveis, organizadas em ciclos de 3, 7 ou 14 dias.",
+    description: "No NeuroExecução, você começa com um briefing simples. Nossa IA transforma seu texto em tarefas acionáveis, organizadas em ciclos de 3, 7 ou 14 dias.",
     icon: Target,
     color: "#FF8C42",
     tips: [
@@ -155,7 +155,7 @@ export default function Onboarding() {
       // Complete onboarding
       await updateOnboarding.mutateAsync({ step: "tourCompleted" });
       utils.gamification.getOnboarding.invalidate();
-      toast.success("Onboarding completo! Bem-vindo ao NeuroPlan!");
+      toast.success("Onboarding completo! Bem-vindo ao NeuroExecução!");
       navigate("/dashboard");
     }
   };

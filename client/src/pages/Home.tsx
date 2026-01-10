@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,236 +10,217 @@ import {
   FileText, 
   Lightbulb, 
   ListTodo, 
-  Quote, 
   Sparkles, 
   Target, 
   Timer, 
   Zap,
   ArrowRight,
   Play,
+  Upload,
+  MessageSquare,
   Users,
-  Star,
-  Rocket,
-  ChevronDown
+  Calendar,
+  BarChart3,
+  ChevronDown,
+  ChevronUp,
+  Eye,
+  Heart,
+  Shield
 } from "lucide-react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 
 /**
- * NeuroPlan Landing Page
- * Design inspired by Starlink - Hero with ONLY Voyager image, text below
- * Following Barkley principles: reduced cognitive load, clear CTAs, generous whitespace
+ * NeuroExecução Landing Page
+ * Design inspired by NotebookLM - Clean, minimal, dark theme
+ * Following Barkley principles: reduced cognitive load, clear CTAs
  */
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      {/* Hero Section - ONLY Voyager Image */}
-      <VoyagerHeroSection />
+    <div className="min-h-screen flex flex-col bg-[#0a0a0a]">
+      {/* Header */}
+      <Header isAuthenticated={isAuthenticated} />
       
-      {/* Main Content Section - Text and CTAs */}
-      <MainContentSection isAuthenticated={isAuthenticated} />
+      {/* Hero Section */}
+      <HeroSection isAuthenticated={isAuthenticated} />
       
-      {/* AI Partner Section */}
-      <AIPartnerSection />
+      {/* How It Works Section */}
+      <HowItWorksSection />
       
       {/* Features Section */}
       <FeaturesSection />
       
-      {/* How People Use Section */}
-      <UseCasesSection />
+      {/* Example Projects Section */}
+      <ExampleProjectsSection />
       
-      {/* Testimonials Section */}
-      <TestimonialsSection />
+      {/* Neuroscience Section */}
+      <NeuroscienceSection />
+      
+      {/* FAQ Section */}
+      <FAQSection />
       
       {/* CTA Section */}
       <CTASection isAuthenticated={isAuthenticated} />
       
-      {/* Footer with Disclaimer */}
+      {/* Footer */}
       <Footer />
     </div>
   );
 }
 
 /**
- * Hero Section - ONLY the Voyager image, no text
- * Clean, immersive visual experience like Starlink
+ * Header - Simple, minimal like NotebookLM
  */
-function VoyagerHeroSection() {
+function Header({ isAuthenticated }: { isAuthenticated: boolean }) {
   return (
-    <section className="relative h-screen flex flex-col overflow-hidden">
-      {/* Background Image - Voyager - Full screen */}
-      <div 
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: "url('/voyager-hero.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
-        {/* Subtle gradient at bottom for transition */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/90" />
-        
-        {/* Animated particles/stars effect */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(60)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 bg-white rounded-full"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                opacity: Math.random() * 0.6 + 0.2,
-              }}
-              animate={{
-                opacity: [0.2, 0.9, 0.2],
-                scale: [1, 1.5, 1],
-              }}
-              transition={{
-                duration: Math.random() * 3 + 2,
-                repeat: Infinity,
-                delay: Math.random() * 2,
-              }}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Minimal Header - Just logo */}
-      <header className="relative z-20 w-full">
-        <div className="container flex h-20 items-center justify-between">
-          <motion.div 
-            className="flex items-center gap-3"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="relative">
-              <Brain className="h-8 w-8 text-[#22C55E]" />
-              <motion.div
-                className="absolute -inset-1 bg-[#22C55E]/20 rounded-full blur-md"
-                animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-            </div>
-            <span className="text-2xl font-bold text-white tracking-tight">NeuroPlan</span>
-          </motion.div>
-        </div>
-      </header>
-
-      {/* Scroll indicator at bottom */}
-      <motion.div 
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 1 }}
-      >
-        <motion.div
-          className="flex flex-col items-center gap-2 cursor-pointer"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          onClick={() => document.getElementById('main-content')?.scrollIntoView({ behavior: 'smooth' })}
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-white/5">
+      <div className="container flex h-16 items-center justify-between">
+        <motion.div 
+          className="flex items-center gap-2"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          <span className="text-xs text-white/50 uppercase tracking-widest">Explorar</span>
-          <ChevronDown className="h-6 w-6 text-white/50" />
+          <Brain className="h-7 w-7 text-[#22C55E]" />
+          <span className="text-xl font-semibold text-white">NeuroExecução</span>
+          <span className="text-xs bg-[#22C55E]/20 text-[#22C55E] px-2 py-0.5 rounded-full ml-2">
+            BETA
+          </span>
         </motion.div>
-      </motion.div>
-    </section>
+        
+        <motion.div 
+          className="flex items-center gap-4"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {isAuthenticated ? (
+            <Link href="/dashboard">
+              <Button className="bg-[#22C55E] hover:bg-[#16A34A] text-white">
+                Dashboard
+              </Button>
+            </Link>
+          ) : (
+            <a href={getLoginUrl()}>
+              <Button variant="ghost" className="text-white/70 hover:text-white hover:bg-white/10">
+                Entrar
+              </Button>
+            </a>
+          )}
+        </motion.div>
+      </div>
+    </header>
   );
 }
 
 /**
- * Main Content Section - All text and CTAs below the hero image
+ * Hero Section - NotebookLM style with geometric shapes
  */
-function MainContentSection({ isAuthenticated }: { isAuthenticated: boolean }) {
+function HeroSection({ isAuthenticated }: { isAuthenticated: boolean }) {
   return (
-    <section id="main-content" className="relative py-24 bg-gradient-to-b from-black via-gray-950 to-background">
-      <div className="container">
+    <section className="relative min-h-screen flex items-center justify-center pt-16 overflow-hidden">
+      {/* Background geometric shapes */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Green geometric shapes like NotebookLM */}
+        <motion.div
+          className="absolute top-20 left-10 w-32 h-32 bg-[#22C55E]/10 rounded-3xl"
+          animate={{ 
+            y: [0, 20, 0],
+            rotate: [0, 5, 0]
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute top-40 left-32 w-20 h-20 bg-[#22C55E]/5 rounded-2xl"
+          animate={{ 
+            y: [0, -15, 0],
+            rotate: [0, -3, 0]
+          }}
+          transition={{ duration: 6, repeat: Infinity, delay: 1 }}
+        />
+        <motion.div
+          className="absolute bottom-40 left-20 w-24 h-24 bg-[#22C55E]/8 rounded-3xl"
+          animate={{ 
+            y: [0, 15, 0],
+            rotate: [0, 3, 0]
+          }}
+          transition={{ duration: 7, repeat: Infinity, delay: 0.5 }}
+        />
+        
+        {/* Right side shapes */}
+        <motion.div
+          className="absolute top-32 right-20 w-40 h-40 bg-[#22C55E]/10 rounded-3xl"
+          animate={{ 
+            y: [0, -20, 0],
+            rotate: [0, -5, 0]
+          }}
+          transition={{ duration: 9, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute top-60 right-40 w-28 h-28 bg-[#22C55E]/5 rounded-2xl"
+          animate={{ 
+            y: [0, 18, 0],
+            rotate: [0, 4, 0]
+          }}
+          transition={{ duration: 7, repeat: Infinity, delay: 1.5 }}
+        />
+        <motion.div
+          className="absolute bottom-32 right-16 w-36 h-36 bg-[#22C55E]/8 rounded-3xl"
+          animate={{ 
+            y: [0, -12, 0],
+            rotate: [0, -3, 0]
+          }}
+          transition={{ duration: 8, repeat: Infinity, delay: 0.8 }}
+        />
+        
+        {/* Outline shapes like NotebookLM */}
+        <div className="absolute top-24 left-8 flex flex-col gap-2">
+          <div className="w-16 h-3 border border-white/10 rounded-full" />
+          <div className="w-12 h-3 border border-white/10 rounded-full" />
+          <div className="w-20 h-3 border border-white/10 rounded-full" />
+        </div>
+        <div className="absolute bottom-24 right-8 flex flex-col gap-2">
+          <div className="w-16 h-3 border border-white/10 rounded-full" />
+          <div className="w-12 h-3 border border-white/10 rounded-full" />
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="container relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Navigation */}
-          <motion.nav 
-            className="flex justify-center items-center gap-8 mb-16"
-            initial={{ opacity: 0, y: -10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <a href="#features" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-              Recursos
-            </a>
-            <a href="#how-it-works" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-              Como Funciona
-            </a>
-            <Link href="/pricing" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-              Planos
-            </Link>
-            {isAuthenticated ? (
-              <Link href="/dashboard">
-                <Button className="bg-[#22C55E] hover:bg-[#16A34A] text-white font-medium border-0">
-                  Acessar Dashboard
-                </Button>
-              </Link>
-            ) : (
-              <a href={getLoginUrl()}>
-                <Button className="bg-white/10 hover:bg-white/20 text-white font-medium border border-white/20 backdrop-blur-sm">
-                  Entrar
-                </Button>
-              </a>
-            )}
-          </motion.nav>
-
-          {/* Mission Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-8"
-          >
-            <Rocket className="h-4 w-4 text-[#22C55E]" />
-            <span className="text-sm text-white/90">Missão: Transformar Ideias em Ação</span>
-          </motion.div>
-
-          {/* Main Headline */}
+          {/* Main Title - Like NotebookLM "Welcome to NotebookLM" */}
           <motion.h1 
-            className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white mb-6"
+            className="text-5xl md:text-7xl font-light text-[#7DD3FC] mb-8"
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            Execute
-            <br />
-            <span className="bg-gradient-to-r from-[#22C55E] via-[#4ADE80] to-[#86EFAC] bg-clip-text text-transparent">
-              Qualquer Projeto
-            </span>
+            Bem-vindo ao NeuroExecução
           </motion.h1>
           
-          {/* Subheadline */}
+          {/* Subtitle */}
           <motion.p 
-            className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed"
+            className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-12 leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            Seu parceiro de execução neuroadaptado. Fundamentado em ciência cognitiva, 
-            construído com IA para transformar ideias em ações concretas.
+            Seu assistente de execução neuroadaptado, fundamentado na ciência cognitiva de Russell Barkley. 
+            Execute projetos em ciclos de 3 dias, mesmo com TDAH.
           </motion.p>
           
           {/* CTA Buttons */}
           <motion.div 
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
             {isAuthenticated ? (
               <Link href="/dashboard">
-                <Button size="lg" className="bg-[#22C55E] hover:bg-[#16A34A] text-white font-semibold px-10 py-7 text-lg rounded-full shadow-lg shadow-[#22C55E]/30 transition-all hover:shadow-xl hover:shadow-[#22C55E]/40 hover:scale-105">
+                <Button size="lg" className="bg-[#22C55E] hover:bg-[#16A34A] text-white font-medium px-8 py-6 text-lg rounded-xl">
                   Ir para o Dashboard
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
@@ -246,159 +228,107 @@ function MainContentSection({ isAuthenticated }: { isAuthenticated: boolean }) {
             ) : (
               <>
                 <a href={getLoginUrl()}>
-                  <Button size="lg" className="bg-[#22C55E] hover:bg-[#16A34A] text-white font-semibold px-10 py-7 text-lg rounded-full shadow-lg shadow-[#22C55E]/30 transition-all hover:shadow-xl hover:shadow-[#22C55E]/40 hover:scale-105">
+                  <Button size="lg" className="bg-[#22C55E] hover:bg-[#16A34A] text-white font-medium px-8 py-6 text-lg rounded-xl">
                     Começar Agora
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </a>
-                <a href="#features">
-                  <Button size="lg" variant="outline" className="bg-transparent hover:bg-white/10 text-white font-semibold px-8 py-7 text-lg rounded-full border-white/30 hover:border-white/50">
-                    <Play className="mr-2 h-5 w-5" />
+                <a href="#how-it-works">
+                  <Button size="lg" variant="outline" className="bg-transparent hover:bg-white/5 text-white/70 hover:text-white font-medium px-8 py-6 text-lg rounded-xl border-white/20">
                     Ver Como Funciona
                   </Button>
                 </a>
               </>
             )}
           </motion.div>
-          
-          {/* Trust indicators */}
-          <motion.div 
-            className="mt-16 flex flex-wrap justify-center gap-8 text-sm text-white/60"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-          >
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-[#22C55E]" />
-              <span>Baseado em Russell Barkley</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-[#22C55E]" />
-              <span>Design Neuroadaptado</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-[#22C55E]" />
-              <span>Conformidade LGPD</span>
-            </div>
-          </motion.div>
         </div>
       </div>
     </section>
   );
 }
 
-function AIPartnerSection() {
-  return (
-    <section id="how-it-works" className="py-24 bg-background">
-      <div className="container">
-        <motion.div 
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Seu Parceiro de Execução com IA
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Transforme qualquer ideia em um plano estruturado e executável em minutos
-          </p>
-        </motion.div>
+/**
+ * How It Works Section - 3 steps with icons like NotebookLM
+ */
+function HowItWorksSection() {
+  const steps = [
+    {
+      icon: Upload,
+      title: "Descreva seu projeto",
+      description: "Envie uma descrição simples do que você quer realizar. A IA vai estruturar tudo para você."
+    },
+    {
+      icon: Calendar,
+      title: "Receba seu ciclo de 3 dias",
+      description: "Tarefas A-B-C organizadas por prioridade. Máximo 3 por dia para não sobrecarregar."
+    },
+    {
+      icon: Target,
+      title: "Execute com foco",
+      description: "Timer progressivo, assistente IA e registro 'Onde Parei' para manter o contexto."
+    }
+  ];
 
-        <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
-          {/* Feature List */}
-          <div className="space-y-8">
-            {[
-              {
-                icon: FileText,
-                title: "Faça o upload do seu briefing",
-                description: "Descreva seu projeto em linguagem natural. A IA reformula e estrutura automaticamente, extraindo objetivos claros e entregáveis definidos."
-              },
-              {
-                icon: Sparkles,
-                title: "Insights instantâneos",
-                description: "Com seu briefing processado, o NeuroPlan gera tarefas acionáveis organizadas em ciclos 3+1, respeitando sua capacidade cognitiva."
-              },
-              {
-                icon: Quote,
-                title: "Veja a fonte, não apenas a resposta",
-                description: "Cada tarefa gerada mantém conexão com seu briefing original. Entenda o 'porquê' de cada ação sugerida."
-              },
-              {
-                icon: Timer,
-                title: "Execute com foco progressivo",
-                description: "Timer que mostra tempo investido (não restante), reduzindo ansiedade e celebrando cada minuto de progresso."
-              }
-            ].map((feature, index) => (
-              <motion.div 
+  return (
+    <section id="how-it-works" className="py-24 bg-[#111111]">
+      <div className="container">
+        <div className="max-w-5xl mx-auto">
+          {/* Section Header */}
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-light text-white mb-4">
+              Como funciona
+            </h2>
+            <p className="text-white/50 max-w-xl mx-auto">
+              NeuroExecução é um assistente de execução neuroadaptado que funciona melhor com seus projetos
+            </p>
+          </motion.div>
+
+          {/* Steps Grid */}
+          <div className="grid md:grid-cols-3 gap-8">
+            {steps.map((step, index) => (
+              <motion.div
                 key={index}
-                className="flex gap-4"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                className="text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-[#22C55E]/10 flex items-center justify-center">
-                  <feature.icon className="h-6 w-6 text-[#22C55E]" />
+                <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                  <step.icon className="w-7 h-7 text-white/70" />
                 </div>
-                <div>
-                  <h3 className="font-semibold text-foreground mb-1">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
-                </div>
+                <h3 className="text-lg font-medium text-white mb-3">
+                  {step.title}
+                </h3>
+                <p className="text-white/50 text-sm leading-relaxed">
+                  {step.description}
+                </p>
               </motion.div>
             ))}
           </div>
 
-          {/* Visual Demo */}
+          {/* CTA Button */}
           <motion.div 
-            className="relative"
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            className="text-center mt-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <div className="relative bg-card rounded-2xl border shadow-2xl overflow-hidden">
-              {/* Mock App Interface */}
-              <div className="p-6 border-b bg-muted/30">
-                <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full bg-red-500" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                  <div className="w-3 h-3 rounded-full bg-green-500" />
-                  <span className="ml-4 text-sm text-muted-foreground">NeuroPlan - Projeto Ativo</span>
-                </div>
-              </div>
-              <div className="p-6 space-y-4">
-                <div className="flex items-center gap-3 p-4 bg-[#22C55E]/10 rounded-xl border border-[#22C55E]/20">
-                  <Target className="h-5 w-5 text-[#22C55E]" />
-                  <div>
-                    <p className="font-medium text-foreground">Projeto: Landing Page</p>
-                    <p className="text-xs text-muted-foreground">Ciclo 2 de 3 • 4 tarefas restantes</p>
-                  </div>
-                </div>
-                
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                    <CheckCircle2 className="h-4 w-4 text-[#22C55E]" />
-                    <span className="text-sm text-muted-foreground line-through">Definir estrutura de navegação</span>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-[#FF8C42]/10 rounded-lg border border-[#FF8C42]/20">
-                    <Clock className="h-4 w-4 text-[#FF8C42]" />
-                    <span className="text-sm text-foreground">Criar hero section com CTA</span>
-                    <span className="ml-auto text-xs bg-[#FF8C42] text-white px-2 py-0.5 rounded">Em foco</span>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
-                    <div className="h-4 w-4 rounded border-2 border-muted-foreground/30" />
-                    <span className="text-sm text-muted-foreground">Implementar seção de features</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Decorative elements */}
-            <div className="absolute -z-10 -top-4 -right-4 w-72 h-72 bg-[#22C55E]/10 rounded-full blur-3xl" />
-            <div className="absolute -z-10 -bottom-4 -left-4 w-72 h-72 bg-[#FF8C42]/10 rounded-full blur-3xl" />
+            <a href={getLoginUrl()}>
+              <Button className="bg-[#3B82F6] hover:bg-[#2563EB] text-white font-medium px-8 py-6 text-base rounded-xl">
+                Criar Projeto
+              </Button>
+            </a>
+            <p className="mt-4 text-white/40 text-sm">
+              Experimente com um projeto de exemplo
+            </p>
           </motion.div>
         </div>
       </div>
@@ -406,219 +336,356 @@ function AIPartnerSection() {
   );
 }
 
+/**
+ * Features Section - Key features in cards
+ */
 function FeaturesSection() {
   const features = [
     {
       icon: Brain,
-      title: "Design Neuroadaptado",
-      description: "Interface sem azul, com cores verde/vermelho/laranja otimizadas para TDAH. Tipografia clara e espaçamento generoso."
+      title: "Baseado em Barkley",
+      description: "Fundamentado na ciência cognitiva de Russell Barkley sobre funções executivas e TDAH."
     },
     {
-      icon: ListTodo,
-      title: "Ciclos 3+1",
-      description: "Projetos divididos em ciclos curtos: D0 para planejamento, D1-D3 para execução. Máximo 3 tarefas por dia."
-    },
-    {
-      icon: Lightbulb,
-      title: "Quick Ideas",
-      description: "Capture pensamentos não-lineares instantaneamente. Ideias são salvas e podem ser transformadas em tarefas depois."
-    },
-    {
-      icon: Target,
-      title: "Entregáveis A-B-C",
-      description: "Defina 3 níveis de entrega: A (mínimo), B (bom), C (excelente). Combate o perfeccionismo paralisante."
-    },
-    {
-      icon: Zap,
+      icon: Timer,
       title: "Timer Progressivo",
-      description: "Mostra tempo investido, não restante. Cada segundo conta como vitória. Pausas sugeridas automaticamente."
+      description: "Mostra tempo investido ao invés de countdown. Reduz ansiedade e aumenta motivação."
+    },
+    {
+      icon: MessageSquare,
+      title: "Assistente IA",
+      description: "Pergunte sobre seu projeto, peça dicas ou use prompts rápidos para metacognição."
     },
     {
       icon: FileText,
-      title: "Daily Log",
-      description: "'Onde parei' - externalize sua memória de trabalho. Retome qualquer projeto exatamente de onde parou."
+      title: "Onde Parei",
+      description: "Registro automático do contexto. Nunca mais perca tempo lembrando onde parou."
+    },
+    {
+      icon: BarChart3,
+      title: "Gamificação",
+      description: "XP, streaks e badges para manter a motivação. Recompensas por consistência."
+    },
+    {
+      icon: Zap,
+      title: "Ciclos de 3 Dias",
+      description: "Projetos divididos em sprints curtos. Ideal para manter foco e ver progresso rápido."
     }
   ];
 
   return (
-    <section id="features" className="py-24 bg-muted/30">
+    <section className="py-24 bg-[#0a0a0a]">
       <div className="container">
-        <motion.div 
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Recursos Projetados para Seu Cérebro
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Cada funcionalidade foi desenvolvida com base em pesquisas de Russell Barkley 
-            sobre funções executivas e TDAH
-          </p>
-        </motion.div>
+        <div className="max-w-6xl mx-auto">
+          {/* Section Header */}
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-light text-white mb-4">
+              Recursos neuroadaptados
+            </h2>
+            <p className="text-white/50 max-w-xl mx-auto">
+              Cada funcionalidade foi desenhada para reduzir carga cognitiva e facilitar a execução
+            </p>
+          </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Card className="h-full hover:shadow-lg transition-shadow border-border/50 bg-card">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 rounded-xl bg-[#22C55E]/10 flex items-center justify-center mb-4">
-                    <feature.icon className="h-6 w-6 text-[#22C55E]" />
-                  </div>
-                  <h3 className="font-semibold text-foreground mb-2">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function UseCasesSection() {
-  const useCases = [
-    {
-      icon: Rocket,
-      title: "Projetos Profissionais",
-      description: "Entregas de trabalho, apresentações, relatórios. Decomponha projetos complexos em tarefas diárias gerenciáveis.",
-      cta: "Execute com clareza."
-    },
-    {
-      icon: Brain,
-      title: "Organize seu Pensamento",
-      description: "Capture ideias soltas, estruture planos, externalize sua memória de trabalho. Deixe o NeuroPlan lembrar por você.",
-      cta: "Pense com suporte."
-    },
-    {
-      icon: Star,
-      title: "Metas Pessoais",
-      description: "Exercícios, estudos, hobbies. Transforme intenções vagas em ações concretas com prazos realistas.",
-      cta: "Realize seus objetivos."
-    }
-  ];
-
-  return (
-    <section className="py-24 bg-background">
-      <div className="container">
-        <motion.div 
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Como as Pessoas Usam o NeuroPlan
-          </h2>
-        </motion.div>
-
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {useCases.map((useCase, index) => (
-            <motion.div
-              key={index}
-              className="text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-6">
-                <useCase.icon className="h-8 w-8 text-foreground" />
-              </div>
-              <h3 className="font-semibold text-foreground mb-3">{useCase.title}</h3>
-              <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{useCase.description}</p>
-              <p className="text-sm font-medium text-[#22C55E]">{useCase.cta}</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function TestimonialsSection() {
-  const testimonials = [
-    {
-      quote: "Finalmente uma ferramenta que entende como meu cérebro funciona. Os ciclos curtos são game-changer.",
-      author: "Marina S.",
-      role: "Designer UX",
-      color: "#FBBF24"
-    },
-    {
-      quote: "O timer progressivo mudou minha relação com o tempo. Cada minuto agora é uma vitória, não uma contagem regressiva.",
-      author: "Pedro L.",
-      role: "Desenvolvedor",
-      color: "#F472B6"
-    },
-    {
-      quote: "Quick Ideas salvou centenas de pensamentos que eu perderia. Agora consigo capturar e organizar depois.",
-      author: "Ana C.",
-      role: "Empreendedora",
-      color: "#A78BFA"
-    }
-  ];
-
-  return (
-    <section className="py-24 bg-muted/30">
-      <div className="container">
-        <motion.div 
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            O Que as Pessoas Estão Dizendo
-          </h2>
-        </motion.div>
-
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Card 
-                className="h-full"
-                style={{ 
-                  background: `linear-gradient(135deg, ${testimonial.color}15 0%, transparent 50%)`,
-                  borderColor: `${testimonial.color}30`
-                }}
+          {/* Features Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <CardContent className="p-6">
-                  <Quote className="h-8 w-8 mb-4" style={{ color: testimonial.color }} />
-                  <p className="text-foreground mb-6 leading-relaxed">"{testimonial.quote}"</p>
-                  <div>
-                    <p className="font-semibold text-foreground">{testimonial.author}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+                <feature.icon className="w-8 h-8 text-[#22C55E] mb-4" />
+                <h3 className="text-lg font-medium text-white mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-white/50 text-sm leading-relaxed">
+                  {feature.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
+/**
+ * Example Projects Section - Like NotebookLM's example notebooks
+ */
+function ExampleProjectsSection() {
+  const examples = [
+    {
+      emoji: "📝",
+      title: "Criar Conteúdo",
+      description: "Blog, vídeos, posts",
+      color: "from-amber-500/20 to-amber-600/20"
+    },
+    {
+      emoji: "💻",
+      title: "Projeto de Software",
+      description: "Apps, sites, APIs",
+      color: "from-blue-500/20 to-blue-600/20"
+    },
+    {
+      emoji: "📚",
+      title: "Trabalho Acadêmico",
+      description: "TCC, artigos, estudos",
+      color: "from-purple-500/20 to-purple-600/20"
+    },
+    {
+      emoji: "🏠",
+      title: "Projeto Pessoal",
+      description: "Organização, metas",
+      color: "from-green-500/20 to-green-600/20"
+    }
+  ];
+
+  return (
+    <section className="py-24 bg-[#111111]">
+      <div className="container">
+        <div className="max-w-5xl mx-auto">
+          {/* Section Header */}
+          <motion.div 
+            className="mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-2xl font-medium text-white mb-2">
+              Projetos de exemplo
+            </h2>
+            <p className="text-white/50">
+              Comece com um template ou crie do zero
+            </p>
+          </motion.div>
+
+          {/* Examples Grid */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {examples.map((example, index) => (
+              <motion.div
+                key={index}
+                className={`p-5 rounded-2xl bg-gradient-to-br ${example.color} border border-white/5 hover:border-white/10 cursor-pointer transition-all hover:scale-[1.02]`}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <span className="text-2xl mb-3 block">{example.emoji}</span>
+                <h3 className="text-base font-medium text-white mb-1">
+                  {example.title}
+                </h3>
+                <p className="text-white/50 text-sm">
+                  {example.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Neuroscience Section - 3 cards explaining Barkley principles
+ */
+function NeuroscienceSection() {
+  const principles = [
+    {
+      icon: Eye,
+      title: "Externalização",
+      description: "O TDAH afeta a memória de trabalho. Por isso, externalizamos tudo: tarefas, progresso, onde você parou. Nada fica só na sua cabeça.",
+      color: "from-blue-500/20 to-blue-600/20"
+    },
+    {
+      icon: Clock,
+      title: "Proximidade Temporal",
+      description: "Recompensas distantes não motivam cérebros TDAH. Ciclos de 3 dias garantem resultados visíveis rapidamente, mantendo a motivação.",
+      color: "from-green-500/20 to-green-600/20"
+    },
+    {
+      icon: Target,
+      title: "Redução de Atrito",
+      description: "Cada clique a menos é uma barreira removida. Interface mínima, ações claras, feedback instantâneo. Menos decisões, mais execução.",
+      color: "from-purple-500/20 to-purple-600/20"
+    }
+  ];
+
+  return (
+    <section className="py-24 bg-[#0a0a0a]">
+      <div className="container">
+        <div className="max-w-5xl mx-auto">
+          {/* Section Header */}
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="inline-flex items-center gap-2 bg-[#22C55E]/10 text-[#22C55E] px-4 py-2 rounded-full text-sm mb-6">
+              <Brain className="w-4 h-4" />
+              Fundamentado em Ciência
+            </span>
+            <h2 className="text-3xl md:text-4xl font-light text-white mb-4">
+              A neurociência por trás
+            </h2>
+            <p className="text-white/50 max-w-2xl mx-auto">
+              Baseado nos estudos de Russell Barkley sobre funções executivas e TDAH. 
+              Cada funcionalidade foi desenhada para compensar déficits específicos.
+            </p>
+          </motion.div>
+
+          {/* Principles Grid */}
+          <div className="grid md:grid-cols-3 gap-6">
+            {principles.map((principle, index) => (
+              <motion.div
+                key={index}
+                className={`p-8 rounded-2xl bg-gradient-to-br ${principle.color} border border-white/5`}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6">
+                  <principle.icon className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl font-medium text-white mb-3">
+                  {principle.title}
+                </h3>
+                <p className="text-white/60 leading-relaxed">
+                  {principle.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Barkley Quote */}
+          <motion.div 
+            className="mt-12 p-8 rounded-2xl bg-white/[0.02] border border-white/5 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <blockquote className="text-lg text-white/70 italic mb-4">
+              "TDAH não é um problema de saber o que fazer, é um problema de fazer o que você sabe."
+            </blockquote>
+            <cite className="text-white/40 text-sm">- Dr. Russell Barkley</cite>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * FAQ Section - Common questions with accordion
+ */
+function FAQSection() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  
+  const faqs = [
+    {
+      question: "O NeuroExecução é apenas para pessoas com TDAH?",
+      answer: "Não! Embora seja otimizado para cérebros TDAH, qualquer pessoa que tenha dificuldade em executar projetos pode se beneficiar. Os princípios de externalização e fragmentação funcionam para todos."
+    },
+    {
+      question: "Como funciona o sistema A-B-C de tarefas?",
+      answer: "Cada dia tem 3 tarefas: A (é o mínimo aceitável, ~30min), B (ideal, ~45min), C (excepcional, ~30min). Isso reduz a paralisia de decisão e dá clareza sobre prioridades."
+    },
+    {
+      question: "Por que ciclos de 3 dias?",
+      answer: "Projetos longos desmotivam cérebros TDAH. Ciclos curtos de 3 dias garantem resultados visíveis rapidamente, mantendo a dopamina e motivação em alta."
+    },
+    {
+      question: "O que é o 'Onde Parei'?",
+      answer: "É um registro automático do seu contexto de trabalho. Quando você retorna a uma tarefa, sabe exatamente onde parou e qual é o próximo passo. Compensa déficits de memória de trabalho."
+    },
+    {
+      question: "Meus dados estão seguros?",
+      answer: "Sim. Seguimos a LGPD, seus dados são criptografados e nunca compartilhados. Você pode exportar ou deletar seus dados a qualquer momento."
+    },
+    {
+      question: "Isso substitui tratamento médico?",
+      answer: "Não. NeuroExecução é uma ferramenta de produtividade, não um tratamento médico. Se você tem TDAH ou suspeita ter, consulte um profissional de saúde."
+    }
+  ];
+
+  return (
+    <section className="py-24 bg-[#111111]">
+      <div className="container">
+        <div className="max-w-3xl mx-auto">
+          {/* Section Header */}
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-light text-white mb-4">
+              Perguntas frequentes
+            </h2>
+            <p className="text-white/50">
+              Tire suas dúvidas sobre o NeuroExecução
+            </p>
+          </motion.div>
+
+          {/* FAQ Accordion */}
+          <div className="space-y-4">
+            {faqs.map((faq, index) => (
+              <motion.div
+                key={index}
+                className="border border-white/10 rounded-xl overflow-hidden"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.05 }}
+              >
+                <button
+                  className="w-full px-6 py-5 flex items-center justify-between text-left bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
+                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                >
+                  <span className="text-white font-medium pr-4">{faq.question}</span>
+                  {openIndex === index ? (
+                    <ChevronUp className="w-5 h-5 text-white/50 flex-shrink-0" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5 text-white/50 flex-shrink-0" />
+                  )}
+                </button>
+                {openIndex === index && (
+                  <div className="px-6 py-5 bg-white/[0.01] border-t border-white/5">
+                    <p className="text-white/60 leading-relaxed">{faq.answer}</p>
+                  </div>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * CTA Section - Final call to action
+ */
 function CTASection({ isAuthenticated }: { isAuthenticated: boolean }) {
   return (
-    <section className="py-24 bg-gradient-to-b from-background to-muted/30">
+    <section className="py-24 bg-[#0a0a0a]">
       <div className="container">
         <motion.div 
           className="max-w-3xl mx-auto text-center"
@@ -627,87 +694,90 @@ function CTASection({ isAuthenticated }: { isAuthenticated: boolean }) {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-            Pronto para Transformar Ideias em Ação?
+          <h2 className="text-3xl md:text-4xl font-light text-white mb-6">
+            Pronto para executar?
           </h2>
-          <p className="text-muted-foreground mb-8 text-lg">
-            Comece gratuitamente. Sem cartão de crédito. Cancele quando quiser.
+          <p className="text-white/50 mb-8 max-w-xl mx-auto">
+            Comece seu primeiro ciclo de 3 dias agora. Sem cartão de crédito, sem compromisso.
           </p>
           
           {isAuthenticated ? (
             <Link href="/dashboard">
-              <Button size="lg" className="bg-[#22C55E] hover:bg-[#16A34A] text-white font-semibold px-10 py-7 text-lg rounded-full">
+              <Button size="lg" className="bg-[#22C55E] hover:bg-[#16A34A] text-white font-medium px-10 py-6 text-lg rounded-xl">
                 Ir para o Dashboard
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
           ) : (
             <a href={getLoginUrl()}>
-              <Button size="lg" className="bg-[#22C55E] hover:bg-[#16A34A] text-white font-semibold px-10 py-7 text-lg rounded-full shadow-lg shadow-[#22C55E]/30">
+              <Button size="lg" className="bg-[#22C55E] hover:bg-[#16A34A] text-white font-medium px-10 py-6 text-lg rounded-xl">
                 Começar Gratuitamente
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </a>
           )}
+          
+          {/* Trust indicators */}
+          <div className="mt-12 flex flex-wrap justify-center gap-8 text-sm text-white/40">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-[#22C55E]" />
+              <span>Baseado em Russell Barkley</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-[#22C55E]" />
+              <span>IA Neuroadaptada</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-[#22C55E]" />
+              <span>Dados Protegidos</span>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
   );
 }
 
+/**
+ * Footer - Simple with disclaimer
+ */
 function Footer() {
   return (
-    <footer className="py-12 bg-muted/50 border-t">
+    <footer className="py-12 bg-[#0a0a0a] border-t border-white/5">
       <div className="container">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Brain className="h-6 w-6 text-[#22C55E]" />
-              <span className="font-bold text-foreground">NeuroPlan</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Seu parceiro de execução neuroadaptado.
+        <div className="max-w-4xl mx-auto">
+          {/* Logo */}
+          <div className="flex items-center justify-center gap-2 mb-8">
+            <Brain className="h-6 w-6 text-[#22C55E]" />
+            <span className="text-lg font-semibold text-white">NeuroExecução</span>
+          </div>
+          
+          {/* Links */}
+          <div className="flex flex-wrap justify-center gap-6 mb-8 text-sm">
+            <Link href="/pricing" className="text-white/50 hover:text-white transition-colors">
+              Planos
+            </Link>
+            <a href="#" className="text-white/50 hover:text-white transition-colors">
+              Privacidade
+            </a>
+            <a href="#" className="text-white/50 hover:text-white transition-colors">
+              Termos
+            </a>
+            <a href="#" className="text-white/50 hover:text-white transition-colors">
+              Contato
+            </a>
+          </div>
+          
+          {/* Disclaimer */}
+          <div className="text-center text-xs text-white/30 max-w-2xl mx-auto leading-relaxed">
+            <p className="mb-4">
+              <strong>Aviso Legal:</strong> NeuroExecução é uma ferramenta de produtividade e não substitui 
+              tratamento médico ou psicológico. Se você tem TDAH ou suspeita ter, consulte um profissional de saúde.
+            </p>
+            <p>
+              © {new Date().getFullYear()} NeuroExecução. Todos os direitos reservados.
             </p>
           </div>
-          
-          <div>
-            <h4 className="font-semibold text-foreground mb-4">Produto</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#features" className="hover:text-foreground transition-colors">Recursos</a></li>
-              <li><Link href="/pricing" className="hover:text-foreground transition-colors">Planos</Link></li>
-              <li><a href="#how-it-works" className="hover:text-foreground transition-colors">Como Funciona</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-semibold text-foreground mb-4">Legal</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-foreground transition-colors">Termos de Uso</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Política de Privacidade</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">LGPD</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-semibold text-foreground mb-4">Contato</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="mailto:contato@neuroplan.app" className="hover:text-foreground transition-colors">contato@neuroplan.app</a></li>
-            </ul>
-          </div>
-        </div>
-        
-        {/* Disclaimer */}
-        <div className="pt-8 border-t border-border">
-          <p className="text-xs text-muted-foreground text-center max-w-4xl mx-auto leading-relaxed">
-            <strong>Aviso Legal:</strong> O NeuroPlan é uma ferramenta de produtividade e organização pessoal. 
-            Não se trata de dispositivo médico, tratamento ou terapia para TDAH ou qualquer condição de saúde. 
-            O uso desta ferramenta não substitui acompanhamento médico ou psicológico profissional. 
-            Consulte sempre um profissional de saúde qualificado para questões relacionadas à saúde mental.
-            Em conformidade com a LGPD (Lei 13.709/2018), seus dados são tratados com segurança e transparência.
-          </p>
-          <p className="text-xs text-muted-foreground text-center mt-4">
-            © {new Date().getFullYear()} NeuroPlan. Todos os direitos reservados.
-          </p>
         </div>
       </div>
     </footer>

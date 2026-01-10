@@ -39,7 +39,7 @@ import {
 } from "lucide-react";
 
 /**
- * Dashboard Unificado do NeuroPlan
+ * Dashboard Unificado do NeuroExecução
  * Todas as funcionalidades em um só lugar para reduzir carga cognitiva
  */
 export default function DashboardUnified() {

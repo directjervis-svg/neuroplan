@@ -254,3 +254,20 @@
 - [ ] Estados vazios sempre guiados
 - [ ] Feedback visual ≤ 200ms em todas as ações
 - [ ] Tooltips explicando elementos neuroadaptativos
+
+
+## Fase 33: Rebranding para NeuroExecução
+- [ ] Renomear app de NeuroPlan para NeuroExecução
+- [ ] Atualizar logo e título em todo o app
+- [ ] Remover imagem NASA (Voyager) da landing page
+- [ ] Redesenhar landing page estilo NotebookLM
+- [ ] Criar hero minimalista com foco em texto
+- [ ] Atualizar meta tags e SEO
+
+
+## Fase 34: Tarefas Finais para Lançamento
+- [x] Criar Agente Planner Barkley para gerar ciclo de 3 dias automaticamente
+- [x] Adicionar seção "Neurociência por trás" com 3 cards Barkley na landing page
+- [x] Adicionar seção FAQ na landing page
+- [x] Implementar tooltips explicativos para elementos neuroadaptativos
+- [x] Garantir feedback visual ≤ 200ms em todas as ações

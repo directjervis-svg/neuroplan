@@ -88,7 +88,7 @@ const DEFAULT_BADGES = [
   { code: "IDEAS_100", name: "Visionário", description: "Capture 100 ideias rápidas", icon: "Sparkles", color: "#D97706", category: "IDEAS" as const, threshold: 100, xpReward: 250, rarity: "RARE" as const },
   
   // Special badges
-  { code: "EARLY_ADOPTER", name: "Early Adopter", description: "Um dos primeiros usuários do NeuroPlan", icon: "Rocket", color: "#8B5CF6", category: "SPECIAL" as const, threshold: 1, xpReward: 100, rarity: "EPIC" as const },
+  { code: "EARLY_ADOPTER", name: "Early Adopter", description: "Um dos primeiros usuários do NeuroExecução", icon: "Rocket", color: "#8B5CF6", category: "SPECIAL" as const, threshold: 1, xpReward: 100, rarity: "EPIC" as const },
   { code: "ONBOARDING_COMPLETE", name: "Pronto para Ação", description: "Complete o tour de boas-vindas", icon: "GraduationCap", color: "#22C55E", category: "SPECIAL" as const, threshold: 1, xpReward: 50, rarity: "COMMON" as const },
 ];
 

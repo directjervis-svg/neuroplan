@@ -1,6 +1,6 @@
 {
-  "name": "NeuroPlan - Seu Parceiro de Execução",
-  "short_name": "NeuroPlan",
+  "name": "NeuroExecução - Seu Parceiro de Execução",
+  "short_name": "NeuroExecução",
   "description": "Ferramenta de produtividade neuroadaptada para transformar ideias em ações concretas",
   "start_url": "/",
   "display": "standalone",

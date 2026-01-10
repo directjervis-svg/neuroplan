@@ -1,5 +1,5 @@
 /**
- * NeuroPlan Offline Database
+ * NeuroExecução Offline Database
  * IndexedDB wrapper for offline data storage and sync
  */
 

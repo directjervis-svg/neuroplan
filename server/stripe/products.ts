@@ -1,5 +1,5 @@
 /**
- * NeuroPlan Subscription Products
+ * NeuroExecução Subscription Products
  * Centralized product and price configuration for Stripe integration
  */
 

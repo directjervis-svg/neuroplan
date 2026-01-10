@@ -322,7 +322,7 @@ export function InstallPWAPrompt() {
             </svg>
           </div>
           <div className="flex-1 min-w-0">
-            <h4 className="font-medium text-foreground">Instalar NeuroPlan</h4>
+            <h4 className="font-medium text-foreground">Instalar NeuroExecução</h4>
             <p className="text-sm text-muted-foreground mt-1">
               Instale o app para acesso rápido e uso offline.
             </p>

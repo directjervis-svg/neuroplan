@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { Link, useParams } from "wouter";
 import { motion } from "framer-motion";
-import DashboardLayoutNeuroPlan from "@/components/DashboardLayoutNeuroPlan";
+import DashboardLayoutNeuroExecucao from "@/components/DashboardLayoutNeuroExecucao";
 import { toast } from "sonner";
 
 export default function ExportProject() {
@@ -112,17 +112,17 @@ export default function ExportProject() {
 
   if (isLoading) {
     return (
-      <DashboardLayoutNeuroPlan>
+      <DashboardLayoutNeuroExecucao>
         <div className="flex items-center justify-center h-64">
           <Loader2 className="h-8 w-8 animate-spin text-[#22C55E]" />
         </div>
-      </DashboardLayoutNeuroPlan>
+      </DashboardLayoutNeuroExecucao>
     );
   }
 
   if (!projectData) {
     return (
-      <DashboardLayoutNeuroPlan>
+      <DashboardLayoutNeuroExecucao>
         <div className="text-center py-12">
           <p className="text-muted-foreground">Projeto não encontrado</p>
           <Link href="/dashboard/projects">
@@ -132,7 +132,7 @@ export default function ExportProject() {
             </Button>
           </Link>
         </div>
-      </DashboardLayoutNeuroPlan>
+      </DashboardLayoutNeuroExecucao>
     );
   }
 
@@ -141,7 +141,7 @@ export default function ExportProject() {
                        generateProjectOnePage.isPending || generateICal.isPending;
 
   return (
-    <DashboardLayoutNeuroPlan>
+    <DashboardLayoutNeuroExecucao>
       <div className="space-y-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
@@ -411,6 +411,6 @@ export default function ExportProject() {
           </CardContent>
         </Card>
       </div>
-    </DashboardLayoutNeuroPlan>
+    </DashboardLayoutNeuroExecucao>
   );
 }

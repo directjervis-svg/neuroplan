@@ -1,7 +1,7 @@
 import { invokeLLM } from "./_core/llm";
 
 /**
- * AI Service for NeuroPlan
+ * AI Service for NeuroExecução
  * Handles briefing processing, task decomposition, and coaching
  * Based on Barkley principles for TDAH-friendly output
  */
