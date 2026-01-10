@@ -34,6 +34,7 @@ import { googleCalendarRouter } from "./googleCalendar";
 import { rewardsRouter } from "./rewards";
 import { calendarExportRouter } from "./exportCalendar";
 import { adminStoreRouter } from "./adminStore";
+import { cyclesRouter } from "./cycles";
 import { createCheckoutSession, createPortalSession, getOrCreateCustomer } from "./stripe/stripe";
 import { NEUROPLAN_PRODUCTS } from "./stripe/products";
 
@@ -343,6 +344,9 @@ export const appRouter = router({
   // Calendar Export Router
   calendarExport: calendarExportRouter,
 
+  // Cycles Router (3-day execution cycles)
+  cycles: cyclesRouter,
+
   // AI Router
   ai: router({
     processBriefing: protectedProcedure
@@ -410,6 +414,20 @@ export const appRouter = router({
       }))
       .mutation(async ({ input }) => {
         const response = await getSocraticResponse(input.context, input.message);
+        return { response };
+      }),
+
+    // Assistant for dashboard - quick help with tasks
+    askAssistant: protectedProcedure
+      .input(z.object({
+        message: z.string().min(1).max(1000),
+        projectId: z.number().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const context = input.projectId 
+          ? `Projeto ID: ${input.projectId}` 
+          : "Contexto geral do usuário";
+        const response = await getSocraticResponse(context, input.message);
         return { response };
       }),
   }),

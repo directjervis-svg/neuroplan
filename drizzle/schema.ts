@@ -684,3 +684,166 @@ export const storeOrderItems = mysqlTable("storeOrderItems", {
 
 export type StoreOrderItem = typeof storeOrderItems.$inferSelect;
 export type InsertStoreOrderItem = typeof storeOrderItems.$inferInsert;
+
+
+/**
+ * Project Cycles - 3-day execution cycles (Barkley-aligned)
+ * Each cycle has exactly 3 days with up to 3 tasks (A-B-C) per day
+ */
+export const projectCycles = mysqlTable("projectCycles", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  userId: int("userId").notNull(),
+  
+  cycleNumber: int("cycleNumber").notNull(), // 1, 2, 3...
+  
+  // Cycle dates
+  day1Date: timestamp("day1Date").notNull(),
+  day2Date: timestamp("day2Date"),
+  day3Date: timestamp("day3Date"),
+  
+  // Status
+  status: mysqlEnum("status", ["PLANNING", "DAY_1", "DAY_2", "DAY_3", "COMPLETED", "ABANDONED"]).default("PLANNING"),
+  currentDay: int("currentDay").default(1), // 1, 2, or 3
+  
+  // Cycle summary (filled at end)
+  whatWorked: text("whatWorked"),
+  whatDidntWork: text("whatDidntWork"),
+  whatToChange: text("whatToChange"),
+  
+  completedAt: timestamp("completedAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectCycle = typeof projectCycles.$inferSelect;
+export type InsertProjectCycle = typeof projectCycles.$inferInsert;
+
+/**
+ * Cycle Tasks - Tasks within a 3-day cycle (A-B-C per day)
+ * A = Minimum acceptable, B = Ideal, C = Exceptional
+ */
+export const cycleTasks = mysqlTable("cycleTasks", {
+  id: int("id").autoincrement().primaryKey(),
+  cycleId: int("cycleId").notNull(),
+  projectId: int("projectId").notNull(),
+  
+  // Day and priority
+  dayNumber: int("dayNumber").notNull(), // 1, 2, or 3
+  priority: mysqlEnum("priority", ["A", "B", "C"]).notNull(), // A = minimum, B = ideal, C = exceptional
+  
+  // Task details
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  estimatedMinutes: int("estimatedMinutes").default(30),
+  
+  // Checklist items (JSON array)
+  checklist: json("checklist"), // [{id, text, completed}]
+  
+  // Status
+  status: mysqlEnum("status", ["PENDING", "IN_PROGRESS", "COMPLETED", "SKIPPED"]).default("PENDING"),
+  completedAt: timestamp("completedAt"),
+  skipReason: text("skipReason"),
+  
+  // Time tracking
+  actualMinutes: int("actualMinutes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CycleTask = typeof cycleTasks.$inferSelect;
+export type InsertCycleTask = typeof cycleTasks.$inferInsert;
+
+/**
+ * Where I Left Off - Daily memory externalization (critical for ADHD)
+ * One entry per day per cycle, always visible at top of dashboard
+ */
+export const whereILeftOff = mysqlTable("whereILeftOff", {
+  id: int("id").autoincrement().primaryKey(),
+  cycleId: int("cycleId").notNull(),
+  projectId: int("projectId").notNull(),
+  userId: int("userId").notNull(),
+  
+  dayNumber: int("dayNumber").notNull(), // 1, 2, or 3
+  
+  // Memory externalization
+  content: text("content").notNull(), // What I was doing
+  nextAction: text("nextAction"), // What to do next (single action)
+  blockers: text("blockers"), // Any impediments
+  
+  // Metadata
+  isActive: boolean("isActive").default(true), // Latest version for this day
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type WhereILeftOff = typeof whereILeftOff.$inferSelect;
+export type InsertWhereILeftOff = typeof whereILeftOff.$inferInsert;
+
+/**
+ * AI Interaction Log - Track all AI calls for analytics and debugging
+ */
+export const aiInteractionLog = mysqlTable("aiInteractionLog", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  projectId: int("projectId"),
+  cycleId: int("cycleId"),
+  
+  // Interaction type
+  actionType: mysqlEnum("actionType", [
+    "PLANNER_BARKLEY", // Generate 3-day cycle
+    "TASK_ASSISTANT", // Help with current task
+    "BRIEFING_PROCESS", // Process project briefing
+    "FIVE_WHYS", // Root cause analysis
+    "METACOGNITION", // Reflection prompts
+    "REFINE_TASK", // Break down task
+    "GENERATE_STEPS" // Generate next steps
+  ]).notNull(),
+  
+  // Request/Response
+  inputPrompt: text("inputPrompt"),
+  outputResponse: text("outputResponse"),
+  
+  // Metrics
+  tokensInput: int("tokensInput"),
+  tokensOutput: int("tokensOutput"),
+  latencyMs: int("latencyMs"),
+  
+  // Status
+  success: boolean("success").default(true),
+  errorMessage: text("errorMessage"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AiInteractionLog = typeof aiInteractionLog.$inferSelect;
+export type InsertAiInteractionLog = typeof aiInteractionLog.$inferInsert;
+
+/**
+ * Project Context - Summary and metadata for assistant panel
+ */
+export const projectContext = mysqlTable("projectContext", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull().unique(),
+  
+  // Summary bullets (AI-generated from briefing/Lean Canvas)
+  summaryBullets: json("summaryBullets"), // [{text: string}]
+  
+  // Lean Canvas simplified
+  problem: text("problem"),
+  solution: text("solution"),
+  uniqueValue: text("uniqueValue"),
+  targetAudience: text("targetAudience"),
+  
+  // Success criteria
+  successCriteria: json("successCriteria"), // [{text: string, met: boolean}]
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectContext = typeof projectContext.$inferSelect;
+export type InsertProjectContext = typeof projectContext.$inferInsert;

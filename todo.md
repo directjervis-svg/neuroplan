@@ -213,3 +213,44 @@
 - [x] Implementar página de processamento de pedidos
 - [x] Adicionar dashboard de métricas da loja
 - [x] Implementar filtros e busca de pedidos
+
+
+## Fase 32: Redesign Neuroadaptativo (Especificação Completa)
+
+### Schema e Entidades
+- [x] Criar tabela de Ciclos (3 dias) com referências a tarefas A/B/C
+- [x] Criar tabela "Onde Parei" (registro diário por ciclo)
+- [x] Atualizar tarefas para suportar tipos A/B/C e estimativas
+- [x] Criar tabela de Log de IA (ações, tokens, tempo)
+
+### Dashboard em 3 Colunas (NotebookLM-like)
+- [x] Coluna esquerda (30-35%): Painel "Hoje" com ciclo de 3 dias
+- [x] Bloco "Onde parei ontem" fixo no topo
+- [x] Lista de máximo 3 tarefas (A destacada, B e C menores)
+- [x] Coluna central (45-50%): Área de trabalho da tarefa ativa
+- [x] Card expansível com descrição, checklist, botão "Começar por 10 min"
+- [x] Barra de ações (Metacognição, 5 Whys, Prompts) no rodapé
+- [x] Coluna direita (20-25%): Painel lateral tipo NotebookLM
+- [x] Aba 1: Resumo do projeto (bullets)
+- [x] Aba 2: Onde parei (editável)
+- [x] Aba 3: Assistente IA (campo + botões rápidos)
+
+### Landing Page Focada em Conversão
+- [ ] Hero: "Execute projetos em ciclos de 3 dias, mesmo com TDAH"
+- [ ] CTA principal: "Começar ciclo de 3 dias grátis"
+- [ ] Seção "Como funciona" (3 passos visuais)
+- [ ] Seção "Neurociência por trás" (3 cards Barkley)
+- [ ] Seção de benefícios esperados (sem promessas médicas)
+- [ ] FAQ e segurança/privacidade
+
+### Agente Planner Barkley (IA)
+- [ ] Criar agente que recebe descrição e retorna ciclo de 3 dias
+- [ ] Gerar tarefas A-B-C automaticamente
+- [ ] Integrar no painel Assistente
+
+### Regras Neuroadaptativas
+- [ ] Máximo 3-4 elementos de ação por bloco
+- [ ] Fonte mínima 14px, espaçamento generoso
+- [ ] Estados vazios sempre guiados
+- [ ] Feedback visual ≤ 200ms em todas as ações
+- [ ] Tooltips explicando elementos neuroadaptativos

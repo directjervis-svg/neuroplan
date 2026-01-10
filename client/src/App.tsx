@@ -25,6 +25,7 @@ import NotificationSettings from "./pages/NotificationSettings";
 import CalendarSettings from "./pages/CalendarSettings";
 import Rewards from "./pages/Rewards";
 import DashboardUnified from "./pages/DashboardUnified";
+import DashboardBarkley from "./pages/DashboardBarkley";
 
 // Admin Pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -116,6 +117,9 @@ function Router() {
       </Route>
       <Route path="/dashboard/unified">
         <ProtectedRoute component={DashboardUnified} />
+      </Route>
+      <Route path="/dashboard/barkley">
+        <ProtectedRoute component={DashboardBarkley} />
       </Route>
       
       {/* 404 */}
