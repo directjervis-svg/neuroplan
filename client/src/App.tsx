@@ -26,6 +26,8 @@ import CalendarSettings from "./pages/CalendarSettings";
 import Rewards from "./pages/Rewards";
 import DashboardUnified from "./pages/DashboardUnified";
 import DashboardBarkley from "./pages/DashboardBarkley";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 
 // Admin Pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -57,6 +59,8 @@ function Router() {
       {/* Public Routes */}
       <Route path="/" component={Home} />
       <Route path="/pricing" component={Pricing} />
+      <Route path="/privacy" component={Privacy} />
+      <Route path="/terms" component={Terms} />
       
       {/* Protected Routes - Dashboard */}
       <Route path="/dashboard">
