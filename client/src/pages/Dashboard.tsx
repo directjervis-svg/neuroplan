@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
+import FocusGarden from "@/components/FocusGarden";
 
 /**
  * Dashboard Page - Main hub for NeuroExecução
@@ -40,6 +41,9 @@ export default function Dashboard() {
             Vamos transformar suas ideias em ações hoje.
           </p>
         </div>
+
+        {/* Jardim do Foco */}
+        <FocusGarden completedCycles={stats?.completedCycles ?? 0} />
 
         {/* Quick Stats */}
         <div className="grid gap-4 md:grid-cols-3">

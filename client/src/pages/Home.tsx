@@ -12,6 +12,8 @@ import {
   ChevronUp
 } from "lucide-react";
 import { Link } from "wouter";
+import Testimonials from "@/components/Testimonials";
+import { useState } from "react";
 
 /**
  * NeuroExecução Landing Page
@@ -95,19 +97,12 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center">
           {/* Main Title with Gradient Word */}
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight tracking-tight">
-            Think{" "}
-            <span className="bg-gradient-to-r from-green-500 via-teal-400 to-blue-500 bg-clip-text text-transparent">
-              Smarter
-            </span>
-            ,
-            <br />
-            Not Harder
+            O Fim da <span className="bg-gradient-to-r from-green-500 via-teal-400 to-blue-500 bg-clip-text text-transparent">Paralisia do TDAH</span>.
           </h1>
           
           {/* Subtitle */}
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-12 leading-relaxed">
-            Seu assistente de execução neuroadaptado para TDAH. 
-            Execute projetos em ciclos de 3 dias com tarefas A-B-C e nunca perca o contexto.
+            Cansado de começar e largar? O NeuroExecução usa a ciência de Russell Barkley para te ajudar a concluir projetos em ciclos curtos de 3 dias. Chega de se sentir sobrecarregado. É hora de executar.
           </p>
           
           {/* CTA Button - Black rounded like NotebookLM */}
@@ -120,7 +115,7 @@ export default function Home() {
           ) : (
             <a href={getLoginUrl()}>
               <Button className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-6 text-base rounded-full font-medium">
-                Try NeuroExecução
+                Comece Seu Primeiro Ciclo (Grátis)
               </Button>
             </a>
           )}
@@ -278,7 +273,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Testimonials Section */}
+      <Testimonials />
+
+      {/* FAQ Section */}
       <section className="py-20 px-6 bg-gray-50">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
@@ -327,3 +325,5 @@ export default function Home() {
     </div>
   );
 }
+
+

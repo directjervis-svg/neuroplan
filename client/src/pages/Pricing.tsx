@@ -112,7 +112,7 @@ export default function Pricing() {
           {/* Pro Plan */}
           <PlanCard
             name="Pro"
-            price="R$ 29"
+            price="R$ 49,90"
             period="/mês"
             description="Para quem quer mais produtividade"
             features={[
@@ -124,7 +124,7 @@ export default function Pricing() {
               "Exportação de dados",
               "Suporte prioritário",
             ]}
-            buttonText="Assinar Pro"
+            buttonText="Teste o Pro por 7 Dias Grátis"
             onSelect={() => handleSelectPlan("pro")}
             isPopular
             isAuthenticated={isAuthenticated}
@@ -133,7 +133,7 @@ export default function Pricing() {
           {/* Team Plan */}
           <PlanCard
             name="Equipe"
-            price="R$ 79"
+            price="R$ 149,90"
             period="/mês"
             description="Para times e empresas"
             features={[
