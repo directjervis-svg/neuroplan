@@ -22,7 +22,8 @@ import {
   createFocusCycle,
   updateFocusCycle,
   getUserStats,
-  updateUserPreferences
+  updateUserPreferences,
+  saveUserConsent
 } from "./db";
 import { processBriefing, decomposeTasks, getSocraticResponse } from "./ai";
 import { gamificationRouter } from "./gamification";
@@ -47,6 +48,25 @@ export const appRouter = router({
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
+    }),
+  }),
+
+  // User Router (LGPD consent, profile)
+  user: router({
+    saveConsent: protectedProcedure
+      .input(z.object({
+        consentVersion: z.string().min(1).max(16),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        return saveUserConsent(ctx.user.id, input.consentVersion);
+      }),
+    
+    getConsentStatus: protectedProcedure.query(({ ctx }) => {
+      return {
+        consentGiven: ctx.user.consentGiven || false,
+        consentVersion: ctx.user.consentVersion || null,
+        consentTimestamp: ctx.user.consentTimestamp || null,
+      };
     }),
   }),
 

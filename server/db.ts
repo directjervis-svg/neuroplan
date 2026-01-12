@@ -136,6 +136,22 @@ export async function updateUserSubscription(
   return { success: true };
 }
 
+export async function saveUserConsent(
+  userId: number,
+  consentVersion: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(users).set({
+    consentGiven: true,
+    consentTimestamp: new Date(),
+    consentVersion: consentVersion,
+  }).where(eq(users.id, userId));
+  
+  return { success: true };
+}
+
 // ============================================
 // PROJECT FUNCTIONS
 // ============================================

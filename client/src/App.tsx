@@ -5,6 +5,7 @@ import { Route, Switch, Redirect } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { useAuth } from "./_core/hooks/useAuth";
+import { usePageTracking } from "./hooks/useAnalytics";
 
 // Pages
 import Home from "./pages/Home";
@@ -54,6 +55,9 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
 }
 
 function Router() {
+  // Track page views on route changes
+  usePageTracking();
+  
   return (
     <Switch>
       {/* Public Routes */}

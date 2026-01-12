@@ -3,6 +3,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Checkbox } from "@/components/ui/checkbox";
 import { trpc } from "@/lib/trpc";
 import { 
   ArrowRight, 
@@ -16,14 +17,30 @@ import {
   Target, 
   Timer,
   Sparkles,
-  X
+  X,
+  Shield
 } from "lucide-react";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
 // Onboarding steps configuration
 const ONBOARDING_STEPS = [
+  {
+    id: "consent",
+    field: "welcomeViewed",
+    title: "Termos e Privacidade",
+    subtitle: "Sua privacidade é nossa prioridade",
+    description: "Antes de começar, precisamos do seu consentimento para processar seus dados de acordo com a LGPD (Lei Geral de Proteção de Dados).",
+    icon: Shield,
+    color: "#22C55E",
+    tips: [
+      "Seus dados são criptografados e armazenados com segurança",
+      "Você pode solicitar exclusão a qualquer momento",
+      "Não compartilhamos dados com terceiros sem consentimento",
+    ],
+    requiresConsent: true,
+  },
   {
     id: "welcome",
     field: "welcomeViewed",
@@ -124,14 +141,19 @@ const ONBOARDING_STEPS = [
   },
 ];
 
+// Current consent version - update when terms change
+const CONSENT_VERSION = "1.0.0";
+
 export default function Onboarding() {
   const { user } = useAuth();
   const [, navigate] = useLocation();
   const [currentStep, setCurrentStep] = useState(0);
+  const [consentChecked, setConsentChecked] = useState(false);
   
   const { data: onboardingProgress, isLoading } = trpc.gamification.getOnboarding.useQuery();
   const updateOnboarding = trpc.gamification.updateOnboarding.useMutation();
   const skipOnboarding = trpc.gamification.skipOnboarding.useMutation();
+  const saveConsent = trpc.user.saveConsent.useMutation();
   const utils = trpc.useUtils();
 
   // Check if user already completed onboarding
@@ -143,6 +165,24 @@ export default function Onboarding() {
 
   const handleNext = async () => {
     const step = ONBOARDING_STEPS[currentStep];
+    
+    // If this is the consent step, save consent first
+    if (step.requiresConsent) {
+      if (!consentChecked) {
+        toast.error("Você precisa aceitar os termos para continuar.");
+        return;
+      }
+      
+      try {
+        await saveConsent.mutateAsync({ 
+          consentVersion: CONSENT_VERSION 
+        });
+        toast.success("Consentimento registrado com sucesso!");
+      } catch (error) {
+        toast.error("Erro ao salvar consentimento. Tente novamente.");
+        return;
+      }
+    }
     
     // Update progress in database
     await updateOnboarding.mutateAsync({ 
@@ -167,6 +207,17 @@ export default function Onboarding() {
   };
 
   const handleSkip = async () => {
+    // Cannot skip if consent not given
+    if (currentStep === 0 && !consentChecked) {
+      toast.error("Você precisa aceitar os termos para usar o NeuroExecução.");
+      return;
+    }
+    
+    // Save consent if on first step
+    if (currentStep === 0 && consentChecked) {
+      await saveConsent.mutateAsync({ consentVersion: CONSENT_VERSION });
+    }
+    
     await skipOnboarding.mutateAsync();
     utils.gamification.getOnboarding.invalidate();
     toast.info("Você pode acessar o tour a qualquer momento no menu de ajuda.");
@@ -185,6 +236,12 @@ export default function Onboarding() {
   const IconComponent = step.icon;
   const progress = ((currentStep + 1) / ONBOARDING_STEPS.length) * 100;
 
+  // Check if next button should be disabled
+  const isNextDisabled = 
+    updateOnboarding.isPending || 
+    saveConsent.isPending ||
+    (step.requiresConsent && !consentChecked);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
       {/* Background decoration */}
@@ -194,16 +251,18 @@ export default function Onboarding() {
       </div>
 
       <div className="relative w-full max-w-2xl">
-        {/* Skip button */}
-        <Button
-          variant="ghost"
-          size="sm"
-          className="absolute -top-12 right-0 text-slate-400 hover:text-white"
-          onClick={handleSkip}
-        >
-          Pular Tour
-          <X className="ml-2 h-4 w-4" />
-        </Button>
+        {/* Skip button - hidden on consent step unless consent is given */}
+        {(currentStep > 0 || consentChecked) && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute -top-12 right-0 text-slate-400 hover:text-white"
+            onClick={handleSkip}
+          >
+            Pular Tour
+            <X className="ml-2 h-4 w-4" />
+          </Button>
+        )}
 
         {/* Progress bar */}
         <div className="mb-6">
@@ -249,11 +308,39 @@ export default function Onboarding() {
                   {step.description}
                 </p>
 
+                {/* Consent checkbox - only on consent step */}
+                {step.requiresConsent && (
+                  <div className="bg-slate-900/50 rounded-lg p-4 mb-6">
+                    <div className="flex items-start gap-3">
+                      <Checkbox
+                        id="consent"
+                        checked={consentChecked}
+                        onCheckedChange={(checked) => setConsentChecked(checked === true)}
+                        className="mt-1 border-slate-500 data-[state=checked]:bg-[#22C55E] data-[state=checked]:border-[#22C55E]"
+                      />
+                      <label 
+                        htmlFor="consent" 
+                        className="text-sm text-slate-300 leading-relaxed cursor-pointer"
+                      >
+                        Li e aceito a{" "}
+                        <Link href="/privacy" className="text-[#22C55E] hover:underline" target="_blank">
+                          Política de Privacidade
+                        </Link>{" "}
+                        e os{" "}
+                        <Link href="/terms" className="text-[#22C55E] hover:underline" target="_blank">
+                          Termos de Uso
+                        </Link>
+                        . Autorizo o tratamento dos meus dados pessoais conforme descrito nestes documentos, de acordo com a LGPD.
+                      </label>
+                    </div>
+                  </div>
+                )}
+
                 {/* Tips */}
                 <div className="bg-slate-900/50 rounded-lg p-4 mb-8">
                   <div className="flex items-center gap-2 text-sm font-medium text-slate-400 mb-3">
                     <Sparkles className="h-4 w-4" />
-                    Dicas importantes
+                    {step.requiresConsent ? "Seus direitos" : "Dicas importantes"}
                   </div>
                   <ul className="space-y-2">
                     {step.tips.map((tip, index) => (
@@ -279,16 +366,21 @@ export default function Onboarding() {
                   
                   <Button
                     onClick={handleNext}
-                    className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
-                    disabled={updateOnboarding.isPending}
+                    className="bg-[#22C55E] hover:bg-[#16A34A] text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isNextDisabled}
                   >
-                    {updateOnboarding.isPending ? (
+                    {(updateOnboarding.isPending || saveConsent.isPending) ? (
                       <Loader2 className="h-4 w-4 animate-spin mr-2" />
                     ) : null}
                     {currentStep === ONBOARDING_STEPS.length - 1 ? (
                       <>
                         Começar
                         <Rocket className="ml-2 h-4 w-4" />
+                      </>
+                    ) : step.requiresConsent ? (
+                      <>
+                        Aceitar e Continuar
+                        <ArrowRight className="ml-2 h-4 w-4" />
                       </>
                     ) : (
                       <>
@@ -308,12 +400,17 @@ export default function Onboarding() {
           {ONBOARDING_STEPS.map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentStep(index)}
+              onClick={() => {
+                // Only allow going back, not forward (unless consent given)
+                if (index < currentStep || (currentStep === 0 && consentChecked)) {
+                  setCurrentStep(index);
+                }
+              }}
               className={`w-2 h-2 rounded-full transition-all ${
                 index === currentStep 
                   ? "bg-[#22C55E] w-6" 
                   : index < currentStep 
-                    ? "bg-[#22C55E]/50" 
+                    ? "bg-[#22C55E]/50 cursor-pointer" 
                     : "bg-slate-600"
               }`}
             />
