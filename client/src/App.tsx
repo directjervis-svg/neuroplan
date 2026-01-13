@@ -25,6 +25,7 @@ import EffortMatrix from "./pages/EffortMatrix";
 import NotificationSettings from "./pages/NotificationSettings";
 import CalendarSettings from "./pages/CalendarSettings";
 import Rewards from "./pages/Rewards";
+import Settings from "./pages/Settings";
 import DashboardUnified from "./pages/DashboardUnified";
 import DashboardBarkley from "./pages/DashboardBarkley";
 import Privacy from "./pages/Privacy";
@@ -110,7 +111,10 @@ function Router() {
         <ProtectedRoute component={CalendarSettings} />
       </Route>
       <Route path="/dashboard/rewards">
-        <ProtectedRoute component={Rewards} />
+        {() => <ProtectedRoute component={Rewards} />}
+      </Route>
+      <Route path="/dashboard/settings">
+        {() => <ProtectedRoute component={Settings} />}
       </Route>
       
       {/* Admin Routes */}

@@ -17,6 +17,8 @@ import {
 import { Link } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import FocusGarden from "@/components/FocusGarden";
+import StreakBadge from "@/components/StreakBadge";
+import WhereILeftOff from "@/components/WhereILeftOff";
 
 /**
  * Dashboard Page - Main hub for NeuroExecução
@@ -32,16 +34,22 @@ export default function Dashboard() {
   return (
     <DashboardLayoutNeuroExecucao>
       <div className="p-6 lg:p-8 space-y-8">
-        {/* Welcome Section */}
-        <div className="space-y-2">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-            Olá, {user?.name?.split(" ")[0] || "Usuário"} 👋
-          </h1>
-          <p className="text-muted-foreground">
-            Vamos transformar suas ideias em ações hoje.
-          </p>
+        {/* Welcome Section with Streak */}
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+              Olá, {user?.name?.split(" ")[0] || "Usuário"} 👋
+            </h1>
+            <p className="text-muted-foreground">
+              Vamos transformar suas ideias em ações hoje.
+            </p>
+          </div>
+          <StreakBadge showAnimation={true} />
         </div>
 
+        {/* Onde Parei */}
+        <WhereILeftOff />
+        
         {/* Jardim do Foco */}
         <FocusGarden completedCycles={stats?.completedCycles ?? 0} />
 

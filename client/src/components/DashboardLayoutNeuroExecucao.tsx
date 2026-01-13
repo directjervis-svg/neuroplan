@@ -35,6 +35,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import GlobalProgressBar from "@/components/GlobalProgressBar";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -274,7 +275,12 @@ export default function DashboardLayoutNeuroExecucao({ children }: DashboardLayo
 
       {/* Main Content */}
       <main className="lg:pl-64">
-        <div className="min-h-screen pt-16 lg:pt-0">
+        {/* Barra de Progresso Global */}
+        <div className="pt-16 lg:pt-0">
+          <GlobalProgressBar />
+        </div>
+        
+        <div className="min-h-screen">
           {children}
         </div>
       </main>

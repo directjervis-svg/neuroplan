@@ -36,6 +36,9 @@ import { rewardsRouter } from "./rewards";
 import { calendarExportRouter } from "./exportCalendar";
 import { adminStoreRouter } from "./adminStore";
 import { cyclesRouter } from "./cycles";
+import { streaksRouter } from "./streaks";
+import { remindersRouter } from "./reminders";
+import { sessionNotesRouter } from "./sessionNotes";
 import { createCheckoutSession, createPortalSession, getOrCreateCustomer } from "./stripe/stripe";
 import { NEUROPLAN_PRODUCTS } from "./stripe/products";
 
@@ -450,7 +453,15 @@ export const appRouter = router({
         const response = await getSocraticResponse(context, input.message);
         return { response };
       }),
-  }),
-});
+   }),
 
+  // Streaks Router
+  streaks: streaksRouter,
+  
+  // Reminders Router
+  reminders: remindersRouter,
+  
+  // Session Notes Router (Onde Parei)
+  sessionNotes: sessionNotesRouter,
+});
 export type AppRouter = typeof appRouter;

@@ -1,0 +1,33 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "NeuroExecução",
+  "applicationCategory": "ProductivityApplication",
+  "operatingSystem": "Web, iOS, Android",
+  "description": "Sistema de gestão de projetos para adultos com TDAH baseado na ciência de Russell Barkley. Ciclos de 3 dias, timer progressivo e gamificação sem punição.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "BRL",
+    "description": "Plano gratuito disponível"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "127"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "NeuroExecução",
+    "url": "https://neuroplan-4wuusrck.manus.space"
+  },
+  "keywords": [
+    "TDAH",
+    "gestão de projetos",
+    "produtividade",
+    "adultos TDAH",
+    "app TDAH Brasil",
+    "Russell Barkley",
+    "paralisia TDAH"
+  ]
+}

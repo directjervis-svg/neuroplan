@@ -103,8 +103,20 @@ export default function DashboardBarkley() {
   );
 
   // Mutations
+  const updateStreak = trpc.streaks.updateStreak.useMutation();
+  
   const completeTask = trpc.cycles.completeTask.useMutation({
-    onSuccess: () => toast.success("Tarefa concluída! +50 XP"),
+    onSuccess: async () => {
+      toast.success("Tarefa concluída! +50 XP");
+      
+      // Atualizar streak
+      const result = await updateStreak.mutateAsync();
+      
+      // Se for novo recorde, mostrar toast especial
+      if (result.isNewRecord) {
+        toast.success(`🔥 Novo recorde! ${result.currentStreak} dias de streak!`);
+      }
+    },
   });
 
   const startTask = trpc.cycles.startTask.useMutation();

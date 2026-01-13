@@ -271,3 +271,54 @@
 - [x] Adicionar seção FAQ na landing page
 - [x] Implementar tooltips explicativos para elementos neuroadaptativos
 - [x] Garantir feedback visual ≤ 200ms em todas as ações
+
+
+## Fase 35: Melhorias P0 (16 dias de desenvolvimento)
+
+### TAREFA 1: Sistema de Streaks (3 dias)
+- [x] Atualizar schema do banco (user_streaks table)
+- [x] Criar router de streaks (server/streaks.ts)
+- [x] Registrar router no routers.ts
+- [x] Criar componente StreakBadge
+- [x] Adicionar StreakBadge ao Dashboard
+- [x] Integrar com conclusão de tarefas
+- [ ] Testar streak consecutivo e quebra
+
+### TAREFA 2: Lembretes Configuráveis (4 dias)
+- [x] Atualizar schema do banco (user_reminders table)
+- [x] Criar router de lembretes (server/reminders.ts)
+- [x] Registrar router no routers.ts
+- [x] Criar componente ReminderSettings
+- [x] Adicionar página Settings
+- [x] Adicionar rota /dashboard/settings
+- [ ] Configurar Service Worker para notificações
+- [ ] Testar lembretes em diferentes horários)
+- [ ] Atualizar schema do banco (context_snapshots table)
+- [ ] Criar router de contexto (server/contextSummary.ts)
+- [ ] Registrar router no routers.ts
+- [ ] Criar componente WhereILeftOff
+- [ ] Adicionar WhereILeftOff ao Dashboard
+- [ ] Integrar com OpenAI para resumos
+- [ ] Testar geração de resumos
+
+### TAREFA 4: Quick Ideas (2 dias)
+- [ ] Atualizar schema do banco (quick_ideas table)
+- [ ] Criar router de ideas (server/quickIdeas.ts)
+- [ ] Registrar router no routers.ts
+- [ ] Criar componente QuickIdeasPanel
+- [ ] Adicionar botão flutuante no Dashboard
+- [ ] Testar captura e listagem de ideias
+
+### TAREFA 5: Barra de Progresso Permanente (2 dias)
+- [ ] Criar componente ProgressHeader
+- [ ] Adicionar ao layout principal
+- [ ] Integrar com dados de ciclos
+- [ ] Testar responsividade
+- [ ] Validar cálculo de progresso
+
+### TAREFA 6: SEO Técnico (1 dia)
+- [ ] Adicionar meta tags no index.html
+- [ ] Criar componente SEO para páginas dinâmicas
+- [ ] Adicionar schema.org JSON-LD
+- [ ] Configurar Open Graph
+- [ ] Testar com Google Rich Results Test

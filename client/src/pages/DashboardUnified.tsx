@@ -68,9 +68,19 @@ export default function DashboardUnified() {
   const notifications: any[] = [];
 
   // Mutations
+  const updateStreak = trpc.streaks.updateStreak.useMutation();
+  
   const completeTask = trpc.tasks.complete.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("Tarefa concluída! +10 XP");
+      
+      // Atualizar streak
+      const result = await updateStreak.mutateAsync();
+      
+      // Se for novo recorde, mostrar toast especial
+      if (result.isNewRecord) {
+        toast.success(`🔥 Novo recorde! ${result.currentStreak} dias de streak!`);
+      }
     },
   });
 
