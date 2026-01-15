@@ -2,8 +2,43 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 
+// Mock Stripe
+vi.mock("./stripe/stripe", () => ({
+  stripe: {
+    checkout: { sessions: { create: vi.fn() } },
+    customers: { list: vi.fn(), create: vi.fn() },
+    subscriptions: { retrieve: vi.fn(), cancel: vi.fn() },
+    billingPortal: { sessions: { create: vi.fn() } },
+    webhooks: { constructEvent: vi.fn() },
+  },
+  createCheckoutSession: vi.fn(),
+  getOrCreateCustomer: vi.fn(),
+  getSubscription: vi.fn(),
+  cancelSubscription: vi.fn(),
+  createPortalSession: vi.fn(),
+  verifyWebhookSignature: vi.fn(),
+}));
+
+// Mock ENV
+vi.mock("./_core/env", () => ({
+  ENV: {
+    stripeSecretKey: "sk_test_mock",
+    stripeWebhookSecret: "whsec_mock",
+    openAiApiKey: "sk-mock",
+    databaseUrl: "mysql://mock",
+    jwtSecret: "mock-secret",
+  },
+}));
+
 // Mock the database functions
 vi.mock("./db", () => ({
+  getDb: vi.fn(() => Promise.resolve({
+    query: {},
+    select: vi.fn(),
+    insert: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+  })),
   getProjects: vi.fn(),
   getProjectById: vi.fn(),
   createProject: vi.fn(),
