@@ -31,6 +31,7 @@ import DashboardUnified from "./pages/DashboardUnified";
 import DashboardBarkley from "./pages/DashboardBarkley";
 import DashboardABTest from "./pages/DashboardABTest";
 import Privacy from "./pages/Privacy";
+import { ProjectWizard } from "./components/wizard/ProjectWizard";
 import Terms from "./pages/Terms";
 
 // Admin Pages
@@ -78,6 +79,9 @@ function Router() {
       </Route>
       <Route path="/dashboard/projects/new">
         <ProtectedRoute component={NewProject} />
+      </Route>
+      <Route path="/dashboard/wizard">
+        <ProtectedRoute component={ProjectWizard} />
       </Route>
       <Route path="/dashboard/projects/:id">
         <ProtectedRoute component={ProjectDetail} />
