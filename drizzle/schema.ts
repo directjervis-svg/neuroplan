@@ -926,3 +926,10 @@ export type NewSessionNote = typeof sessionNotes.$inferInsert;
 // ========================================
 // A tabela quickIdeas já existe no schema
 // Apenas garantindo que está configurada corretamente
+
+
+// ========================================
+// TABELA: USER CALIBRATION
+// Calibração de perfil do usuário para IA adaptativa
+// ========================================
+export * from './schema-calibration';
