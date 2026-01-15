@@ -43,6 +43,7 @@ import { streaksRouter } from "./streaks";
 import { remindersRouter } from "./reminders";
 import { sessionNotesRouter } from "./sessionNotes";
 import { aiUsageRouter as aiMetricsRouter } from "./ai-usage";
+import { analyticsRouter } from "./analytics";
 import { createCheckoutSession, createPortalSession, getOrCreateCustomer } from "./stripe/stripe";
 import { NEUROPLAN_PRODUCTS } from "./stripe/products";
 
@@ -597,5 +598,8 @@ export const appRouter = router({
   
   // AI Usage Metrics Router
   aiMetrics: aiMetricsRouter,
+  
+  // Analytics & Metrics Router
+  analytics: analyticsRouter,
 });
 export type AppRouter = typeof appRouter;
