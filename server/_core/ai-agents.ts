@@ -9,7 +9,7 @@
  * 5. Unblocking Agent - Diagnoses and solves task blockers
  */
 
-import { callLLM } from './llm';
+import { invokeLLM } from './llm';
 
 // ============================================================================
 // TYPES
@@ -108,12 +108,11 @@ Seu trabalho:
 
 IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.`;
 
-  const response = await callLLM({
-    model: 'gpt-4o-mini',
+  const result = await invokeLLM({
     messages: [{ role: 'user', content: prompt }],
-    temperature: 0.3,
-    max_tokens: 500,
   });
+  
+  const response = result.choices[0]?.message?.content || '{}';
 
   try {
     const result = JSON.parse(response);
@@ -170,12 +169,11 @@ Retorne em formato JSON válido:
 
 IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.`;
 
-  const response = await callLLM({
-    model: 'gpt-4o-mini',
+  const result = await invokeLLM({
     messages: [{ role: 'user', content: prompt }],
-    temperature: 0.5,
-    max_tokens: 1000,
   });
+  
+  const response = result.choices[0]?.message?.content || '{}';
 
   try {
     const result = JSON.parse(response);
@@ -242,12 +240,11 @@ Retorne em formato JSON válido:
 
 IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.`;
 
-  const response = await callLLM({
-    model: 'gpt-4o-mini',
+  const result = await invokeLLM({
     messages: [{ role: 'user', content: prompt }],
-    temperature: 0.6,
-    max_tokens: 1500,
   });
+  
+  const response = result.choices[0]?.message?.content || '{}';
 
   try {
     const result = JSON.parse(response);
