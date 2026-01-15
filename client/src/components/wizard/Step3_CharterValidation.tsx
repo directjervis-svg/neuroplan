@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import type { CharterAnalysisResult, CharterData } from '../../hooks/wizard/useProjectWizard';
+import { AILoadingState } from './AILoadingState';
 
 interface Step3Props {
   charter: CharterData;
@@ -34,21 +35,7 @@ export function Step3_CharterValidation({
   }, []);
 
   if (isAnalyzing || !localAnalysis) {
-    return (
-      <div className="max-w-3xl mx-auto py-8 px-4">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-          <div className="flex flex-col items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mb-4"></div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              Analisando seu objetivo...
-            </h3>
-            <p className="text-gray-600 text-center max-w-md">
-              Nossa IA está validando se seu objetivo é SMART (Específico, Mensurável, Atingível, Relevante, Temporal)
-            </p>
-          </div>
-        </div>
-      </div>
-    );
+    return <AILoadingState stage="analyzing" estimatedSeconds={5} />;
   }
 
   const clarityColor =

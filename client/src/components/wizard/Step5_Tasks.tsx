@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import type { Deliverable, Task, CalibrationData } from '../../hooks/wizard/useProjectWizard';
+import { AILoadingState } from './AILoadingState';
 
 interface Step5Props {
   deliverables: Deliverable[];
@@ -79,26 +80,7 @@ export function Step5_Tasks({
   };
 
   if (isGenerating) {
-    return (
-      <div className="max-w-5xl mx-auto py-8 px-4">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-          <div className="flex flex-col items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mb-4"></div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              Gerando tarefas adaptadas ao seu perfil...
-            </h3>
-            <p className="text-gray-600 text-center max-w-md">
-              Nossa IA está criando tarefas personalizadas com base no seu estilo de trabalho
-            </p>
-            <div className="mt-4 text-sm text-gray-500">
-              <p>Granularidade: <strong>{calibration.granularity}</strong></p>
-              <p>Estilo: <strong>{calibration.style}</strong></p>
-              <p>Capacidade: <strong>{calibration.capacity}</strong></p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <AILoadingState stage="generating-tasks" estimatedSeconds={10} />;
   }
 
   return (

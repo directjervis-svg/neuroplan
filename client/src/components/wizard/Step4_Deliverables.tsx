@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import type { Deliverable } from '../../hooks/wizard/useProjectWizard';
+import { AILoadingState } from './AILoadingState';
 
 interface Step4Props {
   charter: string;
@@ -76,21 +77,7 @@ export function Step4_Deliverables({
   };
 
   if (isGenerating) {
-    return (
-      <div className="max-w-4xl mx-auto py-8 px-4">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-          <div className="flex flex-col items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mb-4"></div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              Identificando entregas principais...
-            </h3>
-            <p className="text-gray-600 text-center max-w-md">
-              Nossa IA está decompondo seu projeto em entregas gerenciáveis (WBS)
-            </p>
-          </div>
-        </div>
-      </div>
-    );
+    return <AILoadingState stage="generating-wbs" estimatedSeconds={7} />;
   }
 
   return (
