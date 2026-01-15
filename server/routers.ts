@@ -42,6 +42,7 @@ import { cyclesRouter } from "./cycles";
 import { streaksRouter } from "./streaks";
 import { remindersRouter } from "./reminders";
 import { sessionNotesRouter } from "./sessionNotes";
+import { aiUsageRouter as aiMetricsRouter } from "./ai-usage";
 import { createCheckoutSession, createPortalSession, getOrCreateCustomer } from "./stripe/stripe";
 import { NEUROPLAN_PRODUCTS } from "./stripe/products";
 
@@ -593,5 +594,8 @@ export const appRouter = router({
   
   // Session Notes Router (Onde Parei)
   sessionNotes: sessionNotesRouter,
+  
+  // AI Usage Metrics Router
+  aiMetrics: aiMetricsRouter,
 });
 export type AppRouter = typeof appRouter;
