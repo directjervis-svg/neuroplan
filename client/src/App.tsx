@@ -5,8 +5,11 @@ import { Route, Switch, Redirect } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import LGPDConsentModal from "./components/LGPDConsentModal";
+import { AgeVerificationModal } from "./components/AgeVerificationModal";
 import { useAuth } from "./_core/hooks/useAuth";
 import { usePageTracking } from "./hooks/useAnalytics";
+import { useState, useEffect } from "react";
+import { trpc } from "./lib/trpc";
 
 // Pages
 import Home from "./pages/Home";
@@ -148,12 +151,28 @@ function Router() {
 }
 
 function App() {
+  const { data: user } = trpc.auth.me.useQuery();
+  const [showAgeVerification, setShowAgeVerification] = useState(false);
+  
+  useEffect(() => {
+    if (user && !user.ageVerified) {
+      setShowAgeVerification(true);
+    }
+  }, [user]);
+  
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light" switchable>
         <TooltipProvider>
           <Toaster />
           <LGPDConsentModal />
+          <AgeVerificationModal 
+            open={showAgeVerification}
+            onComplete={() => {
+              setShowAgeVerification(false);
+              window.location.reload();
+            }}
+          />
           <Router />
         </TooltipProvider>
       </ThemeProvider>

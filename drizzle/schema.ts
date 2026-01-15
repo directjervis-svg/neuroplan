@@ -29,6 +29,10 @@ export const users = mysqlTable("users", {
   consentTimestamp: timestamp("consentTimestamp"),
   consentVersion: varchar("consentVersion", { length: 16 }),
   
+  // Age Verification (LGPD compliance for sensitive health data)
+  birthDate: date("birth_date"),
+  ageVerified: boolean("age_verified").default(false).notNull(),
+  
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),

@@ -44,7 +44,9 @@ import { remindersRouter } from "./reminders";
 import { sessionNotesRouter } from "./sessionNotes";
 import { aiUsageRouter as aiMetricsRouter } from "./ai-usage";
 import { analyticsRouter } from "./analytics";
+import { usersRouter } from "./routers/users";
 import { createCheckoutSession, createPortalSession, getOrCreateCustomer } from "./stripe/stripe";
+import { PROJECT_TEMPLATES } from "./data/projectTemplates";
 import { NEUROPLAN_PRODUCTS } from "./stripe/products";
 
 export const appRouter = router({
@@ -66,6 +68,9 @@ export const appRouter = router({
       }),
   }),
 
+  // Users Router (age verification, profile updates)
+  users: usersRouter,
+  
   // User Router (LGPD consent, profile)
   user: router({
     saveConsent: protectedProcedure
@@ -145,6 +150,54 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) => {
         const { id, ...data } = input;
         return updateProject(id, ctx.user.id, data);
+      }),
+    
+    createFromTemplate: protectedProcedure
+      .input(z.object({
+        templateId: z.string(),
+        customTitle: z.string().optional()
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const template = PROJECT_TEMPLATES.find(t => t.id === input.templateId);
+        
+        if (!template) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Template não encontrado'
+          });
+        }
+        
+        // Criar projeto com dados do template
+        const project = await createProject({
+          userId: ctx.user.id,
+          title: input.customTitle || template.title,
+          briefing: template.charter,
+          category: template.category === 'work' ? 'PROFESSIONAL' : 'PERSONAL',
+          cycleDuration: 'DAYS_3',
+        });
+        
+        // Atualizar com deliverables do template
+        await updateProject(project.id, ctx.user.id, {
+          deliverableA: template.deliverableA,
+          deliverableB: template.deliverableB,
+          deliverableC: template.deliverableC,
+          status: 'ACTIVE'
+        });
+        
+        // Criar tarefas do template
+        if (template.tasks.length > 0) {
+          for (const task of template.tasks) {
+            await createTask({
+              projectId: project.id,
+              title: task.title,
+              dayNumber: task.dayNumber,
+              position: 0,
+              type: 'ACTION'
+            }, ctx.user.id);
+          }
+        }
+        
+        return project;
       }),
   }),
 
