@@ -106,13 +106,29 @@ export default function Terms() {
               <strong>Cobrança:</strong> Cobranças são processadas mensalmente ou anualmente via Stripe,
               de acordo com seu plano.
             </p>
+          </section>
+          
+          {/* Seção 5A: Política de Cancelamento e Reembolso */}
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">5A. Política de Cancelamento e Reembolso</h2>
             <p className="mb-4">
-              <strong>Cancelamento:</strong> Você pode cancelar sua assinatura a qualquer momento. O
-              cancelamento entra em vigor no final do período de cobrança.
+              Em conformidade com o Código de Defesa do Consumidor (CDC), você tem direito ao
+              arrependimento em até 7 dias corridos a partir da contratação de qualquer plano pago.
             </p>
+            
+            <h3 className="text-xl font-bold text-gray-900 mb-3">Como Solicitar Reembolso</h3>
+            <ol className="list-decimal list-inside space-y-2 mb-4">
+              <li>Envie um email para suporte@neuroexecucao.com.br dentro do prazo de 7 dias</li>
+              <li>Informe seu email de cadastro e o motivo do cancelamento</li>
+              <li>O reembolso será processado em até 5 dias úteis</li>
+              <li>O valor será devolvido na mesma forma de pagamento utilizada</li>
+            </ol>
+            
+            <h3 className="text-xl font-bold text-gray-900 mb-3">Como Cancelar Assinatura</h3>
             <p className="mb-4">
-              <strong>Reembolso:</strong> Reembolsos não são automáticos. Solicitações de reembolso serão
-              avaliadas caso a caso.
+              Você pode cancelar sua assinatura a qualquer momento sem multa ou penalidade através
+              do Portal do Cliente disponível em Configurações &gt; Assinatura &gt; Gerenciar no Stripe.
+              O cancelamento terá efeito imediato e você perderá acesso aos recursos Pro/Team.
             </p>
           </section>
 

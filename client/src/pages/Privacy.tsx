@@ -162,24 +162,33 @@ export default function Privacy() {
 
           {/* Seção 8 */}
           <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Contato e Responsável</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Encarregado de Dados (DPO)</h2>
             <p className="mb-4">
-              Para dúvidas sobre esta política ou para exercer seus direitos LGPD:
+              Designamos um Encarregado de Proteção de Dados (DPO) conforme exigido pela LGPD.
+              Para exercer seus direitos ou esclarecer dúvidas sobre o tratamento de seus dados pessoais:
             </p>
-            <div className="bg-gray-50 p-6 rounded-lg">
+            <div className="bg-gray-50 p-6 rounded-lg mb-6">
               <p className="mb-2">
-                <strong>Email:</strong>{" "}
-                <a href="mailto:privacidade@neuroexecucao.com.br" className="text-green-600 hover:underline">
-                  privacidade@neuroexecucao.com.br
+                <strong>Email DPO:</strong>{" "}
+                <a href="mailto:dpo@neuroexecucao.com.br" className="text-green-600 hover:underline">
+                  dpo@neuroexecucao.com.br
                 </a>
               </p>
               <p className="mb-2">
-                <strong>Responsável de Dados:</strong> Leonardo (Proprietário)
+                <strong>Nome:</strong> Leonardo (Proprietário e DPO)
               </p>
               <p>
                 <strong>Localização:</strong> Brasil
               </p>
             </div>
+            
+            <h3 className="text-xl font-bold text-gray-900 mb-3">Localização dos Dados</h3>
+            <p className="mb-4">
+              Seus dados pessoais são armazenados em servidores localizados nos Estados Unidos,
+              operados por nossos provedores de infraestrutura (Manus Hosting e TiDB Cloud).
+              Garantimos que todos os prestadores de serviços que processam dados em nosso nome
+              aderem aos mesmos padrões de proteção exigidos pela LGPD.
+            </p>
           </section>
 
           {/* Seção 9 */}
