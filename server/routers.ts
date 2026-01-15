@@ -26,6 +26,7 @@ import {
   saveUserConsent
 } from "./db";
 import { processBriefing, decomposeTasks, getSocraticResponse } from "./ai";
+import { enforceRateLimit, getUserUsage } from "./ratelimit";
 import { gamificationRouter } from "./gamification";
 import { exportRouter } from "./export";
 import { notificationsRouter } from "./notifications";
@@ -376,7 +377,13 @@ export const appRouter = router({
       .input(z.object({
         briefing: z.string().min(10).max(5000),
       }))
-      .mutation(async ({ input }) => {
+      .mutation(async ({ ctx, input }) => {
+        // Enforce rate limit before AI call
+        await enforceRateLimit(
+          ctx.user.id,
+          ctx.user.subscriptionPlan || 'FREE',
+          ctx.req.ip
+        );
         return processBriefing(input.briefing);
       }),
 
@@ -387,6 +394,13 @@ export const appRouter = router({
         cycleDuration: z.enum(["DAYS_3", "DAYS_7", "DAYS_14"]),
       }))
       .mutation(async ({ ctx, input }) => {
+        // Enforce rate limit before AI call
+        await enforceRateLimit(
+          ctx.user.id,
+          ctx.user.subscriptionPlan || 'FREE',
+          ctx.req.ip
+        );
+        
         // First process the briefing
         const processedBriefing = await processBriefing(input.briefing);
         
@@ -435,7 +449,13 @@ export const appRouter = router({
         context: z.string().max(2000),
         message: z.string().min(1).max(1000),
       }))
-      .mutation(async ({ input }) => {
+      .mutation(async ({ ctx, input }) => {
+        // Enforce rate limit before AI call
+        await enforceRateLimit(
+          ctx.user.id,
+          ctx.user.subscriptionPlan || 'FREE',
+          ctx.req.ip
+        );
         const response = await getSocraticResponse(input.context, input.message);
         return { response };
       }),
@@ -446,13 +466,27 @@ export const appRouter = router({
         message: z.string().min(1).max(1000),
         projectId: z.number().optional(),
       }))
-      .mutation(async ({ input }) => {
+      .mutation(async ({ ctx, input }) => {
+        // Enforce rate limit before AI call
+        await enforceRateLimit(
+          ctx.user.id,
+          ctx.user.subscriptionPlan || 'FREE',
+          ctx.req.ip
+        );
         const context = input.projectId 
           ? `Projeto ID: ${input.projectId}` 
           : "Contexto geral do usuário";
         const response = await getSocraticResponse(context, input.message);
         return { response };
       }),
+
+    // Get current AI usage for user (for dashboard display)
+    getUsage: protectedProcedure.query(async ({ ctx }) => {
+      return getUserUsage(
+        ctx.user.id,
+        ctx.user.subscriptionPlan || 'FREE'
+      );
+    }),
    }),
 
   // Streaks Router

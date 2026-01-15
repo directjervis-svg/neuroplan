@@ -28,6 +28,7 @@ import Rewards from "./pages/Rewards";
 import Settings from "./pages/Settings";
 import DashboardUnified from "./pages/DashboardUnified";
 import DashboardBarkley from "./pages/DashboardBarkley";
+import DashboardABTest from "./pages/DashboardABTest";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 
@@ -131,7 +132,7 @@ function Router() {
         <ProtectedRoute component={DashboardUnified} />
       </Route>
       <Route path="/dashboard/barkley">
-        <ProtectedRoute component={DashboardBarkley} />
+        <ProtectedRoute component={DashboardABTest} />
       </Route>
       
       {/* 404 */}
