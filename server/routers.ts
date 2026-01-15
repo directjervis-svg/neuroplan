@@ -26,6 +26,8 @@ import {
   saveUserConsent
 } from "./db";
 import { processBriefing, decomposeTasks, getSocraticResponse } from "./ai";
+import { analyzeCharter, generateWBS, generateTasks, type UserProfile } from "./_core/ai-agents";
+import { getUserCalibration, saveUserCalibration } from "./db-calibration";
 import { enforceRateLimit, getUserUsage } from "./ratelimit";
 import { gamificationRouter } from "./gamification";
 import { exportRouter } from "./export";
@@ -79,6 +81,21 @@ export const appRouter = router({
         consentTimestamp: ctx.user.consentTimestamp || null,
       };
     }),
+
+    // User Calibration (Adaptive AI)
+    getCalibration: protectedProcedure.query(async ({ ctx }) => {
+      return getUserCalibration(ctx.user.id);
+    }),
+
+    saveCalibration: protectedProcedure
+      .input(z.object({
+        granularityLevel: z.enum(['macro', 'meso', 'micro']),
+        structuringStyle: z.enum(['top_down', 'bottom_up']),
+        cognitiveCapacityMinutes: z.number().min(30).max(180),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        return saveUserCalibration(ctx.user.id, input);
+      }),
   }),
 
   // Projects Router
@@ -494,6 +511,78 @@ export const appRouter = router({
         ctx.user.subscriptionPlan || 'FREE'
       );
     }),
+
+    // NEW: Multi-Agent AI Architecture
+    
+    // Agent 1: Charter Analysis - Validates SMART goals
+    analyzeCharter: protectedProcedure
+      .input(z.object({
+        userInput: z.string().min(5).max(1000),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await enforceRateLimit(
+          ctx.user.id,
+          ctx.user.subscriptionPlan || 'FREE',
+          ctx.req.ip
+        );
+        return analyzeCharter(input.userInput);
+      }),
+
+    // Agent 2: WBS Generation - Decomposes into deliverables
+    generateWBS: protectedProcedure
+      .input(z.object({
+        resultadoFinal: z.string().min(5).max(1000),
+        historico: z.string().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await enforceRateLimit(
+          ctx.user.id,
+          ctx.user.subscriptionPlan || 'FREE',
+          ctx.req.ip
+        );
+        
+        // Get user calibration profile
+        const calibration = await getUserCalibration(ctx.user.id);
+        const userProfile: UserProfile = {
+          granularity_level: calibration?.granularityLevel || 'meso',
+          structuring_style: calibration?.structuringStyle || 'top_down',
+          cognitive_capacity_minutes: calibration?.cognitiveCapacityMinutes || 90,
+        };
+        
+        return generateWBS(
+          input.resultadoFinal,
+          userProfile,
+          input.historico
+        );
+      }),
+
+    // Agent 3: Task Generation - Generates tasks adapted to user profile
+    generateTasksAdaptive: protectedProcedure
+      .input(z.object({
+        deliverable: z.object({
+          name: z.string(),
+          description: z.string(),
+          estimated_effort: z.number().min(1).max(5),
+          depends_on: z.array(z.number()).nullable().optional(),
+        }),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await enforceRateLimit(
+          ctx.user.id,
+          ctx.user.subscriptionPlan || 'FREE',
+          ctx.req.ip
+        );
+        
+        // Get user calibration profile
+        const calibration = await getUserCalibration(ctx.user.id);
+        const userProfile: UserProfile = {
+          granularity_level: calibration?.granularityLevel || 'meso',
+          structuring_style: calibration?.structuringStyle || 'top_down',
+          cognitive_capacity_minutes: calibration?.cognitiveCapacityMinutes || 90,
+        };
+        
+        return generateTasks(input.deliverable, userProfile);
+      }),
    }),
 
   // Streaks Router
