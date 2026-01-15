@@ -53,6 +53,13 @@ export const appRouter = router({
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
     }),
+    giveConsent: protectedProcedure
+      .input(z.object({
+        consentVersion: z.string().min(1).max(16),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        return saveUserConsent(ctx.user.id, input.consentVersion);
+      }),
   }),
 
   // User Router (LGPD consent, profile)

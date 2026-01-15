@@ -4,6 +4,7 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch, Redirect } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import LGPDConsentModal from "./components/LGPDConsentModal";
 import { useAuth } from "./_core/hooks/useAuth";
 import { usePageTracking } from "./hooks/useAnalytics";
 
@@ -148,6 +149,7 @@ function App() {
       <ThemeProvider defaultTheme="light" switchable>
         <TooltipProvider>
           <Toaster />
+          <LGPDConsentModal />
           <Router />
         </TooltipProvider>
       </ThemeProvider>
