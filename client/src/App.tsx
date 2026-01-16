@@ -6,6 +6,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import LGPDConsentModal from "./components/LGPDConsentModal";
 import { AgeVerificationModal } from "./components/AgeVerificationModal";
+import { OnboardingModal } from "./components/OnboardingModal";
 import { useAuth } from "./_core/hooks/useAuth";
 import { usePageTracking } from "./hooks/useAnalytics";
 import { useState, useEffect } from "react";
@@ -153,7 +154,10 @@ function Router() {
 function App() {
   const { data: user } = trpc.auth.me.useQuery();
   const [showAgeVerification, setShowAgeVerification] = useState(false);
-  
+  const [showOnboarding, setShowOnboarding] = useState(() =>
+    !localStorage.getItem('neuroplan_onboarding_complete')
+  );
+
   useEffect(() => {
     if (user && !user.ageVerified) {
       setShowAgeVerification(true);
@@ -166,13 +170,25 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <LGPDConsentModal />
-          <AgeVerificationModal 
+          <AgeVerificationModal
             open={showAgeVerification}
             onComplete={() => {
               setShowAgeVerification(false);
               window.location.reload();
             }}
           />
+          {showOnboarding && (
+            <OnboardingModal
+              onComplete={(prefs) => {
+                setShowOnboarding(false);
+                console.log('Neuro preferences saved:', prefs);
+              }}
+              onSkip={() => {
+                localStorage.setItem('neuroplan_onboarding_complete', 'true');
+                setShowOnboarding(false);
+              }}
+            />
+          )}
           <Router />
         </TooltipProvider>
       </ThemeProvider>
