@@ -142,7 +142,7 @@ export default function DashboardBarkley() {
       case "A": return "bg-red-100 text-red-800 border-red-300";
       case "B": return "bg-yellow-100 text-yellow-800 border-yellow-300";
       case "C": return "bg-green-100 text-green-800 border-green-300";
-      default: return "bg-gray-100 text-gray-800";
+      default: return "bg-background-secondary text-text-primary";
     }
   };
 
@@ -160,11 +160,11 @@ export default function DashboardBarkley() {
 
   if (!activeCycle) {
     return (
-      <div className="flex items-center justify-center h-screen bg-white p-4">
+      <div className="flex items-center justify-center h-screen bg-background-primary p-4">
         <div className="text-center">
-          <Brain className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h2 className="text-xl md:text-2xl font-semibold text-gray-900 mb-2">Nenhum ciclo ativo</h2>
-          <p className="text-gray-600 mb-6 text-sm md:text-base">Crie seu primeiro ciclo de 3 dias para começar</p>
+          <Brain className="w-16 h-16 text-text-disabled mx-auto mb-4" />
+          <h2 className="text-xl md:text-2xl font-semibold text-text-primary mb-2">Nenhum ciclo ativo</h2>
+          <p className="text-text-secondary mb-6 text-sm md:text-base">Crie seu primeiro ciclo de 3 dias para começar</p>
           <Link href="/projects">
             <Button className="bg-green-600 hover:bg-green-700 text-white min-h-[48px] px-6">
               Criar Ciclo
@@ -179,13 +179,13 @@ export default function DashboardBarkley() {
   // MOBILE LAYOUT (< lg)
   // ============================================
   const MobileLayout = () => (
-    <div className="flex flex-col h-screen bg-white lg:hidden">
+    <div className="flex flex-col h-screen bg-background-primary lg:hidden">
       {/* Mobile Header */}
-      <header className="border-b border-gray-200 p-4 bg-white">
-        <h1 className="text-lg font-semibold text-gray-900">
+      <header className="border-b border-border-default p-4 bg-background-primary">
+        <h1 className="text-lg font-semibold text-text-primary">
           Dia {activeCycle.currentDay || 1} do ciclo
         </h1>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-text-secondary">
           {todayTasks.filter(t => t.status === "COMPLETED").length}/{todayTasks.length} tarefas concluídas
         </p>
       </header>
@@ -198,11 +198,11 @@ export default function DashboardBarkley() {
             {/* "Onde Parei" Block */}
             {whereILeft && (
               <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <h3 className="text-sm font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                <h3 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 text-blue-600" />
                   Onde parei ontem
                 </h3>
-                <p className="text-sm text-gray-700 line-clamp-3">
+                <p className="text-sm text-text-secondary line-clamp-3">
                   {whereILeft.content}
                 </p>
               </div>
@@ -217,7 +217,7 @@ export default function DashboardBarkley() {
                   className={`w-full text-left p-4 rounded-lg border transition-all min-h-[72px] ${
                     activeTaskId === task.id
                       ? "bg-green-50 border-green-300 shadow-md"
-                      : "bg-white border-gray-200 active:bg-gray-50"
+                      : "bg-background-primary border-border-default active:bg-background-secondary"
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -231,11 +231,11 @@ export default function DashboardBarkley() {
                         <Badge className={`${getPriorityColor(task.priority)} text-xs`}>
                           {task.priority}
                         </Badge>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-text-tertiary">
                           {task.estimatedMinutes}min
                         </span>
                       </div>
-                      <h4 className="font-medium text-gray-900 text-sm leading-snug">
+                      <h4 className="font-medium text-text-primary text-sm leading-snug">
                         {task.title}
                       </h4>
                     </div>
@@ -251,16 +251,16 @@ export default function DashboardBarkley() {
           {activeTask ? (
             <>
               {/* Task Header */}
-              <div className="border-b border-gray-200 p-4">
+              <div className="border-b border-border-default p-4">
                 <div className="flex items-center gap-2 mb-2 flex-wrap">
                   <Badge className={getPriorityColor(activeTask.priority)}>
                     {activeTask.priority}
                   </Badge>
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-text-secondary">
                     {activeTask.estimatedMinutes} minutos
                   </span>
                 </div>
-                <h1 className="text-lg font-bold text-gray-900 leading-snug">
+                <h1 className="text-lg font-bold text-text-primary leading-snug">
                   {activeTask.title}
                 </h1>
               </div>
@@ -270,8 +270,8 @@ export default function DashboardBarkley() {
                 <div className="p-4 space-y-4">
                   {/* Description */}
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2 text-sm">Descrição</h3>
-                    <p className="text-gray-700 leading-relaxed text-sm">
+                    <h3 className="font-semibold text-text-primary mb-2 text-sm">Descrição</h3>
+                    <p className="text-text-secondary leading-relaxed text-sm">
                       {getTaskDescription(activeTask.description)}
                     </p>
                   </div>
@@ -282,12 +282,12 @@ export default function DashboardBarkley() {
                     if (!checklist || !Array.isArray(checklist)) return null;
                     return (
                       <div>
-                        <h3 className="font-semibold text-gray-900 mb-3 text-sm">Checklist</h3>
+                        <h3 className="font-semibold text-text-primary mb-3 text-sm">Checklist</h3>
                         <div className="space-y-3">
                           {checklist.map((item: any, idx: number) => (
                             <label key={idx} className="flex items-center gap-3 cursor-pointer min-h-[44px]">
                               <Checkbox defaultChecked={item.completed} className="min-w-[20px] min-h-[20px]" />
-                              <span className="text-gray-700 text-sm">{item.text}</span>
+                              <span className="text-text-secondary text-sm">{item.text}</span>
                             </label>
                           ))}
                         </div>
@@ -296,9 +296,9 @@ export default function DashboardBarkley() {
                   })()}
 
                   {/* Timer */}
-                  <div className="p-4 bg-gray-50 rounded-lg">
+                  <div className="p-4 bg-background-secondary rounded-lg">
                     <div className="text-center">
-                      <p className="text-sm text-gray-600 mb-2">Tempo investido</p>
+                      <p className="text-sm text-text-secondary mb-2">Tempo investido</p>
                       <p className="text-4xl font-bold text-green-600 font-mono">
                         {formatTime(timerSeconds)}
                       </p>
@@ -308,7 +308,7 @@ export default function DashboardBarkley() {
               </ScrollArea>
 
               {/* Action Bar */}
-              <div className="border-t border-gray-200 p-4 bg-white safe-area-inset-bottom">
+              <div className="border-t border-border-default p-4 bg-background-primary safe-area-inset-bottom">
                 <div className="flex gap-3">
                   <Button
                     onClick={() => setTimerRunning(!timerRunning)}
@@ -329,7 +329,7 @@ export default function DashboardBarkley() {
             </>
           ) : (
             <div className="flex items-center justify-center h-full p-4">
-              <div className="text-center text-gray-500">
+              <div className="text-center text-text-tertiary">
                 <Target className="w-12 h-12 mx-auto mb-3 opacity-50" />
                 <p className="text-sm">Selecione uma tarefa para começar</p>
                 <Button 
@@ -347,7 +347,7 @@ export default function DashboardBarkley() {
         {/* Tab: Info (Project, Where I Left, Assistant) */}
         <TabsContent value="info" className="flex-1 flex flex-col overflow-hidden m-0 p-0">
           <Tabs value={assistantTab} onValueChange={setAssistantTab} className="flex-1 flex flex-col">
-            <TabsList className="w-full rounded-none border-b border-gray-200 bg-transparent p-0 h-auto">
+            <TabsList className="w-full rounded-none border-b border-border-default bg-transparent p-0 h-auto">
               <TabsTrigger 
                 value="project" 
                 className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-green-600 py-3 text-sm"
@@ -375,12 +375,12 @@ export default function DashboardBarkley() {
                   {Array.isArray(projectContext.summaryBullets) && projectContext.summaryBullets.map((bullet: any, idx: number) => (
                     <div key={idx} className="flex gap-2">
                       <span className="text-green-600 mt-1">•</span>
-                      <p className="text-sm text-gray-700">{bullet.text}</p>
+                      <p className="text-sm text-text-secondary">{bullet.text}</p>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-500">Nenhum resumo disponível</p>
+                <p className="text-sm text-text-tertiary">Nenhum resumo disponível</p>
               )}
             </TabsContent>
 
@@ -389,24 +389,24 @@ export default function DashboardBarkley() {
               {whereILeft ? (
                 <div className="space-y-4">
                   <div>
-                    <h4 className="font-semibold text-gray-900 text-sm mb-2">Contexto</h4>
-                    <p className="text-sm text-gray-700">{whereILeft.content}</p>
+                    <h4 className="font-semibold text-text-primary text-sm mb-2">Contexto</h4>
+                    <p className="text-sm text-text-secondary">{whereILeft.content}</p>
                   </div>
                   {whereILeft.nextAction && (
                     <div>
-                      <h4 className="font-semibold text-gray-900 text-sm mb-2">Próxima Ação</h4>
-                      <p className="text-sm text-gray-700">{whereILeft.nextAction}</p>
+                      <h4 className="font-semibold text-text-primary text-sm mb-2">Próxima Ação</h4>
+                      <p className="text-sm text-text-secondary">{whereILeft.nextAction}</p>
                     </div>
                   )}
                   {whereILeft.blockers && (
                     <div>
-                      <h4 className="font-semibold text-gray-900 text-sm mb-2">Bloqueadores</h4>
-                      <p className="text-sm text-gray-700">{whereILeft.blockers}</p>
+                      <h4 className="font-semibold text-text-primary text-sm mb-2">Bloqueadores</h4>
+                      <p className="text-sm text-text-secondary">{whereILeft.blockers}</p>
                     </div>
                   )}
                 </div>
               ) : (
-                <p className="text-sm text-gray-500">Nenhum registro ainda</p>
+                <p className="text-sm text-text-tertiary">Nenhum registro ainda</p>
               )}
             </TabsContent>
 
@@ -414,14 +414,14 @@ export default function DashboardBarkley() {
             <TabsContent value="assistant" className="flex-1 flex flex-col m-0">
               <ScrollArea className="flex-1 p-4">
                 <div className="space-y-3">
-                  <div className="p-3 bg-gray-50 rounded-lg">
-                    <p className="text-sm text-gray-700">
+                  <div className="p-3 bg-background-secondary rounded-lg">
+                    <p className="text-sm text-text-secondary">
                       Olá! Sou seu assistente neuroadaptado. Faça perguntas sobre seu projeto ou tarefa atual.
                     </p>
                   </div>
                 </div>
               </ScrollArea>
-              <div className="border-t border-gray-200 p-4 safe-area-inset-bottom">
+              <div className="border-t border-border-default p-4 safe-area-inset-bottom">
                 <div className="flex gap-2">
                   <Input
                     value={assistantMessage}
@@ -450,7 +450,7 @@ export default function DashboardBarkley() {
         </TabsContent>
 
         {/* Mobile Bottom Navigation */}
-        <TabsList className="w-full rounded-none border-t border-gray-200 bg-white p-0 h-auto safe-area-inset-bottom">
+        <TabsList className="w-full rounded-none border-t border-border-default bg-background-primary p-0 h-auto safe-area-inset-bottom">
           <TabsTrigger 
             value="tasks" 
             className="flex-1 flex flex-col items-center gap-1 py-3 rounded-none data-[state=active]:bg-green-50 data-[state=active]:text-green-700 min-h-[60px]"
@@ -481,15 +481,15 @@ export default function DashboardBarkley() {
   // DESKTOP LAYOUT (lg+)
   // ============================================
   const DesktopLayout = () => (
-    <div className="hidden lg:flex h-screen bg-white overflow-hidden">
+    <div className="hidden lg:flex h-screen bg-background-primary overflow-hidden">
       {/* LEFT PANEL - 30-35% */}
-      <aside className="flex flex-col w-1/3 border-r border-gray-200 bg-white">
+      <aside className="flex flex-col w-1/3 border-r border-border-default bg-background-primary">
         <ScrollArea className="flex-1">
           <div className="p-6">
             {/* Header */}
             <div className="mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-1">Hoje</h2>
-              <p className="text-sm text-gray-600">
+              <h2 className="text-2xl font-semibold text-text-primary mb-1">Hoje</h2>
+              <p className="text-sm text-text-secondary">
                 Dia {activeCycle.currentDay || 1} do ciclo de 3 dias
               </p>
             </div>
@@ -497,11 +497,11 @@ export default function DashboardBarkley() {
             {/* "Onde Parei" Block */}
             {whereILeft && (
               <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <h3 className="text-sm font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                <h3 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 text-blue-600" />
                   Onde parei ontem
                 </h3>
-                <p className="text-sm text-gray-700 line-clamp-3">
+                <p className="text-sm text-text-secondary line-clamp-3">
                   {whereILeft.content}
                 </p>
               </div>
@@ -516,7 +516,7 @@ export default function DashboardBarkley() {
                   className={`w-full text-left p-4 rounded-lg border transition-all ${
                     activeTaskId === task.id
                       ? "bg-green-50 border-green-300 shadow-md"
-                      : "bg-white border-gray-200 hover:border-gray-300"
+                      : "bg-background-primary border-border-default hover:border-border-hover"
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -529,11 +529,11 @@ export default function DashboardBarkley() {
                         <Badge className={getPriorityColor(task.priority)}>
                           {task.priority}
                         </Badge>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-text-tertiary">
                           {task.estimatedMinutes}min
                         </span>
                       </div>
-                      <h4 className="font-medium text-gray-900 text-sm truncate">
+                      <h4 className="font-medium text-text-primary text-sm truncate">
                         {task.title}
                       </h4>
                     </div>
@@ -546,22 +546,22 @@ export default function DashboardBarkley() {
       </aside>
 
       {/* CENTER PANEL - 45-50% */}
-      <main className="flex-1 flex flex-col bg-white overflow-hidden">
+      <main className="flex-1 flex flex-col bg-background-primary overflow-hidden">
         {activeTask ? (
           <>
             {/* Task Header */}
-            <div className="border-b border-gray-200 p-6">
+            <div className="border-b border-border-default p-6">
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <div className="flex items-center gap-2 mb-2">
                     <Badge className={getPriorityColor(activeTask.priority)}>
                       {activeTask.priority}
                     </Badge>
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-text-secondary">
                       {activeTask.estimatedMinutes} minutos
                     </span>
                   </div>
-                  <h1 className="text-2xl font-bold text-gray-900">
+                  <h1 className="text-2xl font-bold text-text-primary">
                     {activeTask.title}
                   </h1>
                 </div>
@@ -573,8 +573,8 @@ export default function DashboardBarkley() {
               <div className="p-6 space-y-6">
                 {/* Description */}
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Descrição</h3>
-                  <p className="text-gray-700 leading-relaxed">
+                  <h3 className="font-semibold text-text-primary mb-2">Descrição</h3>
+                  <p className="text-text-secondary leading-relaxed">
                     {getTaskDescription(activeTask.description)}
                   </p>
                 </div>
@@ -585,12 +585,12 @@ export default function DashboardBarkley() {
                   if (!checklist || !Array.isArray(checklist)) return null;
                   return (
                     <div>
-                      <h3 className="font-semibold text-gray-900 mb-3">Checklist</h3>
+                      <h3 className="font-semibold text-text-primary mb-3">Checklist</h3>
                       <div className="space-y-2">
                         {checklist.map((item: any, idx: number) => (
                           <label key={idx} className="flex items-center gap-3 cursor-pointer">
                             <Checkbox defaultChecked={item.completed} />
-                            <span className="text-gray-700">{item.text}</span>
+                            <span className="text-text-secondary">{item.text}</span>
                           </label>
                         ))}
                       </div>
@@ -599,9 +599,9 @@ export default function DashboardBarkley() {
                 })()}
 
                 {/* Timer */}
-                <div className="p-4 bg-gray-50 rounded-lg">
+                <div className="p-4 bg-background-secondary rounded-lg">
                   <div className="text-center">
-                    <p className="text-sm text-gray-600 mb-2">Tempo investido</p>
+                    <p className="text-sm text-text-secondary mb-2">Tempo investido</p>
                     <p className="text-4xl font-bold text-green-600 font-mono">
                       {formatTime(timerSeconds)}
                     </p>
@@ -611,7 +611,7 @@ export default function DashboardBarkley() {
             </ScrollArea>
 
             {/* Action Bar */}
-            <div className="border-t border-gray-200 p-6 bg-white">
+            <div className="border-t border-border-default p-6 bg-background-primary">
               <div className="flex gap-3">
                 <Button
                   onClick={() => setTimerRunning(!timerRunning)}
@@ -632,7 +632,7 @@ export default function DashboardBarkley() {
           </>
         ) : (
           <div className="flex items-center justify-center h-full">
-            <div className="text-center text-gray-500">
+            <div className="text-center text-text-tertiary">
               <Target className="w-12 h-12 mx-auto mb-3 opacity-50" />
               <p>Selecione uma tarefa para começar</p>
             </div>
@@ -641,9 +641,9 @@ export default function DashboardBarkley() {
       </main>
 
       {/* RIGHT PANEL - 20-25% */}
-      <aside className="flex flex-col w-1/4 border-l border-gray-200 bg-white">
+      <aside className="flex flex-col w-1/4 border-l border-border-default bg-background-primary">
         <Tabs value={assistantTab} onValueChange={setAssistantTab} className="flex-1 flex flex-col">
-          <TabsList className="w-full rounded-none border-b border-gray-200 bg-transparent p-0">
+          <TabsList className="w-full rounded-none border-b border-border-default bg-transparent p-0">
             <TabsTrigger value="project" className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-green-600">
               Projeto
             </TabsTrigger>
@@ -662,12 +662,12 @@ export default function DashboardBarkley() {
                 {Array.isArray(projectContext.summaryBullets) && projectContext.summaryBullets.map((bullet: any, idx: number) => (
                   <div key={idx} className="flex gap-2">
                     <span className="text-green-600 mt-1">•</span>
-                    <p className="text-sm text-gray-700">{bullet.text}</p>
+                    <p className="text-sm text-text-secondary">{bullet.text}</p>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500">Nenhum resumo disponível</p>
+              <p className="text-sm text-text-tertiary">Nenhum resumo disponível</p>
             )}
           </TabsContent>
 
@@ -676,24 +676,24 @@ export default function DashboardBarkley() {
             {whereILeft ? (
               <div className="space-y-3">
                 <div>
-                  <h4 className="font-semibold text-gray-900 text-sm mb-2">Contexto</h4>
-                  <p className="text-sm text-gray-700">{whereILeft.content}</p>
+                  <h4 className="font-semibold text-text-primary text-sm mb-2">Contexto</h4>
+                  <p className="text-sm text-text-secondary">{whereILeft.content}</p>
                 </div>
                 {whereILeft.nextAction && (
                   <div>
-                    <h4 className="font-semibold text-gray-900 text-sm mb-2">Próxima Ação</h4>
-                    <p className="text-sm text-gray-700">{whereILeft.nextAction}</p>
+                    <h4 className="font-semibold text-text-primary text-sm mb-2">Próxima Ação</h4>
+                    <p className="text-sm text-text-secondary">{whereILeft.nextAction}</p>
                   </div>
                 )}
                 {whereILeft.blockers && (
                   <div>
-                    <h4 className="font-semibold text-gray-900 text-sm mb-2">Bloqueadores</h4>
-                    <p className="text-sm text-gray-700">{whereILeft.blockers}</p>
+                    <h4 className="font-semibold text-text-primary text-sm mb-2">Bloqueadores</h4>
+                    <p className="text-sm text-text-secondary">{whereILeft.blockers}</p>
                   </div>
                 )}
               </div>
             ) : (
-              <p className="text-sm text-gray-500">Nenhum registro ainda</p>
+              <p className="text-sm text-text-tertiary">Nenhum registro ainda</p>
             )}
           </TabsContent>
 
@@ -701,14 +701,14 @@ export default function DashboardBarkley() {
           <TabsContent value="assistant" className="flex-1 flex flex-col">
             <ScrollArea className="flex-1 p-4">
               <div className="space-y-3">
-                <div className="p-3 bg-gray-50 rounded-lg">
-                  <p className="text-sm text-gray-700">
+                <div className="p-3 bg-background-secondary rounded-lg">
+                  <p className="text-sm text-text-secondary">
                     Olá! Sou seu assistente neuroadaptado. Faça perguntas sobre seu projeto ou tarefa atual.
                   </p>
                 </div>
               </div>
             </ScrollArea>
-            <div className="border-t border-gray-200 p-4">
+            <div className="border-t border-border-default p-4">
               <div className="flex gap-2">
                 <Input
                   value={assistantMessage}

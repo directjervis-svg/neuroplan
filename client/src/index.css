@@ -4,10 +4,52 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
-  NeuroPlan Design System - Neuroadaptive Color Palette
+  NeuroPlan Design System - Neuroadaptive Color Palette v2.0
   Based on Barkley research: NO BLUE (#87CEEB) - ADHD has blue-yellow perception deficit
   Prioritize: Green (#22C55E), Red (#EF4444), Orange (#FF8C42), Slate neutrals
+
+  Neuro-Adapted Design Tokens (Manus+Claude fusion):
+  - Chromotherapy colors for ADHD focus
+  - Gradient themes for visual engagement
+  - Calm, Energy, and Cool palettes
 */
+
+/* ========================================
+   NEURO-ADAPTED DESIGN TOKENS
+   ======================================== */
+:root {
+  /* Background tokens */
+  --neuro-bg-primary: #F1F5F9;
+  --neuro-bg-secondary: #E2E8F0;
+  --neuro-bg-tertiary: #CBD5E1;
+  --neuro-bg-card: #FFFFFF;
+  --neuro-bg-overlay: rgba(30, 41, 59, 0.8);
+
+  /* Text tokens */
+  --neuro-text-primary: #1E293B;
+  --neuro-text-secondary: #475569;
+  --neuro-text-tertiary: #64748B;
+  --neuro-text-disabled: #94A3B8;
+  --neuro-text-inverse: #F1F5F9;
+
+  /* Action tokens (coral/orange for ADHD-safe dopamine triggers) */
+  --neuro-action-primary: #F4A261;
+  --neuro-action-primary-hover: #E89350;
+  --neuro-action-secondary: #10B981;
+  --neuro-action-secondary-hover: #059669;
+  --neuro-action-destructive: #EF4444;
+  --neuro-action-destructive-hover: #DC2626;
+
+  /* Border tokens */
+  --neuro-border-default: #CBD5E1;
+  --neuro-border-hover: #94A3B8;
+  --neuro-border-focus: #F4A261;
+
+  /* Chromotherapy gradients */
+  --neuro-gradient-calm: linear-gradient(135deg, #CBDCF1 0%, #E0E7FF 100%);
+  --neuro-gradient-energy: linear-gradient(135deg, #F4A261 0%, #F59E0B 50%, #EC4899 100%);
+  --neuro-gradient-cool: linear-gradient(135deg, #60A5FA 0%, #A78BFA 100%);
+}
 
 @font-face {
   font-family: "Inter";
@@ -54,14 +96,45 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  
+
   /* Success color - Green (safe for ADHD) */
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
-  
+
   /* Warning color - Orange (safe for ADHD) */
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
+
+  /* ========================================
+     NEURO-ADAPTED COLOR TOKENS
+     Use: bg-background-primary, text-text-primary, etc.
+     ======================================== */
+
+  /* Background colors */
+  --color-background-primary: var(--neuro-bg-primary);
+  --color-background-secondary: var(--neuro-bg-secondary);
+  --color-background-tertiary: var(--neuro-bg-tertiary);
+  --color-background-card: var(--neuro-bg-card);
+
+  /* Text colors */
+  --color-text-primary: var(--neuro-text-primary);
+  --color-text-secondary: var(--neuro-text-secondary);
+  --color-text-tertiary: var(--neuro-text-tertiary);
+  --color-text-disabled: var(--neuro-text-disabled);
+  --color-text-inverse: var(--neuro-text-inverse);
+
+  /* Action colors */
+  --color-action-primary: var(--neuro-action-primary);
+  --color-action-primaryHover: var(--neuro-action-primary-hover);
+  --color-action-secondary: var(--neuro-action-secondary);
+  --color-action-secondaryHover: var(--neuro-action-secondary-hover);
+  --color-action-destructive: var(--neuro-action-destructive);
+  --color-action-destructiveHover: var(--neuro-action-destructive-hover);
+
+  /* Border colors */
+  --color-border-default: var(--neuro-border-default);
+  --color-border-hover: var(--neuro-border-hover);
+  --color-border-focus: var(--neuro-border-focus);
 }
 
 :root {
@@ -223,5 +296,36 @@
       padding-right: 2rem;
       max-width: 1280px; /* Standard content width */
     }
+  }
+}
+
+/* ========================================
+   NEURO-ADAPTED UTILITY CLASSES
+   Chromotherapy gradients for ADHD focus
+   ======================================== */
+@layer utilities {
+  /* Chromotherapy gradient backgrounds */
+  .bg-gradient-calm {
+    background: var(--neuro-gradient-calm);
+  }
+
+  .bg-gradient-energy {
+    background: var(--neuro-gradient-energy);
+  }
+
+  .bg-gradient-cool {
+    background: var(--neuro-gradient-cool);
+  }
+
+  /* Focus ring for neuro-adapted interactions */
+  .ring-neuro-focus {
+    --tw-ring-color: var(--neuro-action-primary);
+  }
+
+  /* Smooth transitions for ADHD-friendly UI */
+  .transition-neuro {
+    transition-property: color, background-color, border-color, box-shadow, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
   }
 }
