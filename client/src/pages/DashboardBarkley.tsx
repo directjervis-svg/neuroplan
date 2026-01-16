@@ -12,6 +12,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { NeuroTooltip, NeuroInfoBadge } from "@/components/NeuroTooltip";
 import { QuickFeedback, XPGain } from "@/components/QuickFeedback";
+import { ChromotherapyPicker } from "@/components/ChromotherapyPicker";
 import { 
   Play, 
   CheckCircle2, 
@@ -73,6 +74,18 @@ export default function DashboardBarkley() {
   const [assistantTab, setAssistantTab] = useState("project");
   const [mobileTab, setMobileTab] = useState("tasks");
   const [assistantMessage, setAssistantMessage] = useState("");
+  const [currentTheme, setCurrentTheme] = useState(() => {
+    const saved = localStorage.getItem('neuroplan_prefs');
+    if (saved) {
+      try {
+        const prefs = JSON.parse(saved);
+        return prefs.colorTheme || 'calm';
+      } catch {
+        return 'calm';
+      }
+    }
+    return 'calm';
+  });
   
   // Task description as string
   const getTaskDescription = (desc: unknown): string => {
@@ -182,12 +195,25 @@ export default function DashboardBarkley() {
     <div className="flex flex-col h-screen bg-background-primary lg:hidden">
       {/* Mobile Header */}
       <header className="border-b border-border-default p-4 bg-background-primary">
-        <h1 className="text-lg font-semibold text-text-primary">
-          Dia {activeCycle.currentDay || 1} do ciclo
-        </h1>
-        <p className="text-sm text-text-secondary">
-          {todayTasks.filter(t => t.status === "COMPLETED").length}/{todayTasks.length} tarefas concluídas
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-lg font-semibold text-text-primary">
+              Dia {activeCycle.currentDay || 1} do ciclo
+            </h1>
+            <p className="text-sm text-text-secondary">
+              {todayTasks.filter(t => t.status === "COMPLETED").length}/{todayTasks.length} tarefas concluidas
+            </p>
+          </div>
+          <ChromotherapyPicker
+            currentTheme={currentTheme}
+            onChange={(theme) => {
+              setCurrentTheme(theme);
+              const saved = localStorage.getItem('neuroplan_prefs');
+              const prefs = saved ? JSON.parse(saved) : {};
+              localStorage.setItem('neuroplan_prefs', JSON.stringify({ ...prefs, colorTheme: theme }));
+            }}
+          />
+        </div>
       </header>
 
       {/* Mobile Tabs Content */}
@@ -488,7 +514,18 @@ export default function DashboardBarkley() {
           <div className="p-6">
             {/* Header */}
             <div className="mb-6">
-              <h2 className="text-2xl font-semibold text-text-primary mb-1">Hoje</h2>
+              <div className="flex items-center justify-between mb-1">
+                <h2 className="text-2xl font-semibold text-text-primary">Hoje</h2>
+                <ChromotherapyPicker
+                  currentTheme={currentTheme}
+                  onChange={(theme) => {
+                    setCurrentTheme(theme);
+                    const saved = localStorage.getItem('neuroplan_prefs');
+                    const prefs = saved ? JSON.parse(saved) : {};
+                    localStorage.setItem('neuroplan_prefs', JSON.stringify({ ...prefs, colorTheme: theme }));
+                  }}
+                />
+              </div>
               <p className="text-sm text-text-secondary">
                 Dia {activeCycle.currentDay || 1} do ciclo de 3 dias
               </p>
