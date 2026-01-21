@@ -4,8 +4,20 @@ import { ENV } from "../_core/env";
 /**
  * Stripe client instance
  * Uses the secret key from environment
+ * Optional in development mode
  */
-export const stripe = new Stripe(ENV.stripeSecretKey || "");
+const stripeKey = ENV.stripeSecretKey;
+export const stripe = stripeKey && stripeKey !== "sk_test_placeholder"
+  ? new Stripe(stripeKey)
+  : null;
+
+const isStripeEnabled = (): boolean => {
+  if (!stripe) {
+    console.warn("[Stripe] Not configured - payment features disabled");
+    return false;
+  }
+  return true;
+};
 
 /**
  * Create a checkout session for subscription
@@ -25,6 +37,9 @@ export async function createCheckoutSession({
   successUrl: string;
   cancelUrl: string;
 }): Promise<{ url: string }> {
+  if (!isStripeEnabled() || !stripe) {
+    throw new Error("Stripe not configured");
+  }
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
     payment_method_types: ["card"],
@@ -65,6 +80,9 @@ export async function getOrCreateCustomer({
   email: string;
   name?: string;
 }): Promise<string> {
+  if (!isStripeEnabled() || !stripe) {
+    throw new Error("Stripe not configured");
+  }
   // Search for existing customer
   const existingCustomers = await stripe.customers.list({
     email,
@@ -91,6 +109,9 @@ export async function getOrCreateCustomer({
  * Get subscription details
  */
 export async function getSubscription(subscriptionId: string): Promise<Stripe.Subscription | null> {
+  if (!isStripeEnabled() || !stripe) {
+    return null;
+  }
   try {
     return await stripe.subscriptions.retrieve(subscriptionId);
   } catch (error) {
@@ -103,6 +124,9 @@ export async function getSubscription(subscriptionId: string): Promise<Stripe.Su
  * Cancel a subscription
  */
 export async function cancelSubscription(subscriptionId: string): Promise<boolean> {
+  if (!isStripeEnabled() || !stripe) {
+    return false;
+  }
   try {
     await stripe.subscriptions.cancel(subscriptionId);
     return true;
@@ -122,6 +146,9 @@ export async function createPortalSession({
   customerId: string;
   returnUrl: string;
 }): Promise<{ url: string }> {
+  if (!isStripeEnabled() || !stripe) {
+    throw new Error("Stripe not configured");
+  }
   const session = await stripe.billingPortal.sessions.create({
     customer: customerId,
     return_url: returnUrl,
@@ -137,8 +164,11 @@ export function verifyWebhookSignature(
   payload: Buffer,
   signature: string
 ): Stripe.Event {
+  if (!isStripeEnabled() || !stripe) {
+    throw new Error("Stripe not configured");
+  }
   const webhookSecret = ENV.stripeWebhookSecret;
-  
+
   if (!webhookSecret) {
     throw new Error("Stripe webhook secret not configured");
   }
