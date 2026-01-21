@@ -43,6 +43,7 @@ import { cyclesRouter } from "./cycles";
 import { streaksRouter } from "./streaks";
 import { remindersRouter } from "./reminders";
 import { sessionNotesRouter } from "./sessionNotes";
+import { quickIdeasRouter } from "./quickIdeas";
 import { aiUsageRouter as aiMetricsRouter } from "./ai-usage";
 import { analyticsRouter } from "./analytics";
 import { usersRouter } from "./routers/users";
@@ -259,26 +260,7 @@ export const appRouter = router({
   }),
 
   // Quick Ideas Router
-  ideas: router({
-    list: protectedProcedure
-      .input(z.object({ projectId: z.number().optional() }).optional())
-      .query(async ({ ctx, input }) => {
-        return getQuickIdeas(ctx.user.id, input?.projectId);
-      }),
-    
-    create: protectedProcedure
-      .input(z.object({
-        content: z.string().min(1),
-        projectId: z.number().optional(),
-      }))
-      .mutation(async ({ ctx, input }) => {
-        return createQuickIdea({
-          userId: ctx.user.id,
-          content: input.content,
-          projectId: input.projectId,
-        });
-      }),
-  }),
+  ideas: quickIdeasRouter,
 
   // Daily Logs Router
   dailyLogs: router({

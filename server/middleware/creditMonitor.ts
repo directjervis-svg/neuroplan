@@ -6,7 +6,8 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import { db } from '../db';
+import { getDb } from '../db';
+import { aiInteractionLog } from '../drizzle/schema';
 
 interface CreditLog {
   userId: string;
@@ -92,15 +93,24 @@ export const creditMonitorMiddleware = async (
  */
 async function logCreditUsage(log: CreditLog) {
   try {
-    // TODO: Implementar tabela de logs de créditos
-    // await db.creditLogs.create({
-    //   userId: log.userId,
-    //   endpoint: log.endpoint,
-    //   creditsUsed: log.creditsUsed,
-    //   timeMs: log.timeMs,
-    //   status: log.status,
-    //   createdAt: log.timestamp,
-    // });
+    const db = await getDb();
+    if (!db) {
+      console.error('Database not available for credit logging.');
+      return;
+    }
+
+    await db.insert(aiInteractionLog).values({
+      userId: Number(log.userId),
+      actionType: 'MIDDLEWARE_LOG', // Tipo genérico para logs de middleware
+      inputPrompt: `Endpoint: ${log.endpoint}`,
+      outputResponse: `Status: ${log.status}`,
+      tokensInput: log.creditsUsed, // Usando creditsUsed como proxy para tokens
+      tokensOutput: 0,
+      latencyMs: log.timeMs,
+      success: log.status === 'success',
+      errorMessage: log.status === 'error' ? 'Error detected by middleware' : null,
+      createdAt: log.timestamp,
+    });
   } catch (error) {
     console.error('Erro ao salvar log de créditos:', error);
   }

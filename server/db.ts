@@ -285,8 +285,33 @@ export async function getTodayTasks(userId: number) {
     .where(sql`${tasks.projectId} IN (${sql.join(projectIds.map(id => sql`${id}`), sql`, `)})`)
     .orderBy(tasks.position);
 
-  // Filter to get today's tasks (simplified - in production would calculate based on startDate)
-  return allTasks.slice(0, 4);
+  // Filter to get today's tasks (real logic based on project start date)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const todayTasks: (typeof tasks.$inferSelect)[] = [];
+
+  for (const project of activeProjects) {
+    if (!project.startDate) continue;
+
+    // Calculate the difference in days between today and the project start date
+    const diffTime = Math.abs(today.getTime() - project.startDate.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    // Determine the current day number in the cycle (1, 2, or 3 for a 3-day cycle)
+    // The cycle starts on day 0, so we add 1 to the remainder
+    const cycleDay = (diffDays % 3) + 1;
+
+    const projectTasks = await db
+      .select()
+      .from(tasks)
+      .where(and(eq(tasks.projectId, project.id), eq(tasks.dayNumber, cycleDay)))
+      .orderBy(tasks.position);
+
+    todayTasks.push(...projectTasks);
+  }
+
+  return todayTasks;
 }
 
 export async function createTask(
