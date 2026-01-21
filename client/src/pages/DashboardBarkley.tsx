@@ -1,51 +1,53 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ProgressCircle } from "@/components/ui/progress-circle";
+import { MetricCard } from "@/components/ui/metric-card";
+import { CheckboxTask } from "@/components/ui/checkbox-task";
 import { toast } from "sonner";
 import React, { useState, useEffect } from "react";
-import { Link } from "wouter";
-import { NeuroTooltip, NeuroInfoBadge } from "@/components/NeuroTooltip";
-import { QuickFeedback, XPGain } from "@/components/QuickFeedback";
-import { ChromotherapyPicker } from "@/components/ChromotherapyPicker";
-import { 
-  Play, 
-  CheckCircle2, 
-  Clock, 
-  Brain, 
-  MessageSquare,
-  Plus,
+import { Link, useLocation } from "wouter";
+import {
+  LayoutDashboard,
+  ListTodo,
   Target,
-  Calendar,
-  Send,
+  BarChart3,
+  Search,
+  Bell,
+  Settings,
+  Moon,
+  Sun,
   ChevronDown,
-  ChevronUp,
-  Lightbulb,
-  HelpCircle,
-  AlertCircle,
+  ChevronRight,
+  Play,
+  Pause,
+  CheckCircle2,
+  Clock,
+  Brain,
+  Zap,
+  TrendingUp,
+  Calendar,
+  User,
+  LogOut,
   Menu,
   X,
-  ListTodo,
-  FileText,
-  Bot
+  Timer,
+  Flame,
 } from "lucide-react";
 
 /**
- * Dashboard Barkley - Layout Responsivo
- * 
- * Desktop (lg+):
- * - Painel Esquerdo (30-35%): Lista de tarefas A-B-C + "Onde parei"
- * - Painel Central (45-50%): Workspace da tarefa ativa
- * - Painel Direito (20-25%): Abas (Projeto, Onde Parei, Assistente)
- * 
- * Mobile (< lg):
- * - Sistema de Tabs: Tarefas | Workspace | Info
- * - Layout de coluna única com navegação por abas
+ * NeuroFlow Dashboard - Barkley Method
+ *
+ * Layout otimizado para TDAH adulto:
+ * - Sidebar fixa com navegação clara
+ * - Métricas em cards visuais
+ * - Círculo de progresso Focus Score
+ * - Gráficos de tendência
+ * - Tasks do dia com checkboxes celebratórios
  */
 
 interface CycleTask {
@@ -59,40 +61,114 @@ interface CycleTask {
   checklist: unknown;
 }
 
-interface WhereILeftOff {
-  id: number;
-  content: string;
-  nextAction: string | null;
-  blockers: string | null;
+// Simulated chart data (in production, fetch from API)
+const weeklyData = [
+  { day: "Seg", focus: 65, tasks: 4 },
+  { day: "Ter", focus: 72, tasks: 5 },
+  { day: "Qua", focus: 58, tasks: 3 },
+  { day: "Qui", focus: 85, tasks: 6 },
+  { day: "Sex", focus: 79, tasks: 5 },
+  { day: "Sab", focus: 45, tasks: 2 },
+  { day: "Dom", focus: 30, tasks: 1 },
+];
+
+// Mini bar chart component for weekly productivity
+function WeeklyChart({ data }: { data: typeof weeklyData }) {
+  const maxFocus = Math.max(...data.map(d => d.focus));
+
+  return (
+    <div className="flex items-end justify-between gap-2 h-32 px-2">
+      {data.map((item, index) => {
+        const height = (item.focus / maxFocus) * 100;
+        const getBarColor = (value: number) => {
+          if (value >= 70) return "bg-[var(--neuro-green-primary)]";
+          if (value >= 50) return "bg-[var(--neuro-yellow-primary)]";
+          return "bg-[var(--neuro-orange-primary)]";
+        };
+
+        return (
+          <div key={item.day} className="flex flex-col items-center gap-2 flex-1">
+            <div
+              className={`w-full rounded-t-md transition-all duration-300 ${getBarColor(item.focus)}`}
+              style={{ height: `${height}%`, minHeight: "8px" }}
+            />
+            <span className="text-xs text-[var(--neuro-text-tertiary)]">{item.day}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
+// Focus Trend Chart (Area-like visualization)
+function FocusTrendChart() {
+  const points = [30, 45, 38, 65, 55, 78, 82];
+  const max = Math.max(...points);
+  const width = 100;
+  const height = 60;
+
+  const pathData = points
+    .map((p, i) => {
+      const x = (i / (points.length - 1)) * width;
+      const y = height - (p / max) * height;
+      return `${i === 0 ? "M" : "L"} ${x} ${y}`;
+    })
+    .join(" ");
+
+  const areaPath = `${pathData} L ${width} ${height} L 0 ${height} Z`;
+
+  return (
+    <svg viewBox={`0 0 ${width} ${height + 10}`} className="w-full h-24">
+      <defs>
+        <linearGradient id="focusGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="var(--neuro-blue-primary)" stopOpacity="0.3" />
+          <stop offset="100%" stopColor="var(--neuro-blue-primary)" stopOpacity="0.05" />
+        </linearGradient>
+      </defs>
+      {/* Area fill */}
+      <path d={areaPath} fill="url(#focusGradient)" />
+      {/* Line */}
+      <path
+        d={pathData}
+        fill="none"
+        stroke="var(--neuro-blue-primary)"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* Current point */}
+      <circle
+        cx={width}
+        cy={height - (points[points.length - 1] / max) * height}
+        r="4"
+        fill="var(--neuro-blue-primary)"
+      />
+    </svg>
+  );
+}
+
+// Navigation items
+const navItems = [
+  { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
+  { icon: ListTodo, label: "Tarefas", href: "/projects" },
+  { icon: Target, label: "Foco", href: "/focus-timer" },
+  { icon: BarChart3, label: "Insights", href: "/analytics" },
+];
+
 export default function DashboardBarkley() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, logout } = useAuth();
+  const [location] = useLocation();
   const [activeTaskId, setActiveTaskId] = useState<number | null>(null);
   const [timerSeconds, setTimerSeconds] = useState(0);
   const [timerRunning, setTimerRunning] = useState(false);
-  const [assistantTab, setAssistantTab] = useState("project");
-  const [mobileTab, setMobileTab] = useState("tasks");
-  const [assistantMessage, setAssistantMessage] = useState("");
-  const [currentTheme, setCurrentTheme] = useState(() => {
-    const saved = localStorage.getItem('neuroplan_prefs');
-    if (saved) {
-      try {
-        const prefs = JSON.parse(saved);
-        return prefs.colorTheme || 'calm';
-      } catch {
-        return 'calm';
-      }
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== "undefined") {
+      return document.documentElement.classList.contains("dark");
     }
-    return 'calm';
+    return false;
   });
-  
-  // Task description as string
-  const getTaskDescription = (desc: unknown): string => {
-    if (typeof desc === 'string') return desc;
-    if (desc === null || desc === undefined) return '';
-    return JSON.stringify(desc);
-  };
+  const [expandedDays, setExpandedDays] = useState<Set<number>>(new Set([1]));
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Queries
   const { data: activeCycle, isLoading: cycleLoading } = trpc.cycles.getActive.useQuery(
@@ -110,677 +186,462 @@ export default function DashboardBarkley() {
     { enabled: !!user }
   );
 
-  const { data: projectContext } = trpc.cycles.getProjectContext.useQuery(
-    { projectId: activeCycle?.projectId ?? 0 },
-    { enabled: !!activeCycle?.projectId }
-  );
-
   // Mutations
   const updateStreak = trpc.streaks.updateStreak.useMutation();
-  
   const completeTask = trpc.cycles.completeTask.useMutation({
     onSuccess: async () => {
-      toast.success("Tarefa concluída! +50 XP");
-      
-      // Atualizar streak
-      const result = await updateStreak.mutateAsync();
-      
-      // Se for novo recorde, mostrar toast especial
-      if (result.isNewRecord) {
-        toast.success(`🔥 Novo recorde! ${result.currentStreak} dias de streak!`);
-      }
+      toast.success("Tarefa concluída! +50 XP", {
+        icon: "🎉",
+      });
+      await updateStreak.mutateAsync();
     },
   });
-
-  const startTask = trpc.cycles.startTask.useMutation();
-  const askAssistant = trpc.ai.askAssistant.useMutation();
 
   // Timer
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (timerRunning) {
-      interval = setInterval(() => setTimerSeconds(s => s + 1), 1000);
+      interval = setInterval(() => setTimerSeconds((s) => s + 1), 1000);
     }
     return () => clearInterval(interval);
   }, [timerRunning]);
 
+  // Dark mode toggle
+  const toggleDarkMode = () => {
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    document.documentElement.classList.toggle("dark", newMode);
+    localStorage.setItem("theme", newMode ? "dark" : "light");
+  };
+
+  // Format timer
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
-  const getPriorityColor = (priority: string) => {
+  // Get priority styles
+  const getPriorityStyles = (priority: string) => {
     switch (priority) {
-      case "A": return "bg-red-100 text-red-800 border-red-300";
-      case "B": return "bg-yellow-100 text-yellow-800 border-yellow-300";
-      case "C": return "bg-green-100 text-green-800 border-green-300";
-      default: return "bg-background-secondary text-text-primary";
+      case "A":
+        return "bg-[var(--neuro-red-100)] text-[var(--neuro-red-600)] border-[var(--neuro-red-200)]";
+      case "B":
+        return "bg-[var(--neuro-yellow-100)] text-[var(--neuro-yellow-600)] border-[var(--neuro-yellow-200)]";
+      case "C":
+        return "bg-[var(--neuro-green-100)] text-[var(--neuro-green-600)] border-[var(--neuro-green-200)]";
+      default:
+        return "bg-[var(--neuro-gray-200)] text-[var(--neuro-text-secondary)]";
     }
   };
 
-  const activeTask = todayTasks.find(t => t.id === activeTaskId);
+  // Calculate metrics
+  const completedTasks = todayTasks.filter((t) => t.status === "COMPLETED").length;
+  const totalTasks = todayTasks.length;
+  const focusScore = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
-  // Handle task selection on mobile - switch to workspace tab
-  const handleTaskSelect = (taskId: number) => {
-    setActiveTaskId(taskId);
-    setMobileTab("workspace");
-  };
-
+  // Loading state
   if (authLoading || cycleLoading) {
-    return <div className="flex items-center justify-center h-screen">Carregando...</div>;
-  }
-
-  if (!activeCycle) {
     return (
-      <div className="flex items-center justify-center h-screen bg-background-primary p-4">
-        <div className="text-center">
-          <Brain className="w-16 h-16 text-text-disabled mx-auto mb-4" />
-          <h2 className="text-xl md:text-2xl font-semibold text-text-primary mb-2">Nenhum ciclo ativo</h2>
-          <p className="text-text-secondary mb-6 text-sm md:text-base">Crie seu primeiro ciclo de 3 dias para começar</p>
-          <Link href="/projects">
-            <Button className="bg-green-600 hover:bg-green-700 text-white min-h-[48px] px-6">
-              Criar Ciclo
-            </Button>
-          </Link>
+      <div className="flex items-center justify-center h-screen bg-[var(--neuro-bg-primary)]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-[var(--neuro-orange-primary)] border-t-transparent rounded-full animate-neuro-spin" />
+          <p className="text-[var(--neuro-text-secondary)]">Carregando...</p>
         </div>
       </div>
     );
   }
 
-  // ============================================
-  // MOBILE LAYOUT (< lg)
-  // ============================================
-  const MobileLayout = () => (
-    <div className="flex flex-col h-screen bg-background-primary lg:hidden">
-      {/* Mobile Header */}
-      <header className="border-b border-border-default p-4 bg-background-primary">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-lg font-semibold text-text-primary">
-              Dia {activeCycle.currentDay || 1} do ciclo
-            </h1>
-            <p className="text-sm text-text-secondary">
-              {todayTasks.filter(t => t.status === "COMPLETED").length}/{todayTasks.length} tarefas concluidas
-            </p>
-          </div>
-          <ChromotherapyPicker
-            currentTheme={currentTheme}
-            onChange={(theme) => {
-              setCurrentTheme(theme);
-              const saved = localStorage.getItem('neuroplan_prefs');
-              const prefs = saved ? JSON.parse(saved) : {};
-              localStorage.setItem('neuroplan_prefs', JSON.stringify({ ...prefs, colorTheme: theme }));
-            }}
-          />
-        </div>
-      </header>
+  // No active cycle
+  if (!activeCycle) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-[var(--neuro-bg-primary)] p-4">
+        <Card className="max-w-md w-full text-center p-8">
+          <Brain className="w-16 h-16 text-[var(--neuro-orange-primary)] mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-[var(--neuro-text-primary)] mb-2">
+            Nenhum ciclo ativo
+          </h2>
+          <p className="text-[var(--neuro-text-secondary)] mb-6">
+            Crie seu primeiro ciclo de 3 dias para começar a executar com foco.
+          </p>
+          <Link href="/projects">
+            <Button variant="gradient" size="lg" className="w-full">
+              Criar Primeiro Ciclo
+            </Button>
+          </Link>
+        </Card>
+      </div>
+    );
+  }
 
-      {/* Mobile Tabs Content */}
-      <Tabs value={mobileTab} onValueChange={setMobileTab} className="flex-1 flex flex-col overflow-hidden">
-        {/* Tab: Tasks List */}
-        <TabsContent value="tasks" className="flex-1 overflow-y-auto m-0 p-0">
-          <div className="p-4 space-y-4">
-            {/* "Onde Parei" Block */}
-            {whereILeft && (
-              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <h3 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-blue-600" />
-                  Onde parei ontem
-                </h3>
-                <p className="text-sm text-text-secondary line-clamp-3">
-                  {whereILeft.content}
-                </p>
-              </div>
-            )}
+  const activeTask = todayTasks.find((t) => t.id === activeTaskId);
 
-            {/* Tasks List */}
-            <div className="space-y-3">
-              {todayTasks.map((task) => (
-                <button
-                  key={task.id}
-                  onClick={() => handleTaskSelect(task.id)}
-                  className={`w-full text-left p-4 rounded-lg border transition-all min-h-[72px] ${
-                    activeTaskId === task.id
-                      ? "bg-green-50 border-green-300 shadow-md"
-                      : "bg-background-primary border-border-default active:bg-background-secondary"
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <Checkbox
-                      checked={task.status === "COMPLETED"}
-                      className="mt-1 min-w-[20px] min-h-[20px]"
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1 flex-wrap">
-                        <Badge className={`${getPriorityColor(task.priority)} text-xs`}>
-                          {task.priority}
-                        </Badge>
-                        <span className="text-xs text-text-tertiary">
-                          {task.estimatedMinutes}min
-                        </span>
-                      </div>
-                      <h4 className="font-medium text-text-primary text-sm leading-snug">
-                        {task.title}
-                      </h4>
-                    </div>
-                  </div>
-                </button>
-              ))}
+  return (
+    <div className="flex h-screen bg-[var(--neuro-bg-primary)]">
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`
+          fixed lg:static inset-y-0 left-0 z-50
+          w-64 bg-[var(--neuro-bg-card)] border-r border-[var(--neuro-border-default)]
+          transform transition-transform duration-200 ease-out
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+        `}
+      >
+        <div className="flex flex-col h-full">
+          {/* Logo */}
+          <div className="flex items-center gap-3 p-6 border-b border-[var(--neuro-border-default)]">
+            <div className="w-10 h-10 rounded-xl bg-neuro-gradient-primary flex items-center justify-center">
+              <Brain className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="font-bold text-[var(--neuro-text-primary)]">NeuroExecução</h1>
+              <p className="text-xs text-[var(--neuro-text-tertiary)]">Barkley Method</p>
             </div>
           </div>
-        </TabsContent>
 
-        {/* Tab: Workspace */}
-        <TabsContent value="workspace" className="flex-1 flex flex-col overflow-hidden m-0 p-0">
-          {activeTask ? (
-            <>
-              {/* Task Header */}
-              <div className="border-b border-border-default p-4">
-                <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  <Badge className={getPriorityColor(activeTask.priority)}>
-                    {activeTask.priority}
-                  </Badge>
-                  <span className="text-sm text-text-secondary">
-                    {activeTask.estimatedMinutes} minutos
-                  </span>
-                </div>
-                <h1 className="text-lg font-bold text-text-primary leading-snug">
-                  {activeTask.title}
-                </h1>
+          {/* Navigation */}
+          <nav className="flex-1 p-4">
+            <ul className="space-y-1">
+              {navItems.map((item) => {
+                const isActive = location === item.href || (item.href === "/dashboard" && location === "/dashboard-barkley");
+                return (
+                  <li key={item.href}>
+                    <Link href={item.href}>
+                      <a
+                        className={`
+                          flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-150
+                          ${
+                            isActive
+                              ? "bg-[var(--neuro-orange-100)] text-[var(--neuro-orange-primary)] font-medium"
+                              : "text-[var(--neuro-text-secondary)] hover:bg-[var(--neuro-gray-100)] hover:text-[var(--neuro-text-primary)]"
+                          }
+                        `}
+                        onClick={() => setSidebarOpen(false)}
+                      >
+                        <item.icon className="w-5 h-5" />
+                        {item.label}
+                      </a>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          {/* User Section */}
+          <div className="p-4 border-t border-[var(--neuro-border-default)]">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-[var(--neuro-gray-200)] flex items-center justify-center">
+                <User className="w-5 h-5 text-[var(--neuro-text-secondary)]" />
               </div>
-
-              {/* Task Content */}
-              <ScrollArea className="flex-1">
-                <div className="p-4 space-y-4">
-                  {/* Description */}
-                  <div>
-                    <h3 className="font-semibold text-text-primary mb-2 text-sm">Descrição</h3>
-                    <p className="text-text-secondary leading-relaxed text-sm">
-                      {getTaskDescription(activeTask.description)}
-                    </p>
-                  </div>
-
-                  {/* Checklist */}
-                  {(() => {
-                    const checklist = activeTask.checklist as any[];
-                    if (!checklist || !Array.isArray(checklist)) return null;
-                    return (
-                      <div>
-                        <h3 className="font-semibold text-text-primary mb-3 text-sm">Checklist</h3>
-                        <div className="space-y-3">
-                          {checklist.map((item: any, idx: number) => (
-                            <label key={idx} className="flex items-center gap-3 cursor-pointer min-h-[44px]">
-                              <Checkbox defaultChecked={item.completed} className="min-w-[20px] min-h-[20px]" />
-                              <span className="text-text-secondary text-sm">{item.text}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })()}
-
-                  {/* Timer */}
-                  <div className="p-4 bg-background-secondary rounded-lg">
-                    <div className="text-center">
-                      <p className="text-sm text-text-secondary mb-2">Tempo investido</p>
-                      <p className="text-4xl font-bold text-green-600 font-mono">
-                        {formatTime(timerSeconds)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </ScrollArea>
-
-              {/* Action Bar */}
-              <div className="border-t border-border-default p-4 bg-background-primary safe-area-inset-bottom">
-                <div className="flex gap-3">
-                  <Button
-                    onClick={() => setTimerRunning(!timerRunning)}
-                    className="flex-1 bg-green-600 hover:bg-green-700 text-white min-h-[48px]"
-                  >
-                    {timerRunning ? "Pausar" : "Começar"}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => completeTask.mutate({ taskId: activeTask.id })}
-                    className="flex-1 min-h-[48px]"
-                  >
-                    <CheckCircle2 className="w-4 h-4 mr-2" />
-                    Concluir
-                  </Button>
-                </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-[var(--neuro-text-primary)] truncate">
+                  {user?.name || "Usuário"}
+                </p>
+                <p className="text-xs text-[var(--neuro-text-tertiary)] truncate">
+                  {user?.email}
+                </p>
               </div>
-            </>
-          ) : (
-            <div className="flex items-center justify-center h-full p-4">
-              <div className="text-center text-text-tertiary">
-                <Target className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                <p className="text-sm">Selecione uma tarefa para começar</p>
-                <Button 
-                  variant="link" 
-                  className="mt-2 text-green-600"
-                  onClick={() => setMobileTab("tasks")}
-                >
-                  Ver tarefas
+            </div>
+            <div className="flex gap-2">
+              <Button variant="ghost" size="icon-sm" onClick={toggleDarkMode}>
+                {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </Button>
+              <Link href="/settings">
+                <Button variant="ghost" size="icon-sm">
+                  <Settings className="w-4 h-4" />
                 </Button>
-              </div>
-            </div>
-          )}
-        </TabsContent>
-
-        {/* Tab: Info (Project, Where I Left, Assistant) */}
-        <TabsContent value="info" className="flex-1 flex flex-col overflow-hidden m-0 p-0">
-          <Tabs value={assistantTab} onValueChange={setAssistantTab} className="flex-1 flex flex-col">
-            <TabsList className="w-full rounded-none border-b border-border-default bg-transparent p-0 h-auto">
-              <TabsTrigger 
-                value="project" 
-                className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-green-600 py-3 text-sm"
-              >
-                Projeto
-              </TabsTrigger>
-              <TabsTrigger 
-                value="whereILeft" 
-                className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-green-600 py-3 text-sm"
-              >
-                Onde Parei
-              </TabsTrigger>
-              <TabsTrigger 
-                value="assistant" 
-                className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-green-600 py-3 text-sm"
-              >
-                Assistente
-              </TabsTrigger>
-            </TabsList>
-
-            {/* Sub-Tab: Project */}
-            <TabsContent value="project" className="flex-1 overflow-y-auto p-4 m-0">
-              {projectContext?.summaryBullets ? (
-                <div className="space-y-3">
-                  {Array.isArray(projectContext.summaryBullets) && projectContext.summaryBullets.map((bullet: any, idx: number) => (
-                    <div key={idx} className="flex gap-2">
-                      <span className="text-green-600 mt-1">•</span>
-                      <p className="text-sm text-text-secondary">{bullet.text}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-text-tertiary">Nenhum resumo disponível</p>
-              )}
-            </TabsContent>
-
-            {/* Sub-Tab: Onde Parei */}
-            <TabsContent value="whereILeft" className="flex-1 overflow-y-auto p-4 m-0">
-              {whereILeft ? (
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold text-text-primary text-sm mb-2">Contexto</h4>
-                    <p className="text-sm text-text-secondary">{whereILeft.content}</p>
-                  </div>
-                  {whereILeft.nextAction && (
-                    <div>
-                      <h4 className="font-semibold text-text-primary text-sm mb-2">Próxima Ação</h4>
-                      <p className="text-sm text-text-secondary">{whereILeft.nextAction}</p>
-                    </div>
-                  )}
-                  {whereILeft.blockers && (
-                    <div>
-                      <h4 className="font-semibold text-text-primary text-sm mb-2">Bloqueadores</h4>
-                      <p className="text-sm text-text-secondary">{whereILeft.blockers}</p>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <p className="text-sm text-text-tertiary">Nenhum registro ainda</p>
-              )}
-            </TabsContent>
-
-            {/* Sub-Tab: Assistant */}
-            <TabsContent value="assistant" className="flex-1 flex flex-col m-0">
-              <ScrollArea className="flex-1 p-4">
-                <div className="space-y-3">
-                  <div className="p-3 bg-background-secondary rounded-lg">
-                    <p className="text-sm text-text-secondary">
-                      Olá! Sou seu assistente neuroadaptado. Faça perguntas sobre seu projeto ou tarefa atual.
-                    </p>
-                  </div>
-                </div>
-              </ScrollArea>
-              <div className="border-t border-border-default p-4 safe-area-inset-bottom">
-                <div className="flex gap-2">
-                  <Input
-                    value={assistantMessage}
-                    onChange={(e) => setAssistantMessage(e.target.value)}
-                    placeholder="Faça uma pergunta..."
-                    className="text-sm min-h-[44px]"
-                  />
-                  <Button
-                    className="bg-green-600 hover:bg-green-700 min-w-[48px] min-h-[48px]"
-                    onClick={() => {
-                      if (assistantMessage.trim()) {
-                        askAssistant.mutate({
-                          projectId: activeCycle.projectId,
-                          message: assistantMessage,
-                        });
-                        setAssistantMessage("");
-                      }
-                    }}
-                  >
-                    <Send className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </TabsContent>
-
-        {/* Mobile Bottom Navigation */}
-        <TabsList className="w-full rounded-none border-t border-border-default bg-background-primary p-0 h-auto safe-area-inset-bottom">
-          <TabsTrigger 
-            value="tasks" 
-            className="flex-1 flex flex-col items-center gap-1 py-3 rounded-none data-[state=active]:bg-green-50 data-[state=active]:text-green-700 min-h-[60px]"
-          >
-            <ListTodo className="w-5 h-5" />
-            <span className="text-xs">Tarefas</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="workspace" 
-            className="flex-1 flex flex-col items-center gap-1 py-3 rounded-none data-[state=active]:bg-green-50 data-[state=active]:text-green-700 min-h-[60px]"
-          >
-            <Target className="w-5 h-5" />
-            <span className="text-xs">Foco</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="info" 
-            className="flex-1 flex flex-col items-center gap-1 py-3 rounded-none data-[state=active]:bg-green-50 data-[state=active]:text-green-700 min-h-[60px]"
-          >
-            <Bot className="w-5 h-5" />
-            <span className="text-xs">Info</span>
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
-    </div>
-  );
-
-  // ============================================
-  // DESKTOP LAYOUT (lg+)
-  // ============================================
-  const DesktopLayout = () => (
-    <div className="hidden lg:flex h-screen bg-background-primary overflow-hidden">
-      {/* LEFT PANEL - 30-35% */}
-      <aside className="flex flex-col w-1/3 border-r border-border-default bg-background-primary">
-        <ScrollArea className="flex-1">
-          <div className="p-6">
-            {/* Header */}
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-1">
-                <h2 className="text-2xl font-semibold text-text-primary">Hoje</h2>
-                <ChromotherapyPicker
-                  currentTheme={currentTheme}
-                  onChange={(theme) => {
-                    setCurrentTheme(theme);
-                    const saved = localStorage.getItem('neuroplan_prefs');
-                    const prefs = saved ? JSON.parse(saved) : {};
-                    localStorage.setItem('neuroplan_prefs', JSON.stringify({ ...prefs, colorTheme: theme }));
-                  }}
-                />
-              </div>
-              <p className="text-sm text-text-secondary">
-                Dia {activeCycle.currentDay || 1} do ciclo de 3 dias
-              </p>
-            </div>
-
-            {/* "Onde Parei" Block */}
-            {whereILeft && (
-              <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <h3 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-blue-600" />
-                  Onde parei ontem
-                </h3>
-                <p className="text-sm text-text-secondary line-clamp-3">
-                  {whereILeft.content}
-                </p>
-              </div>
-            )}
-
-            {/* Tasks List */}
-            <div className="space-y-3">
-              {todayTasks.map((task) => (
-                <button
-                  key={task.id}
-                  onClick={() => setActiveTaskId(task.id)}
-                  className={`w-full text-left p-4 rounded-lg border transition-all ${
-                    activeTaskId === task.id
-                      ? "bg-green-50 border-green-300 shadow-md"
-                      : "bg-background-primary border-border-default hover:border-border-hover"
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <Checkbox
-                      checked={task.status === "COMPLETED"}
-                      className="mt-1"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Badge className={getPriorityColor(task.priority)}>
-                          {task.priority}
-                        </Badge>
-                        <span className="text-xs text-text-tertiary">
-                          {task.estimatedMinutes}min
-                        </span>
-                      </div>
-                      <h4 className="font-medium text-text-primary text-sm truncate">
-                        {task.title}
-                      </h4>
-                    </div>
-                  </div>
-                </button>
-              ))}
+              </Link>
+              <Button variant="ghost" size="icon-sm" onClick={() => logout()}>
+                <LogOut className="w-4 h-4" />
+              </Button>
             </div>
           </div>
-        </ScrollArea>
+        </div>
       </aside>
 
-      {/* CENTER PANEL - 45-50% */}
-      <main className="flex-1 flex flex-col bg-background-primary overflow-hidden">
-        {activeTask ? (
-          <>
-            {/* Task Header */}
-            <div className="border-b border-border-default p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge className={getPriorityColor(activeTask.priority)}>
-                      {activeTask.priority}
-                    </Badge>
-                    <span className="text-sm text-text-secondary">
-                      {activeTask.estimatedMinutes} minutos
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header */}
+        <header className="h-16 border-b border-[var(--neuro-border-default)] bg-[var(--neuro-bg-card)] flex items-center justify-between px-4 lg:px-6">
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden p-2 rounded-lg hover:bg-[var(--neuro-gray-100)]"
+            onClick={() => setSidebarOpen(true)}
+          >
+            <Menu className="w-6 h-6 text-[var(--neuro-text-primary)]" />
+          </button>
+
+          {/* Search */}
+          <div className="hidden md:flex items-center gap-2 flex-1 max-w-md">
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--neuro-text-tertiary)]" />
+              <Input
+                placeholder="Buscar tarefas..."
+                className="pl-10 bg-[var(--neuro-bg-secondary)] border-transparent"
+              />
+            </div>
+          </div>
+
+          {/* Right Actions */}
+          <div className="flex items-center gap-3">
+            {/* Streak Badge */}
+            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--neuro-orange-100)]">
+              <Flame className="w-4 h-4 text-[var(--neuro-orange-primary)]" />
+              <span className="text-sm font-medium text-[var(--neuro-orange-primary)]">7 dias</span>
+            </div>
+
+            {/* Notifications */}
+            <Button variant="ghost" size="icon-sm" className="relative">
+              <Bell className="w-5 h-5" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-[var(--neuro-red-primary)] rounded-full" />
+            </Button>
+
+            {/* Day Progress */}
+            <div className="hidden lg:flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--neuro-bg-secondary)]">
+              <Calendar className="w-4 h-4 text-[var(--neuro-text-tertiary)]" />
+              <span className="text-sm font-medium text-[var(--neuro-text-primary)]">
+                Dia {activeCycle.currentDay || 1}/3
+              </span>
+            </div>
+          </div>
+        </header>
+
+        {/* Main Content Area */}
+        <ScrollArea className="flex-1">
+          <main className="p-4 lg:p-6 space-y-6">
+            {/* Where I Left Off Banner */}
+            {whereILeft && (
+              <Card className="bg-[var(--neuro-blue-50)] border-[var(--neuro-blue-200)] animate-fade-in-up">
+                <CardContent className="p-4 flex items-start gap-4">
+                  <div className="p-2 rounded-lg bg-[var(--neuro-blue-100)]">
+                    <Brain className="w-5 h-5 text-[var(--neuro-blue-primary)]" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-[var(--neuro-text-primary)] mb-1">
+                      Onde você parou
+                    </h3>
+                    <p className="text-sm text-[var(--neuro-text-secondary)] line-clamp-2">
+                      {whereILeft.content}
+                    </p>
+                    {whereILeft.nextAction && (
+                      <p className="text-sm text-[var(--neuro-blue-primary)] mt-2 font-medium">
+                        → {whereILeft.nextAction}
+                      </p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Metrics Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Focus Score - Large Circle */}
+              <Card className="sm:col-span-2 lg:col-span-1 lg:row-span-2">
+                <CardContent className="p-6 flex flex-col items-center justify-center h-full">
+                  <ProgressCircle
+                    value={focusScore || 82}
+                    size="xl"
+                    color="orange"
+                    sublabel="Focus Score"
+                  />
+                  <p className="text-sm text-[var(--neuro-text-tertiary)] mt-4 text-center">
+                    {completedTasks} de {totalTasks || 6} tarefas concluídas
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* Tasks Completed */}
+              <MetricCard
+                title="Tarefas Hoje"
+                value={`${completedTasks}/${totalTasks || 6}`}
+                subtitle="vs. meta de 6"
+                trend={completedTasks >= 3 ? "up" : "down"}
+                trendValue={completedTasks >= 3 ? "No ritmo" : "Acelere!"}
+                icon={CheckCircle2}
+                color="green"
+              />
+
+              {/* Time Focused */}
+              <MetricCard
+                title="Tempo de Foco"
+                value={formatTime(timerSeconds) || "3h 42m"}
+                subtitle="sessão atual"
+                trend="up"
+                trendValue="+15%"
+                icon={Timer}
+                color="blue"
+              />
+
+              {/* Distraction Time */}
+              <MetricCard
+                title="Distrações"
+                value="4"
+                subtitle="interrupções"
+                trend="down"
+                trendValue="-2"
+                icon={Zap}
+                color="yellow"
+              />
+
+              {/* Weekly Streak */}
+              <MetricCard
+                title="Streak Semanal"
+                value="7"
+                subtitle="dias seguidos"
+                trend="up"
+                icon={Flame}
+                color="orange"
+              />
+            </div>
+
+            {/* Charts Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Focus Trends */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-[var(--neuro-blue-primary)]" />
+                    Tendência de Foco
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <FocusTrendChart />
+                  <div className="flex items-center justify-between mt-4 pt-4 border-t border-[var(--neuro-border-default)]">
+                    <span className="text-sm text-[var(--neuro-text-secondary)]">Última semana</span>
+                    <span className="text-sm font-medium text-[var(--neuro-green-primary)]">
+                      +12% vs. semana anterior
                     </span>
                   </div>
-                  <h1 className="text-2xl font-bold text-text-primary">
-                    {activeTask.title}
-                  </h1>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
+
+              {/* Weekly Productivity */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BarChart3 className="w-5 h-5 text-[var(--neuro-orange-primary)]" />
+                    Produtividade Semanal
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <WeeklyChart data={weeklyData} />
+                  <div className="flex items-center justify-between mt-4 pt-4 border-t border-[var(--neuro-border-default)]">
+                    <span className="text-sm text-[var(--neuro-text-secondary)]">Média: 62%</span>
+                    <span className="text-sm font-medium text-[var(--neuro-orange-primary)]">
+                      Melhor dia: Qui (85%)
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
-            {/* Task Content */}
-            <ScrollArea className="flex-1">
-              <div className="p-6 space-y-6">
-                {/* Description */}
-                <div>
-                  <h3 className="font-semibold text-text-primary mb-2">Descrição</h3>
-                  <p className="text-text-secondary leading-relaxed">
-                    {getTaskDescription(activeTask.description)}
-                  </p>
+            {/* Today's Tasks */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <ListTodo className="w-5 h-5 text-[var(--neuro-orange-primary)]" />
+                    Tarefas de Hoje
+                  </CardTitle>
+                  <Badge className="bg-[var(--neuro-orange-100)] text-[var(--neuro-orange-primary)]">
+                    Dia {activeCycle.currentDay || 1}
+                  </Badge>
                 </div>
-
-                {/* Checklist */}
-                {(() => {
-                  const checklist = activeTask.checklist as any[];
-                  if (!checklist || !Array.isArray(checklist)) return null;
-                  return (
-                    <div>
-                      <h3 className="font-semibold text-text-primary mb-3">Checklist</h3>
-                      <div className="space-y-2">
-                        {checklist.map((item: any, idx: number) => (
-                          <label key={idx} className="flex items-center gap-3 cursor-pointer">
-                            <Checkbox defaultChecked={item.completed} />
-                            <span className="text-text-secondary">{item.text}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })()}
-
-                {/* Timer */}
-                <div className="p-4 bg-background-secondary rounded-lg">
-                  <div className="text-center">
-                    <p className="text-sm text-text-secondary mb-2">Tempo investido</p>
-                    <p className="text-4xl font-bold text-green-600 font-mono">
-                      {formatTime(timerSeconds)}
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {todayTasks.length === 0 ? (
+                  <div className="text-center py-8">
+                    <ListTodo className="w-12 h-12 text-[var(--neuro-text-disabled)] mx-auto mb-3" />
+                    <p className="text-[var(--neuro-text-secondary)]">
+                      Nenhuma tarefa para hoje. Aproveite o descanso!
                     </p>
                   </div>
-                </div>
-              </div>
-            </ScrollArea>
+                ) : (
+                  todayTasks.map((task, index) => (
+                    <div
+                      key={task.id}
+                      className={`
+                        flex items-start gap-4 p-4 rounded-xl border transition-all duration-150 cursor-pointer
+                        ${
+                          activeTaskId === task.id
+                            ? "border-[var(--neuro-orange-primary)] bg-[var(--neuro-orange-50)] shadow-md"
+                            : "border-[var(--neuro-border-default)] hover:border-[var(--neuro-border-hover)] hover:bg-[var(--neuro-bg-secondary)]"
+                        }
+                        animate-fade-in-up stagger-${index + 1}
+                      `}
+                      onClick={() => setActiveTaskId(task.id === activeTaskId ? null : task.id)}
+                    >
+                      <CheckboxTask
+                        checked={task.status === "COMPLETED"}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            completeTask.mutate({ taskId: task.id });
+                          }
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      />
 
-            {/* Action Bar */}
-            <div className="border-t border-border-default p-6 bg-background-primary">
-              <div className="flex gap-3">
-                <Button
-                  onClick={() => setTimerRunning(!timerRunning)}
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-                >
-                  {timerRunning ? "Pausar" : "Começar"} por 10 min
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => completeTask.mutate({ taskId: activeTask.id })}
-                  className="flex-1"
-                >
-                  <CheckCircle2 className="w-4 h-4 mr-2" />
-                  Concluir
-                </Button>
-              </div>
-            </div>
-          </>
-        ) : (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center text-text-tertiary">
-              <Target className="w-12 h-12 mx-auto mb-3 opacity-50" />
-              <p>Selecione uma tarefa para começar</p>
-            </div>
-          </div>
-        )}
-      </main>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <Badge className={getPriorityStyles(task.priority)}>
+                            {task.priority}
+                          </Badge>
+                          <span className="text-xs text-[var(--neuro-text-tertiary)]">
+                            {task.estimatedMinutes || 15}min
+                          </span>
+                        </div>
+                        <h4
+                          className={`font-medium text-[var(--neuro-text-primary)] ${
+                            task.status === "COMPLETED"
+                              ? "line-through text-[var(--neuro-text-tertiary)]"
+                              : ""
+                          }`}
+                        >
+                          {task.title}
+                        </h4>
+                        {task.description && typeof task.description === "string" && (
+                          <p className="text-sm text-[var(--neuro-text-secondary)] mt-1 line-clamp-2">
+                            {task.description}
+                          </p>
+                        )}
+                      </div>
 
-      {/* RIGHT PANEL - 20-25% */}
-      <aside className="flex flex-col w-1/4 border-l border-border-default bg-background-primary">
-        <Tabs value={assistantTab} onValueChange={setAssistantTab} className="flex-1 flex flex-col">
-          <TabsList className="w-full rounded-none border-b border-border-default bg-transparent p-0">
-            <TabsTrigger value="project" className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-green-600">
-              Projeto
-            </TabsTrigger>
-            <TabsTrigger value="whereILeft" className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-green-600">
-              Onde Parei
-            </TabsTrigger>
-            <TabsTrigger value="assistant" className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-green-600">
-              Assistente
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Tab: Project */}
-          <TabsContent value="project" className="flex-1 overflow-y-auto p-4">
-            {projectContext?.summaryBullets ? (
-              <div className="space-y-3">
-                {Array.isArray(projectContext.summaryBullets) && projectContext.summaryBullets.map((bullet: any, idx: number) => (
-                  <div key={idx} className="flex gap-2">
-                    <span className="text-green-600 mt-1">•</span>
-                    <p className="text-sm text-text-secondary">{bullet.text}</p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-text-tertiary">Nenhum resumo disponível</p>
-            )}
-          </TabsContent>
-
-          {/* Tab: Onde Parei */}
-          <TabsContent value="whereILeft" className="flex-1 overflow-y-auto p-4">
-            {whereILeft ? (
-              <div className="space-y-3">
-                <div>
-                  <h4 className="font-semibold text-text-primary text-sm mb-2">Contexto</h4>
-                  <p className="text-sm text-text-secondary">{whereILeft.content}</p>
-                </div>
-                {whereILeft.nextAction && (
-                  <div>
-                    <h4 className="font-semibold text-text-primary text-sm mb-2">Próxima Ação</h4>
-                    <p className="text-sm text-text-secondary">{whereILeft.nextAction}</p>
-                  </div>
+                      {/* Quick Actions */}
+                      {activeTaskId === task.id && task.status !== "COMPLETED" && (
+                        <div className="flex items-center gap-2">
+                          <Button
+                            size="sm"
+                            variant={timerRunning ? "secondary" : "primary"}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setTimerRunning(!timerRunning);
+                            }}
+                          >
+                            {timerRunning ? (
+                              <Pause className="w-4 h-4" />
+                            ) : (
+                              <Play className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  ))
                 )}
-                {whereILeft.blockers && (
-                  <div>
-                    <h4 className="font-semibold text-text-primary text-sm mb-2">Bloqueadores</h4>
-                    <p className="text-sm text-text-secondary">{whereILeft.blockers}</p>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <p className="text-sm text-text-tertiary">Nenhum registro ainda</p>
-            )}
-          </TabsContent>
-
-          {/* Tab: Assistant */}
-          <TabsContent value="assistant" className="flex-1 flex flex-col">
-            <ScrollArea className="flex-1 p-4">
-              <div className="space-y-3">
-                <div className="p-3 bg-background-secondary rounded-lg">
-                  <p className="text-sm text-text-secondary">
-                    Olá! Sou seu assistente neuroadaptado. Faça perguntas sobre seu projeto ou tarefa atual.
-                  </p>
-                </div>
-              </div>
-            </ScrollArea>
-            <div className="border-t border-border-default p-4">
-              <div className="flex gap-2">
-                <Input
-                  value={assistantMessage}
-                  onChange={(e) => setAssistantMessage(e.target.value)}
-                  placeholder="Faça uma pergunta..."
-                  className="text-sm"
-                />
-                <Button
-                  size="sm"
-                  className="bg-green-600 hover:bg-green-700"
-                  onClick={() => {
-                    if (assistantMessage.trim()) {
-                      askAssistant.mutate({
-                        projectId: activeCycle.projectId,
-                        message: assistantMessage,
-                      });
-                      setAssistantMessage("");
-                    }
-                  }}
-                >
-                  <Send className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </aside>
+              </CardContent>
+            </Card>
+          </main>
+        </ScrollArea>
+      </div>
     </div>
-  );
-
-  // Render appropriate layout based on screen size
-  return (
-    <>
-      <MobileLayout />
-      <DesktopLayout />
-    </>
   );
 }
