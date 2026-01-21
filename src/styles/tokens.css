@@ -1,0 +1,270 @@
+/**
+ * DESIGN TOKENS - MATRIZ CREXTIO
+ * NeuroExecução (KNH4)
+ *
+ * Base: Referências de Design consolidadas
+ * Versão: 1.0
+ * Data: 21/01/2026
+ */
+
+:root {
+  /* ============================================
+     CORES PRIMÁRIAS
+     ============================================ */
+
+  /* Amarelo - Sistema de destaque */
+  --color-accent-primary: #FFC738;      /* Amarelo médio - hover/destaque */
+  --color-accent-secondary: #FFD400;    /* Amarelo CTA - ações principais */
+  --color-accent-light: #FFE89A;        /* Amarelo claro - backgrounds */
+  --color-accent-dark: #E5B32D;         /* Amarelo escuro - estados ativos */
+
+  /* Preto - Sistema de contraste */
+  --color-dark-primary: #000000;        /* Preto puro - contraste forte */
+  --color-dark-soft: #1A1A1A;           /* Preto suave - texto principal */
+  --color-dark-medium: #2D2D2D;         /* Cinza escuro - backgrounds escuros */
+
+  /* ============================================
+     BACKGROUNDS
+     ============================================ */
+
+  --bg-app: #F8F6F1;                    /* Bege claro - fundo geral da aplicação */
+  --bg-card: #FFFFFF;                   /* Branco puro - cards/containers */
+  --bg-hover: #FFFBF2;                  /* Amarelo muito claro - hover states */
+  --bg-selected: #FFF9E6;               /* Amarelo pastel - estados selecionados */
+  --bg-input: #F5F5F5;                  /* Cinza claro - inputs */
+  --bg-input-focus: #EBEBEB;            /* Cinza médio - inputs em foco */
+
+  /* ============================================
+     TEXTO
+     ============================================ */
+
+  --text-primary: #1A1A1A;              /* Preto suave - texto principal */
+  --text-secondary: #6B6B6B;            /* Cinza médio - texto secundário */
+  --text-tertiary: #A8A8A8;             /* Cinza claro - hints/disabled */
+  --text-muted: #64748b;                /* Cinza azulado - metadados */
+  --text-on-dark: #FFFFFF;              /* Branco - texto em fundos escuros */
+  --text-on-accent: #000000;            /* Preto - texto em fundos amarelos */
+
+  /* ============================================
+     CORES SEMÂNTICAS
+     ============================================ */
+
+  --color-success: #7ED957;             /* Verde limão - sucesso/progresso */
+  --color-success-bg: #E8F5E0;          /* Verde claro - background success */
+  --color-success-text: #4A8C2A;        /* Verde escuro - texto em success */
+
+  --color-warning: #FFC738;             /* Amarelo - atenção (reutiliza accent) */
+  --color-warning-bg: #FFF9E6;          /* Amarelo pastel - background warning */
+  --color-warning-text: #B8860B;        /* Dourado escuro - texto em warning */
+
+  --color-error: #FF6B6B;               /* Vermelho suave - erros */
+  --color-error-bg: #FFE4E1;            /* Rosa claro - background error */
+  --color-error-text: #DD4B5B;          /* Vermelho escuro - texto em error */
+
+  --color-info: #5B9BFF;                /* Azul médio - informações */
+  --color-info-bg: #E3F2FD;             /* Azul claro - background info */
+  --color-info-text: #4B5BDD;           /* Azul escuro - texto em info */
+
+  /* ============================================
+     BORDERS & DIVIDERS
+     ============================================ */
+
+  --border-light: #E8E5DD;              /* Bege escuro - bordas sutis */
+  --border-medium: #D4D1C7;             /* Bege mais escuro - bordas visíveis */
+  --border-dark: #B8B5AC;               /* Bege saturado - bordas fortes */
+  --border-accent: #FFC738;             /* Amarelo - bordas de destaque */
+
+  /* ============================================
+     SHADOWS (Progressive Enhancement)
+     ============================================ */
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.16);
+
+  /* Shadows específicas amarelo (hover CTAs) */
+  --shadow-accent: 0 4px 16px rgba(255, 199, 56, 0.25);
+  --shadow-accent-lg: 0 8px 32px rgba(255, 199, 56, 0.3);
+
+  /* ============================================
+     TYPOGRAPHY
+     ============================================ */
+
+  /* Font Stack */
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+
+  /* Type Scale (baseado em 16px) */
+  --text-xs: 0.6875rem;     /* 11px - Metadados, hints */
+  --text-sm: 0.8125rem;     /* 13px - Labels, badges */
+  --text-base: 0.9375rem;   /* 15px - Corpo padrão */
+  --text-lg: 1.125rem;      /* 18px - Subtítulos */
+  --text-xl: 1.25rem;       /* 20px - Títulos de seção */
+  --text-2xl: 1.75rem;      /* 28px - Títulos de modal */
+  --text-3xl: 2rem;         /* 32px - Títulos de página */
+  --text-4xl: 3rem;         /* 48px - Hero titles */
+
+  /* Weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* Line Heights */
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.6;
+  --leading-loose: 1.8;
+
+  /* Letter Spacing */
+  --tracking-tight: -0.02em;    /* Títulos grandes */
+  --tracking-normal: 0;
+  --tracking-wide: 0.03em;      /* Labels uppercase */
+  --tracking-wider: 0.05em;     /* Headers */
+
+  /* ============================================
+     SPACING (Sistema 4px)
+     ============================================ */
+
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+
+  /* ============================================
+     BORDER RADIUS
+     ============================================ */
+
+  --radius-xs: 0.25rem;     /* 4px - Micro elementos */
+  --radius-sm: 0.375rem;    /* 6px - Checkboxes, small elements */
+  --radius-md: 0.75rem;     /* 12px - Cards internos, inputs */
+  --radius-lg: 1rem;        /* 16px - Pills, tags */
+  --radius-xl: 1.5rem;      /* 24px - Cards principais, modais */
+  --radius-2xl: 2rem;       /* 32px - Container principal */
+  --radius-full: 9999px;    /* Círculo completo - pills, avatares */
+
+  /* ============================================
+     TRANSITIONS & ANIMATIONS
+     ============================================ */
+
+  /* Cubic Bezier */
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Durations */
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
+  --duration-slower: 500ms;
+
+  /* ============================================
+     Z-INDEX SCALE
+     ============================================ */
+
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  --z-modal-backdrop: 40;
+  --z-modal: 50;
+  --z-popover: 60;
+  --z-tooltip: 70;
+  --z-notification: 80;
+
+  /* ============================================
+     BREAKPOINTS (para uso em JS)
+     ============================================ */
+
+  --breakpoint-xs: 375px;   /* Mobile small */
+  --breakpoint-sm: 640px;   /* Mobile large */
+  --breakpoint-md: 768px;   /* Tablet */
+  --breakpoint-lg: 1024px;  /* Desktop small */
+  --breakpoint-xl: 1280px;  /* Desktop large */
+  --breakpoint-2xl: 1536px; /* Desktop extra large */
+
+  /* ============================================
+     LAYOUT ESPECÍFICO KNH4
+     ============================================ */
+
+  /* Dashboard 3 Colunas */
+  --dashboard-sidebar-left: 320px;
+  --dashboard-sidebar-right: 400px;
+  --dashboard-gap: 24px;
+
+  /* Container Máximos */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1440px;
+
+  /* ============================================
+     COMPONENTS ESPECÍFICOS
+     ============================================ */
+
+  /* Botões */
+  --btn-padding-y: 0.875rem;      /* 14px */
+  --btn-padding-x: 1.75rem;       /* 28px */
+  --btn-height-min: 44px;         /* Touch-friendly */
+
+  /* Cards */
+  --card-padding: var(--space-8); /* 32px */
+
+  /* Inputs */
+  --input-height: 44px;           /* Touch-friendly */
+  --input-padding-y: var(--space-4);
+  --input-padding-x: var(--space-5);
+
+  /* Avatares */
+  --avatar-xs: 28px;
+  --avatar-sm: 40px;
+  --avatar-md: 64px;
+  --avatar-lg: 96px;
+  --avatar-xl: 120px;
+
+  /* Timer Progressivo (TDAH) */
+  --timer-color: var(--color-success);
+  --timer-bg: var(--bg-card);
+
+  /* Pills de Status */
+  --pill-padding-y: 6px;
+  --pill-padding-x: 12px;
+  --pill-radius: var(--radius-lg);
+}
+
+/* ============================================
+   DARK MODE (Futuro)
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Inverter cores quando necessário */
+    /* --bg-app: #1A1A1A; */
+    /* --bg-card: #2D2D2D; */
+    /* --text-primary: #FFFFFF; */
+  }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  :root {
+    /* Ajustes para impressão */
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+    --shadow-xl: none;
+  }
+}
