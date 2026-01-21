@@ -267,58 +267,140 @@ IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.`;
 }
 
 // ============================================================================
-// AGENT 4: CYCLE VALIDATION AGENT (P1 - Not implemented yet)
+// AGENT 4: CYCLE VALIDATION AGENT
 // ============================================================================
 
 export async function validateCycle(
   tasks: Task[],
   userProfile: UserProfile
 ): Promise<CycleValidationResult> {
-  // TODO: Implement in P1
-  // For now, return a simple validation
-  const totalLoad = tasks.reduce((sum, task) => sum + task.estimated_duration_minutes, 0);
-  const dailyCapacity = userProfile.cognitive_capacity_minutes;
-  const threeDayCapacity = dailyCapacity * 3;
+  const tasksList = tasks.map((t, index) => ({ id: index, ...t }));
+  const prompt = `Você é um especialista em validação de ciclos de execução neuroadaptativos (TDAH).
+  
+  Analise o seguinte ciclo de tarefas:
+  
+  Perfil do Usuário:
+  - Capacidade Cognitiva Diária: ${userProfile.cognitive_capacity_minutes} minutos
+  - Nível de Granularidade Preferido: ${userProfile.granularity_level}
+  
+  Tarefas do Ciclo (Total de ${tasks.length} tarefas):
+  ${JSON.stringify(tasksList, null, 2)}
+  
+  Seu trabalho é avaliar a viabilidade do ciclo de 3 dias, focando em:
+  1. **Carga Cognitiva:** A carga total excede a capacidade de 3 dias? (3 * ${userProfile.cognitive_capacity_minutes} minutos)
+  2. **Context Switches:** Identifique tarefas que exigem mudança de contexto (ex: Backend -> Design -> Marketing) e calcule a média por dia.
+  3. **Potenciais Bloqueadores:** Identifique tarefas vagas, muito longas ou com dependências implícitas.
+  
+  Retorne em formato JSON válido:
+  {
+    "is_viable": boolean,
+    "total_cognitive_load": number (minutos),
+    "load_vs_capacity_ratio": number (deve ser <= 1.0),
+    "context_switches_per_day": [number, number, number], // Estimativa para Dia 1, 2 e 3
+    "potential_blockers": array de IDs de tarefas (números),
+    "suggested_adjustments": array de objetos com { task_id: number, issue: string, suggestion: string }
+  }
+  
+  IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.`;
 
-  return {
-    is_viable: totalLoad <= threeDayCapacity,
-    total_cognitive_load: totalLoad,
-    load_vs_capacity_ratio: totalLoad / threeDayCapacity,
-    context_switches_per_day: [0, 0, 0], // TODO: Calculate
-    potential_blockers: [],
-    suggested_adjustments: [],
-  };
+  const result = await invokeLLM({
+    messages: [{ role: 'user', content: prompt }],
+  });
+  
+  const response = result.choices[0]?.message?.content || '{}';
+
+  try {
+    const validationResult = JSON.parse(response);
+    return validationResult as CycleValidationResult;
+  } catch (error) {
+    console.error('Error parsing Cycle Validation response:', error);
+    // Fallback: return simple validation
+    const totalLoad = tasks.reduce((sum, task) => sum + task.estimated_duration_minutes, 0);
+    const dailyCapacity = userProfile.cognitive_capacity_minutes;
+    const threeDayCapacity = dailyCapacity * 3;
+
+    return {
+      is_viable: totalLoad <= threeDayCapacity,
+      total_cognitive_load: totalLoad,
+      load_vs_capacity_ratio: totalLoad / threeDayCapacity,
+      context_switches_per_day: [2, 2, 2],
+      potential_blockers: [],
+      suggested_adjustments: [],
+    };
+  }
 }
 
 // ============================================================================
-// AGENT 5: UNBLOCKING AGENT (P1 - Not implemented yet)
+// AGENT 5: UNBLOCKING AGENT
 // ============================================================================
 
 export async function diagnoseBlocker(
   task: Task,
   userReportedReason: string | null
 ): Promise<UnblockingResult> {
-  // TODO: Implement in P1
-  // For now, return generic unblocking advice
-  return {
-    diagnosis: 'Tarefa pode estar muito vaga ou ampla.',
-    root_cause: 'vague_task',
-    solutions: [
+  const prompt = `Você é um Agente de Desbloqueio especializado em TDAH. Sua função é diagnosticar a causa raiz de um bloqueio e sugerir soluções imediatas e neuroadaptativas.
+  
+  Tarefa Bloqueada:
+  - Título: ${task.title}
+  - Descrição: ${task.description}
+  - Primeira Ação: ${task.first_action}
+  - Critério de Conclusão: ${task.done_when}
+  - Duração Estimada: ${task.estimated_duration_minutes} minutos
+  
+  Motivo Reportado pelo Usuário (se houver):
+  ${userReportedReason || 'Nenhum motivo específico reportado.'}
+  
+  Seu trabalho é:
+  1. Diagnosticar a causa raiz (escolha uma das opções no JSON).
+  2. Sugerir 3 soluções, cada uma com uma "ação imediata" de 5 minutos.
+  
+  Retorne em formato JSON válido:
+  {
+    "diagnosis": string (diagnóstico detalhado),
+    "root_cause": "vague_task" | "too_difficult" | "missing_info" | "emotional_block" | "unclear_outcome",
+    "solutions": [
       {
-        type: 'decompose',
-        description: 'Quebrar a tarefa em passos menores de 5-10 minutos',
-        immediate_action: 'Escrever os 3 primeiros micro-passos em um papel',
-      },
-      {
-        type: 'clarify',
-        description: 'Definir critério de "pronto" mais específico',
-        immediate_action: 'Completar a frase: "Esta tarefa está pronta quando..."',
-      },
-      {
-        type: 'skip',
-        description: 'Pular temporariamente e voltar depois',
-        immediate_action: 'Marcar como "bloqueada" e começar próxima tarefa',
-      },
-    ],
-  };
+        "type": "decompose" | "clarify" | "substitute" | "skip",
+        "description": string (descrição da solução),
+        "immediate_action": string (ação de 5 minutos para começar)
+      }
+    ]
+  }
+  
+  IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.`;
+
+  const result = await invokeLLM({
+    messages: [{ role: 'user', content: prompt }],
+  });
+  
+  const response = result.choices[0]?.message?.content || '{}';
+
+  try {
+    const unblockingResult = JSON.parse(response);
+    return unblockingResult as UnblockingResult;
+  } catch (error) {
+    console.error('Error parsing Unblocking Agent response:', error);
+    // Fallback: return generic unblocking advice
+    return {
+      diagnosis: 'Erro ao processar diagnóstico. Sugestões genéricas aplicadas.',
+      root_cause: 'vague_task',
+      solutions: [
+        {
+          type: 'decompose',
+          description: 'Quebrar a tarefa em passos menores de 5-10 minutos',
+          immediate_action: 'Escrever os 3 primeiros micro-passos em um papel',
+        },
+        {
+          type: 'clarify',
+          description: 'Definir critério de "pronto" mais específico',
+          immediate_action: 'Completar a frase: "Esta tarefa está pronta quando..."',
+        },
+        {
+          type: 'skip',
+          description: 'Pular temporariamente e voltar depois',
+          immediate_action: 'Marcar como "bloqueada" e começar próxima tarefa',
+        },
+      ],
+    };
+  }
 }
