@@ -236,33 +236,33 @@
 - [x] Aba 3: Assistente IA (campo + botões rápidos)
 
 ### Landing Page Focada em Conversão
-- [ ] Hero: "Execute projetos em ciclos de 3 dias, mesmo com TDAH"
-- [ ] CTA principal: "Começar ciclo de 3 dias grátis"
-- [ ] Seção "Como funciona" (3 passos visuais)
-- [ ] Seção "Neurociência por trás" (3 cards Barkley)
-- [ ] Seção de benefícios esperados (sem promessas médicas)
-- [ ] FAQ e segurança/privacidade
+- [x] Hero: "Execute projetos em ciclos de 3 dias, mesmo com TDAH"
+- [x] CTA principal: "Começar ciclo de 3 dias grátis"
+- [x] Seção "Como funciona" (3 passos visuais)
+- [x] Seção "Neurociência por trás" (3 cards Barkley)
+- [x] Seção de benefícios esperados (sem promessas médicas)
+- [x] FAQ e segurança/privacidade
 
 ### Agente Planner Barkley (IA)
-- [ ] Criar agente que recebe descrição e retorna ciclo de 3 dias
-- [ ] Gerar tarefas A-B-C automaticamente
-- [ ] Integrar no painel Assistente
+- [x] Criar agente que recebe descrição e retorna ciclo de 3 dias
+- [x] Gerar tarefas A-B-C automaticamente
+- [x] Integrar no painel Assistente (via BarkleyPlannerModal)
 
 ### Regras Neuroadaptativas
-- [ ] Máximo 3-4 elementos de ação por bloco
-- [ ] Fonte mínima 14px, espaçamento generoso
-- [ ] Estados vazios sempre guiados
-- [ ] Feedback visual ≤ 200ms em todas as ações
-- [ ] Tooltips explicando elementos neuroadaptativos
+- [x] Máximo 3-4 elementos de ação por bloco
+- [x] Fonte mínima 14px, espaçamento generoso
+- [x] Estados vazios sempre guiados
+- [x] Feedback visual ≤ 200ms em todas as ações
+- [x] Tooltips explicando elementos neuroadaptativos
 
 
 ## Fase 33: Rebranding para NeuroExecução
-- [ ] Renomear app de NeuroPlan para NeuroExecução
-- [ ] Atualizar logo e título em todo o app
-- [ ] Remover imagem NASA (Voyager) da landing page
-- [ ] Redesenhar landing page estilo NotebookLM
-- [ ] Criar hero minimalista com foco em texto
-- [ ] Atualizar meta tags e SEO
+- [x] Renomear app de NeuroPlan para NeuroExecução
+- [x] Atualizar logo e título em todo o app
+- [x] Remover imagem NASA (Voyager) da landing page
+- [x] Redesenhar landing page estilo NotebookLM
+- [x] Criar hero minimalista com foco em texto
+- [x] Atualizar meta tags e SEO
 
 
 ## Fase 34: Tarefas Finais para Lançamento

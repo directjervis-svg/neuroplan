@@ -43,6 +43,10 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminOrders from "./pages/admin/AdminOrders";
 
+// Components
+import BarkleyPlannerFAB from "./components/BarkleyPlannerFAB";
+import { ProgressHeader } from "./components/ProgressHeader";
+
 // Protected Route Component
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   const { isAuthenticated, loading } = useAuth();
@@ -59,7 +63,12 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
     return <Redirect to="/" />;
   }
 
-  return <Component />;
+  return (
+    <>
+      <ProgressHeader />
+      <Component />
+    </>
+  );
 }
 
 function Router() {
@@ -190,6 +199,7 @@ function App() {
             />
           )}
           <Router />
+          {user && <BarkleyPlannerFAB />}
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
