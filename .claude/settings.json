@@ -1,0 +1,58 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "echo 'NeuroExecução - Ambiente Sincronizado' && pnpm install --silent 2>/dev/null || true"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write(.py)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v ruff >/dev/null 2>&1 && ruff format $file && ruff check --fix $file || true"
+          }
+        ]
+      },
+      {
+        "matcher": "Write(.tsx|.ts)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v prettier >/dev/null 2>&1 && npx prettier --write $file || true"
+          }
+        ]
+      }
+    ]
+  },
+  "tools": {
+    "bash": {
+      "enabled": true,
+      "trusted": true
+    },
+    "file_operations": {
+      "enabled": true,
+      "forbidden_patterns": [
+        "node_modules/",
+        ".venv/",
+        "__pycache__/",
+        "*.pyc",
+        ".env",
+        ".env.local",
+        "dist/"
+      ]
+    }
+  },
+  "context": {
+    "max_tokens": 190000,
+    "auto_compact": true,
+    "compact_threshold": 0.85
+  },
+  "project": {
+    "name": "NeuroExecução",
+    "description": "AI-Powered Execution Platform for ADHD Adults",
+    "version": "1.1.0"
+  }
+}

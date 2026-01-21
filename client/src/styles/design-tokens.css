@@ -1,0 +1,481 @@
+/**
+ * NeuroExecução Design Tokens - Matriz Crextio
+ * Sistema de design neuroadaptativo baseado em evidências científicas
+ *
+ * PRINCÍPIOS:
+ * - Digital Nature: cores orgânicas de baixa estimulação
+ * - Bento Grids: compartimentalização visual
+ * - Progressive Disclosure: ocultar para revelar
+ * - Tipografia acessível: line-height 1.6, min 16px
+ */
+
+:root {
+  /* ===================================
+   * CORES PRINCIPAIS (Matriz Crextio)
+   * =================================== */
+
+  /* Background System */
+  --color-bg-app: #F8F6F1;           /* Fundo geral da aplicação */
+  --color-bg-card: #FFFFFF;          /* Cards e containers */
+  --color-bg-hover: #FFFBF2;         /* Hover states */
+  --color-bg-selected: #FFF9E6;      /* Selected states */
+
+  /* Accent Colors (Sistema de Destaque) */
+  --color-accent-primary: #FFD400;   /* Amarelo CTA - Botões principais */
+  --color-accent-secondary: #FFC738; /* Amarelo médio - Highlights */
+  --color-accent-light: #FFE89A;     /* Amarelo claro - Gradientes */
+  --color-accent-dark: #E5B32D;      /* Amarelo escuro - Hover */
+
+  /* Text System */
+  --color-text-primary: #000000;     /* Texto principal */
+  --color-text-secondary: #1A1A1A;   /* Texto títulos */
+  --color-text-muted: #6B6B6B;       /* Texto secundário */
+  --color-text-hint: #A8A8A8;        /* Texto hint/disabled */
+
+  /* Semantic Colors */
+  --color-success: #7ED957;          /* Verde - Sucesso, completude */
+  --color-warning: #FFC738;          /* Amarelo - Atenção */
+  --color-error: #FF6B6B;            /* Vermelho - Erro (uso mínimo) */
+  --color-info: #5B9BFF;             /* Azul - Informação */
+
+  /* Borders & Dividers */
+  --color-border-light: #E8E5DD;     /* Bordas sutis */
+  --color-border-medium: #D4D1C7;    /* Bordas visíveis */
+  --color-border-dark: #B8B5AC;      /* Bordas fortes */
+
+  /* C-Level Persona Colors */
+  --color-persona-cto: #3B82F6;      /* Tech - Azul */
+  --color-persona-cpo: #8B5CF6;      /* Product - Roxo */
+  --color-persona-caio: #10B981;     /* AI - Verde */
+  --color-persona-cmo: #F59E0B;      /* Marketing - Laranja */
+  --color-persona-cfo: #EF4444;      /* Finance - Vermelho */
+  --color-persona-cso: #06B6D4;      /* Sales - Ciano */
+  --color-persona-cco: #EC4899;      /* Customer - Rosa */
+  --color-persona-clo: #6366F1;      /* Legal - Índigo */
+
+  /* ===================================
+   * SHADOWS (Progressive Enhancement)
+   * =================================== */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.16);
+  --shadow-accent: 0 4px 16px rgba(255, 212, 0, 0.25);
+
+  /* ===================================
+   * TIPOGRAFIA
+   * =================================== */
+
+  /* Font Stack */
+  --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Type Scale (baseado em 16px) */
+  --text-xs: 0.6875rem;   /* 11px - Metadados, hints */
+  --text-sm: 0.8125rem;   /* 13px - Labels, badges */
+  --text-base: 0.9375rem; /* 15px - Corpo padrão */
+  --text-lg: 1.125rem;    /* 18px - Subtítulos */
+  --text-xl: 1.25rem;     /* 20px - Títulos de seção */
+  --text-2xl: 2rem;       /* 32px - Títulos de modal */
+  --text-3xl: 3rem;       /* 48px - Títulos de página */
+
+  /* Weights */
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Line Heights */
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.6;  /* Recomendado para TDAH */
+  --leading-loose: 1.8;
+
+  /* Letter Spacing */
+  --tracking-tight: -0.02em;   /* Títulos grandes */
+  --tracking-normal: 0;
+  --tracking-wide: 0.03em;     /* Labels uppercase */
+
+  /* ===================================
+   * ESPAÇAMENTO (Sistema 4px)
+   * =================================== */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+
+  /* ===================================
+   * BORDER RADIUS
+   * =================================== */
+  --radius-sm: 0.375rem;   /* 6px - Checkboxes, small elements */
+  --radius-md: 0.75rem;    /* 12px - Cards internos, inputs */
+  --radius-lg: 1rem;       /* 16px - Pills, tags */
+  --radius-xl: 1.5rem;     /* 24px - Cards principais, modais */
+  --radius-2xl: 2rem;      /* 32px - Container principal */
+  --radius-full: 9999px;   /* Pills, avatares */
+
+  /* ===================================
+   * ANIMATIONS & TRANSITIONS
+   * =================================== */
+
+  /* Timing Functions */
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Durations */
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
+  --duration-slower: 500ms;
+
+  /* ===================================
+   * Z-INDEX SCALE
+   * =================================== */
+  --z-dropdown: 100;
+  --z-modal: 200;
+  --z-popover: 300;
+  --z-tooltip: 400;
+  --z-toast: 500;
+}
+
+/* ===================================
+ * BASE COMPONENT STYLES
+ * =================================== */
+
+/* Botão Padrão */
+.btn {
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  font-family: var(--font-family-base);
+  transition: all var(--duration-base) var(--ease-default);
+  border: none;
+  cursor: pointer;
+  line-height: var(--leading-normal);
+}
+
+.btn-primary {
+  background: var(--color-accent-primary);
+  color: var(--color-text-primary);
+}
+
+.btn-primary:hover {
+  background: var(--color-accent-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-accent);
+}
+
+.btn-secondary {
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  border: 2px solid var(--color-border-light);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-accent-secondary);
+  background: var(--color-bg-hover);
+}
+
+.btn-dark {
+  background: var(--color-text-primary);
+  color: var(--color-bg-card);
+}
+
+.btn-dark:hover {
+  background: var(--color-text-secondary);
+  box-shadow: var(--shadow-md);
+}
+
+/* Card Padrão */
+.card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border-light);
+  transition: all var(--duration-base) var(--ease-default);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-accent-secondary);
+}
+
+/* Input Padrão */
+.input {
+  background: #F5F5F5;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  font-size: var(--text-base);
+  font-family: var(--font-family-base);
+  transition: background var(--duration-base);
+  line-height: var(--leading-relaxed);
+}
+
+.input:focus {
+  background: #EBEBEB;
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--color-text-hint);
+}
+
+/* Status Pills */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.pill-success {
+  background: #E8F5E0;
+  color: #4A8C2A;
+}
+
+.pill-warning {
+  background: var(--color-bg-selected);
+  color: #B8860B;
+}
+
+.pill-error {
+  background: #FFE5E5;
+  color: #DC2626;
+}
+
+.pill-info {
+  background: #E3F2FD;
+  color: #1976D2;
+}
+
+/* ===================================
+ * TDAH-SPECIFIC STYLES
+ * =================================== */
+
+/* Progressive Timer (Barkley) */
+.timer-progressive {
+  background: linear-gradient(135deg, var(--color-accent-light) 0%, var(--color-accent-secondary) 100%);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  text-align: center;
+}
+
+.timer-time {
+  font-size: 3rem;
+  font-weight: var(--weight-bold);
+  font-family: var(--font-family-mono);
+  color: var(--color-text-primary);
+}
+
+/* Where I Left Off Panel */
+.where-left-off {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  border-left: 4px solid var(--color-accent-primary);
+}
+
+/* Task Effort Indicators */
+.effort-action {
+  border-left: 4px solid var(--color-accent-primary);
+}
+
+.effort-retention {
+  border-left: 4px solid var(--color-accent-secondary);
+}
+
+.effort-maintenance {
+  border-left: 4px solid var(--color-border-medium);
+}
+
+/* Daily Tasks Card (Max 3 - Barkley) */
+.daily-tasks {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+}
+
+.daily-tasks-header {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-4);
+}
+
+.daily-tasks-title {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-5);
+}
+
+.task-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent-secondary);
+  flex-shrink: 0;
+}
+
+/* ===================================
+ * PERSONA CARDS
+ * =================================== */
+
+.persona-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-border-light);
+  background: var(--color-bg-card);
+  cursor: pointer;
+  transition: all var(--duration-base) var(--ease-default);
+}
+
+.persona-card:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
+}
+
+.persona-card.selected {
+  border-color: var(--color-accent-primary);
+  background: var(--color-bg-selected);
+}
+
+.persona-icon {
+  font-size: 1.5rem;
+}
+
+.persona-name {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.persona-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+/* ===================================
+ * PROMPT LIBRARY CARDS
+ * =================================== */
+
+.prompt-card {
+  background: var(--color-bg-card);
+  border: 2px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  transition: all var(--duration-base) var(--ease-default);
+}
+
+.prompt-card:hover {
+  border-color: var(--color-accent-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-accent);
+}
+
+.prompt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-3);
+}
+
+.prompt-title {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.prompt-category {
+  background: var(--color-bg-selected);
+  color: var(--color-text-primary);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+}
+
+.prompt-tags {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin: var(--space-3) 0;
+}
+
+.prompt-tag {
+  background: var(--color-bg-app);
+  border: 1px solid var(--color-border-light);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+/* ===================================
+ * BENTO GRID LAYOUT
+ * =================================== */
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr 400px;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  height: 100vh;
+  background: var(--color-bg-app);
+}
+
+.bento-box {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border-light);
+  transition: all var(--duration-base) var(--ease-default);
+}
+
+.bento-box:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--color-accent-secondary);
+}
+
+.bento-box-highlight {
+  background: linear-gradient(135deg, var(--color-bg-selected) 0%, var(--color-bg-card) 100%);
+  border-left: 4px solid var(--color-accent-primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .bento-grid {
+    grid-template-columns: 280px 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+}
