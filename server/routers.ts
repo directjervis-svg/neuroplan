@@ -27,6 +27,7 @@ import {
 } from "./db";
 import { processBriefing, decomposeTasks, getSocraticResponse } from "./ai";
 import { analyzeCharter, generateWBS, generateTasks, type UserProfile } from "./_core/ai-agents";
+import { generateBarkleyCycle } from "./barkley-planner";
 import { getUserCalibration, saveUserCalibration } from "./db-calibration";
 import { enforceRateLimit, getUserUsage } from "./ratelimit";
 import { gamificationRouter } from "./gamification";
@@ -654,5 +655,37 @@ export const appRouter = router({
   
   // Analytics & Metrics Router
   analytics: analyticsRouter,
+
+  // Barkley Planner Router - Generate 3-day cycles
+  barkleyPlanner: router({
+    generateCycle: protectedProcedure
+      .input(z.object({
+        projectDescription: z.string().min(10).max(1000),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        // Enforce rate limit before AI call
+        await enforceRateLimit(
+          ctx.user.id,
+          ctx.user.subscriptionPlan || 'FREE',
+          ctx.req.ip
+        );
+
+        // Get user calibration profile
+        const calibration = await getUserCalibration(ctx.user.id);
+        const userProfile: UserProfile = {
+          granularity_level: calibration?.granularityLevel || 'meso',
+          structuring_style: calibration?.structuringStyle || 'top_down',
+          cognitive_capacity_minutes: calibration?.cognitiveCapacityMinutes || 90,
+        };
+
+        // Generate the 3-day cycle
+        const cycle = await generateBarkleyCycle({
+          projectDescription: input.projectDescription,
+          userProfile,
+        });
+
+        return cycle;
+      }),
+  }),
 });
 export type AppRouter = typeof appRouter;
