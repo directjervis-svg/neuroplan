@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { api } from '../utils/api';
+import { trpc } from '@/lib/trpc';
 import { Plus, Check, Trash2, Lightbulb } from 'lucide-react';
 
 interface IdeaItemProps {
@@ -51,16 +51,16 @@ const IdeaItem: React.FC<IdeaItemProps> = ({ idea, onConvert, onDelete }) => {
 
 export const QuickIdeasPanel: React.FC = () => {
   const [newIdea, setNewIdea] = useState('');
-  const { data: ideas, refetch } = api.quickIdeas.getIdeas.useQuery();
+  const { data: ideas, refetch } = trpc.quickIdeas.getIdeas.useQuery();
   
-  const createIdeaMutation = api.quickIdeas.createIdea.useMutation({
+  const createIdeaMutation = trpc.quickIdeas.createIdea.useMutation({
     onSuccess: () => {
       setNewIdea('');
       refetch();
     },
   });
 
-  const convertToTaskMutation = api.quickIdeas.convertToTask.useMutation({
+  const convertToTaskMutation = trpc.quickIdeas.convertToTask.useMutation({
     onSuccess: () => {
       refetch();
       // TODO: Adicionar lógica para realmente criar a tarefa no banco aqui

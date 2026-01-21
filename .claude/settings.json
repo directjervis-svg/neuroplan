@@ -1,0 +1,54 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "npm install && echo 'Ambiente sincronizado ✅'"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write(*.tsx|*.ts|*.jsx|*.js)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx prettier --write $file"
+          }
+        ]
+      },
+      {
+        "matcher": "Write(*.css)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx prettier --write $file"
+          }
+        ]
+      }
+    ]
+  },
+  "tools": {
+    "bash": {
+      "enabled": true,
+      "trusted": true
+    },
+    "file_operations": {
+      "enabled": true,
+      "forbidden_patterns": [
+        "node_modules/",
+        ".venv/",
+        "__pycache__/",
+        "*.pyc",
+        ".env",
+        ".git/",
+        "dist/",
+        "build/"
+      ]
+    }
+  },
+  "context": {
+    "max_tokens": 190000,
+    "auto_compact": true,
+    "compact_threshold": 0.85
+  }
+}
