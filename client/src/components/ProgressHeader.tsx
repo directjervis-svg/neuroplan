@@ -1,5 +1,5 @@
 import React from 'react';
-import { api } from '../utils/api';
+import { trpc } from '@/lib/trpc';
 import { Zap, CheckCircle, Clock } from 'lucide-react';
 
 /**
@@ -8,7 +8,7 @@ import { Zap, CheckCircle, Clock } from 'lucide-react';
  */
 export const ProgressHeader: React.FC = () => {
   // Simulação de dados (em produção, usaria a API)
-  const { data: stats, isLoading } = api.user.getStats.useQuery(undefined, {
+  const { data: stats, isLoading } = trpc.user.getStats.useQuery(undefined, {
     staleTime: 5000, // Atualiza a cada 5 segundos
   });
 
