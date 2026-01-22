@@ -1,29 +1,26 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from './_core/trpc';
-import { getDb } from './db';
+import { getDb, createQuickIdea, getQuickIdeas } from './db';
 import { quickIdeas } from '../drizzle/schema';
-import { InsertQuickIdea } from '../drizzle/schema';
 import { eq, desc } from 'drizzle-orm';
 
 // Schema para validação de input
 const createIdeaSchema = z.object({
   content: z.string().min(1, 'A ideia não pode estar vazia').max(500, 'A ideia não pode exceder 500 caracteres'),
+  projectId: z.number().optional(),
 });
 
 export const quickIdeasRouter = router({
 
   // Procedure para criar uma nova Quick Idea
-  createIdea: protectedProcedure
+  create: protectedProcedure
     .input(createIdeaSchema)
     .mutation(async ({ ctx, input }) => {
-      const db = await getDb();
-      const newIdea: InsertQuickIdea = {
+      return createQuickIdea({
         userId: ctx.user.id,
         content: input.content,
-      };
-
-      const result = await db.insert(quickIdeas).values(newIdea);
-      return { id: Number(result[0].insertId), ...newIdea };
+        projectId: input.projectId,
+      });
     }),
 
   // Procedure para listar todas as Quick Ideas do usuário

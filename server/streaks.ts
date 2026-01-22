@@ -4,16 +4,15 @@ import { getDb } from "./db";
 import { userStreaks } from "../drizzle/schema";
 import { eq, sql } from "drizzle-orm";
 
-const db = await getDb();
-
 export const streaksRouter = router({
   // Obter streak atual do usuário
   getStreak: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
     const userId = ctx.user.id;
     
-    let streak = await db.query.userStreaks.findFirst({
-      where: eq(userStreaks.userId, userId),
-    });
+    const results = await db.select().from(userStreaks).where(eq(userStreaks.userId, userId)).limit(1);
+    let streak = results[0];
 
     // Se não existe, criar registro inicial
     if (!streak) {
@@ -24,9 +23,8 @@ export const streaksRouter = router({
         totalDaysActive: 0,
       });
       
-      streak = await db.query.userStreaks.findFirst({
-        where: eq(userStreaks.userId, userId),
-      });
+      const retryResults = await db.select().from(userStreaks).where(eq(userStreaks.userId, userId)).limit(1);
+      streak = retryResults[0];
     }
 
     return streak;
@@ -34,12 +32,13 @@ export const streaksRouter = router({
 
   // Atualizar streak (chamar quando usuário completa tarefa)
   updateStreak: protectedProcedure.mutation(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
     const userId = ctx.user.id;
     const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
     
-    let streak = await db.query.userStreaks.findFirst({
-      where: eq(userStreaks.userId, userId),
-    });
+    const results = await db.select().from(userStreaks).where(eq(userStreaks.userId, userId)).limit(1);
+    let streak = results[0];
 
     if (!streak) {
       // Criar primeiro registro
