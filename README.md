@@ -95,3 +95,12 @@ NODE_ENV=production node dist/index.js
 ## 🤝 Contribuição
 
 Consulte o arquivo `CONTRIBUTING.md` para diretrizes sobre como submeter Pull Requests, reportar bugs e sugerir novas funcionalidades.
+
+
+## Novo Componente: ExecutiveOffice_April2026.jsx
+
+O componente `ExecutiveOffice_April2026.jsx` foi adicionado em `client/src/components/ExecutiveOffice_April2026.jsx`. Este componente parece ser uma interface de dashboard ou gerenciamento, provavelmente relacionada ao planejamento de sprints e gerenciamento de tarefas, incorporando cálculos dinâmicos de data, relógio em tempo real e rastreamento de status para tarefas e cursos.
+
+Ele utiliza `lucide-react` para ícones e hooks padrão do React (`useState`, `useEffect`, `useMemo`, `useCallback`, `useRef`).
+
+**Nota:** Este componente está integrado à estrutura frontend existente de React/TypeScript/Vite. Integrações adicionais ao roteamento da aplicação ou a outros componentes podem ser necessárias, dependendo do seu caso de uso pretendido.
